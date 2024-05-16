@@ -6,7 +6,7 @@ import React, { useEffect } from 'react';
 const RootPage = () => {
   const router = useRouter();
   useEffect(() => {
-    router.replace('/Main');
+    router.replace('/Login');
   }, []);
 
   return <></>;
