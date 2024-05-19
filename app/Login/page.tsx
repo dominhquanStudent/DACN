@@ -2,6 +2,7 @@
 import Footer from '../Component/Footer/Footer';
 import Logo from '../../public/img/logo';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 function Page() {
     const router = useRouter();
@@ -30,7 +31,7 @@ function Page() {
                 <div className='bg-white w-2/6 rounded-xl ml-16 px-12 pt-8 flex flex-col ' style={{ height: '70vh' }}>
                     <div className='text-2xl font-bold mb-6'>Đăng nhập </div>
                     <input type="text" className="p-2 pl-4 mb-6 font-nunito rounded border border-gray-300 w-full text-lg" placeholder="Email/SĐT" />
-                    <div className="mb-6 font-nunito rounded border border-gray-300 w-full text-lg">
+                    <div className="mb-2 font-nunito rounded border border-gray-300 w-full text-lg">
                         <div className="relative flex items-center font-nunito w-full text-lg">
                             <input type={hidepass ? "text" : "password"} className='p-2 pl-4 w-full' placeholder="Mật khẩu" />
                             <button onClick={() => sethidepass(!hidepass)}>
@@ -38,6 +39,7 @@ function Page() {
                             </button>
                         </div>
                     </div>
+                    <div className='text-md text-[#C5C5CF] font-bold mb-2'><Link href="/Login/Getpass">Quên mật khẩu ?</Link> </div>
                     <button type="submit" className="bg-[#296EB6] text-white font-nunito p-2 text-xl rounded w-full" onClick={() => router.push('/')}>Đăng nhập</button>
                     <div className='mt-6 text-[16px] font-bold flex flex-row items-center justify-center'>
                         <div className='border border-[#C5C5CF] w-36 mr-5'></div>
@@ -54,7 +56,7 @@ function Page() {
                             Google
                         </button>
                     </div>
-                    <div className='mt-6 font-k2d text-lg text-center'>Chưa có tài khoản,
+                    <div className='mt-4 font-k2d text-lg text-center'>Chưa có tài khoản,
                         <button className=' text-[#FC0E0E] rounded-md p-2 font-bold' onClick={() => router.push('/Sigup')}>Đăng ký</button>
                     </div>
                 </div>
