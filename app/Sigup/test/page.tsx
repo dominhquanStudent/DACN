@@ -3,14 +3,12 @@ import Footer from '../../Component/Footer/Footer';
 import Logo from '../../../public/img/logo';
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect, useRef } from 'react';
-function Page({
-    searchParams,
-}: {searchParams:{email: string};}) {
+function Page() {
     const router = useRouter();
     const [otp, setOtp] = useState(['', '', '', '']);
     const [combinedOtp, setCombinedOtp] = useState('');
     const inputRefs = Array.from({ length: 4 }).map(() => useRef<HTMLInputElement | null>(null));
-    const buttonRef = useRef<HTMLButtonElement | null>(null);
+
     const handleChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
         const newOtp = [...otp];
         newOtp[index] = event.target.value;
@@ -23,11 +21,7 @@ function Page({
         setCombinedOtp(otpString);
     };
     const [step, setStep] = useState(1);
-    useEffect(() => {
-        if (combinedOtp.length === 4) {
-          buttonRef.current?.focus();
-        }
-      }, [combinedOtp]);
+
 
     return (
         <div className="flex flex-col w-full ">
@@ -50,15 +44,15 @@ function Page({
                     </div>
                     <div className="mx-32 mt-12 font-nunito text-3xl text-[#ffffff] text-center ">Cửa hàng dịch vụ chăm sóc thú cưng hàng đầu TP.HCM</div>
                 </div>
-                <div className='bg-white w-2/6 rounded-xl ml-16 px-12 pt-8 flex flex-col items-center' style={{ height: '70vh' }}>
+                <div className='bg-white w-2/6 rounded-xl ml-16 px-12 pt-8 flex flex-col ' style={{ height: '70vh' }}>
                     <div className='text-2xl font-bold mb-6'>Đăng ký </div>
                     <div className='text-lg text-[#969090] mb-6 text-center font-bold'>
                         Nhập mã xác nhận
                         <div className='font-normal'>
-                        Mã xác nhận sẽ được gửi qua Email <br/> {searchParams.email}
+                        Mã xác nhận sẽ được gửi qua Email <br/> user@gmail.com
                         </div>
                     </div>
-                    <div className="flex justify-between w-4/6">
+                    <div className="flex justify-between mb-6">
                     {otp.map((value, index) => (
                         <input
                             key={index}
@@ -75,7 +69,7 @@ function Page({
                     <div className='mt-6 font-k2d text-lg text-center'>Chưa nhận được,
                         <button className=' text-[#FC0E0E] rounded-md p-2 font-bold' onClick={() => router.push('/Sigup')}>Gửi lại</button>
                     </div>
-                    <button type="submit" className="bg-[#296EB6] text-white font-nunito p-2 text-xl rounded w-full" ref = {buttonRef}>Kế tiếp</button>
+                    <button type="submit" className="bg-[#296EB6] text-white font-nunito p-2 text-xl rounded w-full" onClick={() =>{}}>Kế tiếp</button>
 
                 </div>
             </div>

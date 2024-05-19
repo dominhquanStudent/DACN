@@ -1,10 +1,9 @@
 'use client';
 import Footer from '../Component/Footer/Footer';
 import Logo from '../../public/img/logo';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 function Page() {
-    const router = useRouter();
     const [isPopup, setIsPopup] = useState(false);
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
@@ -29,12 +28,16 @@ function Page() {
         <div className="flex flex-col w-full" style={{ opacity: isPopup ? '0.5' : '1' }}>
         <div className="flex items-center">
                 <img src={"./img/logo.png"} alt="Logo" className='scale-75 ml-8' />
-                <button onClick={() => router.push('/Main')}>
+                <Link href="/Main">
+                <button>
                     <div className="ml-4 font-nunito text-4xl text-[#1286CE] font-bold">BK</div>
-                </button>
-                <button onClick={() => router.push('/Main')}>
+                </button>    
+                </Link>
+                <Link href="/Main">
+                <button>
                     <div className="font-nunito text-4xl text-[#EDB24E] font-bold">Petcare</div>
                 </button>
+                </Link>
                 <div className="ml-8 font-nunito text-3xl font-bold">Đăng ký</div>
             </div>
             <div className="w-full bg-[#296EB6] flex pt-16" style={{ height: '90vh' }}>
@@ -72,7 +75,9 @@ function Page() {
                         </button>
                     </div>
                     <div className='mt-6 font-k2d text-lg text-center'>Đã có tài khoản,
-                        <button className=' text-[#FC0E0E] rounded-md p-2 font-bold' onClick={() => router.push('/Login')}>Đăng nhập</button>
+                    <Link href="/Login">
+                        <button className=' text-[#FC0E0E] rounded-md p-2 font-bold'>Đăng nhập</button>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -100,7 +105,9 @@ function Page() {
                         zIndex: 1000,
                     }} className='p-4 text-center text-black'>
      Tiếp theo chúng tôi sẽ gửi mã OTP đến email <br /> <text className='font-bold'>{email}</text> <br />
-                        <button type="submit" className="bg-[#296EB6] text-white font-nunito text-xl rounded w-1/3 mt-2" onClick={() => router.push('Sigup/next')}>Tiếp tục</button>
+     <Link href={{pathname:"Sigup/next",query:{email: email},}}>
+                        <button type="submit" className="bg-[#296EB6] text-white font-nunito text-xl rounded w-1/3 mt-2" 
+                        >Tiếp tục</button></Link>
                     </div>
                 </>
             )}
