@@ -21,6 +21,10 @@ const config: Config = {
         nunito:['var(--font-nunito)',"sans-serif"]
         // Add more custom font families as needed
       },
+      colors: {
+        'footer-yellow': '#FFFAED',
+        'search-button-orange':'#EDB24E',
+      },
     },
   },
   plugins: [],
