@@ -7,6 +7,10 @@ import React, { useState, useEffect } from 'react';
 function Page() {
     const router = useRouter();
     const [hidepass, sethidepass] = useState(false);
+    const handleLogin = () => {
+        router.push('/');
+        //......
+    }
     return (
         <div className="flex flex-col w-full ">
             <div className="flex items-center">
@@ -39,8 +43,8 @@ function Page() {
                             </button>
                         </div>
                     </div>
-                    <div className='text-md text-[#C5C5CF] font-bold mb-2'><Link href="/Login/Getpass">Quên mật khẩu ?</Link> </div>
-                    <button type="submit" className="bg-[#296EB6] text-white font-nunito p-2 text-xl rounded w-full" onClick={() => router.push('/')}>Đăng nhập</button>
+                    <div className='text-md text-[#C5C5CF] mb-2'><Link href="/Login/Getpass">Quên mật khẩu ?</Link> </div>
+                    <button type="submit" className="bg-[#296EB6] text-white font-nunito p-2 text-xl rounded w-full" onClick={handleLogin}>Đăng nhập</button>
                     <div className='mt-6 text-[16px] font-bold flex flex-row items-center justify-center'>
                         <div className='border border-[#C5C5CF] w-36 mr-5'></div>
                         <div className='text-[#C5C5CF]'>Hoặc </div>
@@ -61,7 +65,7 @@ function Page() {
                     </div>
                 </div>
             </div>
-            <Footer />
+            <Footer/>
         </div>
     )
 }
