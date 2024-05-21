@@ -1,32 +1,34 @@
 import logo from "../../../public/img/Header/logo.png"
 import SearchBar from "./searchbar"
 import { useState } from "react"
-
+import { useRouter } from 'next/navigation';
 export default function Header(props: any) {
     const [showSublist1, setShowSublist1] = useState(false);
-
+    const router = useRouter();
 
     return(
         // global container
-        <div className="flex flex-col m-8 ">
+        <div className="flex flex-col mx-8 mt-2">
             {/* top part */}
             <div className="flex items-center justify-between">
                 {/* image */}
+                <button onClick={()=>router.push('/Main')}>
                 <img src={logo.src} alt="Logo" className="w-60 "/>
+                </button>
                 <SearchBar/>
                 {/* button */}
                 <div>
                         <button className="middle none center mr-4 rounded-lg bg-blue-500 py-2 px-6 font-sans text-xs font-bold 
                         uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 
                         focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none 
-                        disabled:opacity-50 disabled:shadow-none" data-ripple-light="true">
+                        disabled:opacity-50 disabled:shadow-none" data-ripple-light="true" onClick={()=>router.push('/Login')}>
                                         Đăng nhập
                         </button>
                         <button className="middle none center rounded-lg bg-yellow-400 py-2 px-6 font-sans text-xs font-bold 
                         uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 
                         focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none 
-                        disabled:opacity-50 disabled:shadow-none" data-ripple-light="true" >
-                                        Đăng xuất
+                        disabled:opacity-50 disabled:shadow-none" data-ripple-light="true" onClick={()=>router.push('/Sigup')}>
+                                        Đăng ký
                         </button>
                 </div>
                 
