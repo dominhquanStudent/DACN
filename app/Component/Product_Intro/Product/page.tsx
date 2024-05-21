@@ -1,6 +1,5 @@
 'use client';
 import Header from "../../Header/Header";
-import Login_SignUp_Header from "../../Header/Login_SignUp_Header";
 import Footer from "../../Footer/Footer";
 import StarRating from "./star_rating";
 import ProductCard from "./ProductFrame_Main";
@@ -61,7 +60,7 @@ export default function Product(){
     return (
 
         <>
-        <Login_SignUp_Header/>
+        <Header/>
         <div className="flex">
             {/* FilterSide */}
            <div className="w-1/6 font-k2d   flex flex-col items-center border-r-[1px] border-black ">
