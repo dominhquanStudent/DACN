@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Montserrat, Nunito,Poppins,Mulish, K2D } from "next/font/google";
 
+
 const inter = Inter({ subsets: ["latin"] });
 const k2d = K2D({ subsets: ["latin"], weight: ["400", "500", "600", "800"], variable: '--font-k2d' });
 const montserrat = Montserrat({ subsets: ["latin"], variable: '--font-montserrat' });

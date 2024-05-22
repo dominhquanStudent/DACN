@@ -3,6 +3,8 @@ import Service from "../../../public/img/Greet page/Service.png"
 import React, { useState, useEffect } from 'react';
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
+import Healthcare from "../../../public/img/Greet page/Healtcare.png"
+import Consult from "../../../public/img/Greet page/Consult.png"
 export default function GreetPage() {
     const [activeContainer, setActiveContainer] = useState(1); // 1: top, 2: middle, 3: bottom
     useEffect(() => {
@@ -55,7 +57,7 @@ export default function GreetPage() {
                             <button className="transition ease-in-out  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full  md:w-auto flex justify-center items-center p-3 space-x-4 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100
                     hover:bg-opacity-90 mt-10
                     ">
-                    <span className="font-montserrat">Sản Phẩm</span>
+                    <span className="font-montserrat">SẢN PHẨM</span>
                     </button>
                         </div>
                         {/* first right container */}
@@ -67,7 +69,7 @@ export default function GreetPage() {
                 <div className="flex flex-col md:flex-row items-center ">
                         {/* second left container */}
                         <div className="w-[50%]">
-                            <img src={Service.src} alt="" />
+                            <img src={Healthcare.src} alt="" />
                         </div>
                         {/* second right container */}
                         <div className=" w-[50%] ">
@@ -77,12 +79,12 @@ export default function GreetPage() {
                                     <button className="transition ease-in-out  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full  md:w-auto flex justify-center items-center p-3 space-x-4 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100
                             hover:bg-opacity-90  
                             ">
-                            <span className="font-montserrat">Nhận nuôi ngay</span>
+                            <span className="font-montserrat">NHẬN NUÔI NGAY</span>
                             </button>
                                     <button className="transition ease-in-out  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full  md:w-auto flex justify-center items-center p-3 space-x-4 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100
                             hover:bg-opacity-90 md:ml-20 
                             ">
-                            <span className="font-montserrat">Thông báo cứu hộ</span>
+                            <span className="font-montserrat">THÔNG BÁO CỨU HỘ</span>
                             </button>
                             </div>
                            
@@ -99,19 +101,19 @@ export default function GreetPage() {
                                         <button className="transition ease-in-out  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full  md:w-auto flex justify-center items-center p-3 space-x-4 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100
                                 hover:bg-opacity-90  
                                 ">
-                                <span className="font-montserrat">Nhận nuôi ngay</span>
+                                <span className="font-montserrat">CẦN TƯ VẤN</span>
                                 </button>
                                         <button className="transition ease-in-out  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full  md:w-auto flex justify-center items-center p-3 space-x-4 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100
                                 hover:bg-opacity-90 md:ml-20 
                                 ">
-                                <span className="font-montserrat">Thông báo cứu hộ</span>
+                                <span className="font-montserrat">ĐẶT LỊCH KHÁM</span>
                                 </button>
                                         
                             </div>
                         </div>
                         {/* second right container */}
                         <div className="w-[50%]">
-                            <img src={Service.src} alt="" />
+                            <img src={Consult.src} alt="" />
                         </div>
                 </div>
                 
