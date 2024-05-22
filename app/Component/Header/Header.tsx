@@ -5,16 +5,19 @@ import { useState } from "react";
 import notification from "../../../public/img/Header/notification.png";
 import ShoppingCart from "../../../public/img/Header/Shopping Cart.png";
 import User from "../../../public/img/Header/User.png";
+import Link from "next/link";
 export default function Header(props: any) {
   const [showSublist1, setShowSublist1] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   return (
     // global container
-    <div className="flex flex-col m-8 ">
+    <div className="flex flex-col mx-8 ">
       {/* top part */}
       <div className="flex items-center justify-between border-b-[1px] border-gray-300">
         {/* image */}
-        <img src={logo.src} alt="Logo" className="w-60 " />
+        
+        <Link href="Main"><img src={logo.src} alt="Logo" className="w-60 " /></Link>
+        
         <SearchBar />
         {!isLoggedIn ? (
           <div>
@@ -58,7 +61,7 @@ export default function Header(props: any) {
             onMouseLeave={() => setShowSublist1(false)}
             className={` ${showSublist1 ? "text-yellow-400 " : ""}`}
           >
-            Sản phẩm thú cưng
+            <Link href="/Product">Sản phẩm thú cưng</Link>
             {/* sub list 1 */}
             {showSublist1 && (
               <ul className="absolute  p-2 text-black text-base flex justify-center w-[100%] font-normal ">
@@ -70,10 +73,10 @@ export default function Header(props: any) {
               </ul>
             )}
           </li>
-          <li>Đặt lịch hẹn</li>
+          <li><Link href="/Booking">Đặt lịch hẹn</Link></li>
           <li>Nhận nuôi thú cưng</li>
-          <li>Yêu cầu cứu hộ</li>
-          <li>Về chúng tôi</li>
+          <li><Link href="/Rescue">Yêu cầu cứu hộ</Link></li>
+          <li><Link href="/Main">Về chúng tôi</Link></li>
         </ul>
       </div>
     </div>
