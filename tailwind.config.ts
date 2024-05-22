@@ -24,7 +24,11 @@ const config: Config = {
       colors: {
         'footer-yellow': '#FFFAED',
         'search-button-orange':'#EDB24E',
-      },
+        'table-brown':'#FFE5B9',
+        'table-line': '#F29A2E',
+        'background-col': '#DDF2FF',
+        'background-blue': '#296EB6',
+      }
     },
   },
   plugins: [],
