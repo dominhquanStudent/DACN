@@ -1,15 +1,15 @@
 'use client';
-import Welcome from '../../../public/img/Product_Main/Welcome.jpg'
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
+import Welcome from '@/public/img/Product_Main/Welcome.jpg'
+import Header from '@/app/Component/Header/Header';
+import Footer from '@/app/Component/Footer/Footer';
 import Product_Frame from './Product_Frame';
-import Brand1 from '../../../public/img/Product_Main/Brand_Farmina.png';
-import Brand2 from '../../../public/img/Product_Main/Brand_Hill.png';
-import Brand3 from '../../../public/img/Product_Main/Brand_NexGard.png';
-import Brand4 from '../../../public/img/Product_Main/Brand_Pedigree.png';
-import Brand5 from '../../../public/img/Product_Main/Brand_Premier.png';
-import Brand6 from '../../../public/img/Product_Main/Brand_RoyalCanin.png';
-import Brand7 from '../../../public/img/Product_Main/Brand_Whiskas.png';
+import Brand1 from '@/public/img/Product_Main/Brand_Farmina.png';
+import Brand2 from '@/public/img/Product_Main/Brand_Hill.png';
+import Brand3 from '@/public/img/Product_Main/Brand_NexGard.png';
+import Brand4 from '@/public/img/Product_Main/Brand_Pedigree.png';
+import Brand5 from '@/public/img/Product_Main/Brand_Premier.png';
+import Brand6 from '@/public/img/Product_Main/Brand_RoyalCanin.png';
+import Brand7 from '@/public/img/Product_Main/Brand_Whiskas.png';
 import { Slider } from '@mui/material';
 export default function Product_Main(){
     const shownProducts = [

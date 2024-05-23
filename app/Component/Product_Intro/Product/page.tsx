@@ -1,9 +1,9 @@
 'use client';
-import Header from "../../Header/Header";
-import Footer from "../../Footer/Footer";
+import Header from "@/app/Component/Header/Header";
+import Footer from "@/app/Component/Footer/Footer";
 import StarRating from "./star_rating";
 import ProductCard from "./ProductFrame_Main";
-import Foto from "../../../../public/img/Product_Main/foto.png";
+import Foto from "@/public/img/Product_Main/foto.png";
 export default function Product(){
     const products = [
         {

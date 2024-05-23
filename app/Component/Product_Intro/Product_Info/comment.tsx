@@ -1,4 +1,4 @@
-import User from "../../../../public/img/Header/User.png";
+import User from "@/public/img/Header/User.png";
 export default function Comment() {
   return (
     <div className="mt-4 m-9">
