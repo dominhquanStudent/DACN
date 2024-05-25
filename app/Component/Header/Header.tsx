@@ -44,7 +44,10 @@ export default function Header(props: any) {
         ) : (
           <div className="flex space-x-4 items-center">
             <img className="w-7 h-7" src={notification.src} alt="" />
-            <img className="w-7 h-7" src={ShoppingCart.src} alt="" />
+            <Link href="/Cart">
+              <img className="w-7 h-7" src={ShoppingCart.src} alt="" />
+            </Link>
+
             <img className="w-7 h-7" src={User.src} alt="" />
             <div className="self-center text-3xl font-semibold text-yellow-500">
               {">"}
@@ -76,10 +79,22 @@ export default function Header(props: any) {
               </ul>
             )}
           </li>
-          <li><Link className="hover:text-yellow-500" href="/Component/Booking">Đặt lịch hẹn</Link></li>
+          <li>
+            <Link className="hover:text-yellow-500" href="/Component/Booking">
+              Đặt lịch hẹn
+            </Link>
+          </li>
           <li className="hover:text-yellow-500">Nhận nuôi thú cưng</li>
-          <li><Link className="hover:text-yellow-500" href="/Component/Rescue">Yêu cầu cứu hộ</Link></li>
-          <li><Link className="hover:text-yellow-500" href="/Main">Về chúng tôi</Link></li>
+          <li>
+            <Link className="hover:text-yellow-500" href="/Component/Rescue">
+              Yêu cầu cứu hộ
+            </Link>
+          </li>
+          <li>
+            <Link className="hover:text-yellow-500" href="/Main">
+              Về chúng tôi
+            </Link>
+          </li>
         </ul>
       </div>
     </div>
