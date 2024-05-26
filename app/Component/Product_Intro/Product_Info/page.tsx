@@ -5,6 +5,8 @@ import Foto from "@/public/img/Product_Main/foto.png";
 import { useState } from "react";
 import StarRating from "@/app/Component/Product_Intro/Product/star_rating";
 import Comment from "./comment";
+import Footer from "@/app/Component/Footer/Footer";
+
 export default function ProductDetailPage() {
   const [selectedVolume, setSelectedVolume] = useState(null);
 
@@ -127,6 +129,7 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

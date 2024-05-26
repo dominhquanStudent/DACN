@@ -1,9 +1,11 @@
+import Foto from "@/public/img/Product_Main/foto.png";
+
 export default function Product_Frame() {
     return (
         <div
         class="flex flex-col min-[500px]:flex-row min-[500px]:items-center gap-5 py-6  border-b border-gray-200 group">
         <div class="w-full md:max-w-[126px]">
-            <img src="https://pagedone.io/asset/uploads/1701162850.png" alt="perfume bottle image"
+            <img src={Foto.src} alt="perfume bottle image"
                 class="mx-auto"/>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-4 w-full">
