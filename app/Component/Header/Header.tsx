@@ -8,18 +8,16 @@ import User from "@/public/img/Header/User.png";
 import Link from "next/link";
 export default function Header(props: any) {
   const [showSublist1, setShowSublist1] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   return (
     // global container
-    <div className="flex flex-col m-8 mt-4">
+    <div className="flex flex-col mx-8 ">
       {/* top part */}
       <div className="flex items-center justify-center space-x-11 border-b-[1px] border-gray-300">
         {/* image */}
-
         <Link href="/Component/Product_Intro">
           <img src={logo.src} alt="Logo" className="w-60 " />
         </Link>
-
         <SearchBar />
         {!isLoggedIn ? (
           <div>

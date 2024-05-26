@@ -6,8 +6,6 @@ import Calendar from 'react-calendar';
 import logo from "../../../public/img/Booking/petcare.png";
 import logoname from "../../../public/img/Booking/pc.jpg";
 import Doggo1 from "../../../public/img/Greet page/Doggo1.png";
-
-
 import 'react-calendar/dist/Calendar.css'; // Import the calendar CSS
 
 export default function Booking() {
