@@ -61,75 +61,81 @@ export default function Booking() {
                   <h2 className="mb-4 text-center text-orange-500 font-bold text-4xl">Bảng giá dịch vụ</h2>
 
                       <div className="border-b border-gray-500 w-full my-2"></div> {/* Horizontal line */}
-                      <div>
-                            <h2 className="mb-4 text-orange-500 font-bold">Kiểm tra sức khỏe</h2>
-                            <div className="relative overflow-x-auto">
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr>
-                                            <th scope="col" className="px-6 py-3">
-                                                Dịch vụ
-                                            </th>
-                                            <th scope="col" className="px-6 py-3" colspan="2">
-                                                Giá tiền
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {[...Array(7)].map((_, rowIndex) => (
-                                            <tr key={rowIndex} className={`bg-white border-b  dark:bg-gray-800 dark:border-gray-700`}>
-                                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {generateRandomService(rowIndex)}
-                                                </th>
-                                                <td className="px-6 py-4">
-                                                    {generateRandomPrice(rowIndex)}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    {generateRandomPrice2(rowIndex)}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div className="flex gap-4 p-4">
 
+                            <div>
+                                    <h2 className="mb-4 text-orange-500 font-bold">Kiểm tra sức khỏe</h2>
+                                    <div className="relative overflow-x-auto">
+                                        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                <tr>
+                                                    <th scope="col" className="px-6 py-3">
+                                                        Dịch vụ
+                                                    </th>
+                                                    <th scope="col" className="px-6 py-3" colspan="2">
+                                                        Giá tiền
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {[...Array(7)].map((_, rowIndex) => (
+                                                    <tr key={rowIndex} className={`bg-white border-b  dark:bg-gray-800 dark:border-gray-700`}>
+                                                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                            {generateRandomService(rowIndex)}
+                                                        </th>
+                                                        <td className="px-6 py-4">
+                                                            {generateRandomPrice(rowIndex)}
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            {generateRandomPrice2(rowIndex)}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                            </div>
+                            <div className="border-r border-gray-300 mx-4"></div> {/* Divider line */}
+
+                            
+
+                            <div>
+                                    <h2 className="mb-4 text-orange-500 font-bold">Spa and Grooming</h2>
+                                    <div className="relative overflow-x-auto">
+                                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                            <tr>
+                                                <th scope="col" className="px-6 py-3">
+                                                    Dịch vụ
+                                                </th>
+                                                <th scope="col" className="px-6 py-3" colspan="2">
+                                                    Giá tiền
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {[...Array(5)].map((_, rowIndex) => (
+                                                <tr key={rowIndex} className={`bg-white ${rowIndex % 2 === 0 ? 'border-b' : ''} dark:bg-gray-800 dark:border-gray-700`}>
+                                                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                        {generateRandomServiceSpa(rowIndex)}
+                                                    </th>
+                                                    <td className="px-6 py-4">
+                                                        {generateRandomPriceSpa(rowIndex)}
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        {generateRandomPriceSpa2(rowIndex)}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                    </div>
+
+                            </div>
                         </div>
                       <h2 className="mb-4">Lưu ý: Giá tham khảo, có thể thay đổi với mức độ thứ cưng nhưng không quá 20%</h2>
-                      <div className="border-b border-gray-500 w-full my-4"></div>
 
-                      <div>
-                            <h2 className="mb-4 text-orange-500 font-bold">Spa and Grooming</h2>
-                            <div className="relative overflow-x-auto">
-                            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" className="px-6 py-3">
-                                            Dịch vụ
-                                        </th>
-                                        <th scope="col" className="px-6 py-3" colspan="2">
-                                            Giá tiền
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {[...Array(5)].map((_, rowIndex) => (
-                                        <tr key={rowIndex} className={`bg-white ${rowIndex % 2 === 0 ? 'border-b' : ''} dark:bg-gray-800 dark:border-gray-700`}>
-                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                {generateRandomServiceSpa(rowIndex)}
-                                            </th>
-                                            <td className="px-6 py-4">
-                                                {generateRandomPriceSpa(rowIndex)}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                {generateRandomPriceSpa2(rowIndex)}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        </div>
                         <div className="mt-6 mb-4 mx-2">
                             <button className="bg-orange-500 text-white font-bold py-2 px-4 rounded hover:bg-orange-600 transition duration-300">
                                 Đặt lịch chăm sóc thú cưng tại đây
@@ -141,7 +147,7 @@ export default function Booking() {
               </div>
               <div className="border-r border-gray-300 mx-4"></div> {/* Divider line */}
 
-              <div className="flex flex-col items-center justify-center min-h-screen">
+              <div className="flex flex-col items-center  min-h-screen">
                     <h2 className="mb-4 text-orange-500 font-bold">Đặt lịch ngay</h2>
                     <div className="p-4">
                         <Calendar onChange={setDate} value={date} />
