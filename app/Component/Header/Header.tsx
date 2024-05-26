@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import logo from "@/public/img/Header/logo.png";
 import SearchBar from "./searchbar";
 import { useState } from "react";
@@ -85,7 +85,11 @@ export default function Header(props: any) {
               Đặt lịch hẹn
             </Link>
           </li>
-          <li className="hover:text-yellow-500">Nhận nuôi thú cưng</li>
+          <li>
+            <Link className="hover:text-yellow-500" href="/Component/Adopt">
+              Nhận nuôi thú cưng
+            </Link>
+          </li>
           <li>
             <Link className="hover:text-yellow-500" href="/Component/Rescue">
               Yêu cầu cứu hộ
