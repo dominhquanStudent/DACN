@@ -4,6 +4,7 @@ import "./globals.css";
 import { Montserrat, Nunito,Poppins,Mulish, K2D } from "next/font/google";
 
 
+
 const inter = Inter({ subsets: ["latin"] });
 const k2d = K2D({ subsets: ["latin"], weight: ["400", "500", "600", "800"], variable: '--font-k2d' });
 const montserrat = Montserrat({ subsets: ["latin"], variable: '--font-montserrat' });
@@ -23,6 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+
     <html lang="en">
       <body className={[inter.className, montserrat.variable,nunito.variable,poppins.variable,mulish.variable,k2d.variable].join(' ')}>{children}</body>
     </html>

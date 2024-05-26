@@ -28,11 +28,11 @@ export default function GreetPage() {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
-  
+    
     return (
          //global container
          <>
-         <Header></Header>
+         <Header ></Header>
       <div className="flex flex-col w-screen 	">
             {/* top container */}
             <div className={`flex flex-col items-center ${activeContainer >= 1 ? 'opacity-100 transition-opacity duration-500' : 'opacity-0 transition-opacity duration-500'}`}>

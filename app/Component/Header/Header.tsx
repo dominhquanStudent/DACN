@@ -11,7 +11,7 @@ export default function Header(props: any) {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   return (
     // global container
-    <div className="flex flex-col m-8 mt-4">
+    <div className="flex flex-col mx-8 mb-8 ">
       {/* top part */}
       <div className="flex items-center justify-center space-x-11 border-b-[1px] border-gray-300">
         {/* image */}
@@ -23,24 +23,28 @@ export default function Header(props: any) {
         <SearchBar />
         {!isLoggedIn ? (
           <div>
-            <button
-              className="middle none center mr-4 rounded-lg bg-blue-500 py-2 px-6 font-sans text-xs font-bold 
+            <Link href="/Login">
+              <button
+                className="middle none center mr-4 rounded-lg bg-blue-500 py-2 px-6 font-sans text-xs font-bold 
                         uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 
                         focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none 
                         disabled:opacity-50 disabled:shadow-none"
-              data-ripple-light="true"
-            >
-              Đăng nhập
-            </button>
-            <button
-              className="middle none center rounded-lg bg-yellow-400 py-2 px-6 font-sans text-xs font-bold 
+                data-ripple-light="true"
+              >
+                Đăng nhập
+              </button>
+            </Link>
+            <Link href="/Sigup">
+              <button
+                className="middle none center rounded-lg bg-yellow-400 py-2 px-6 font-sans text-xs font-bold 
                         uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 
                         focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none 
                         disabled:opacity-50 disabled:shadow-none"
-              data-ripple-light="true"
-            >
-              Đăng ký
-            </button>
+                data-ripple-light="true"
+              >
+                Đăng ký
+              </button>
+            </Link>
           </div>
         ) : (
           <div className="flex space-x-4 items-center">
