@@ -32,7 +32,7 @@ function Page({
     return (
         <div className="flex flex-col w-full ">
             <div className="flex items-center">
-                <img src={"./../img/logo.png"} alt="Logo" className='scale-75 ml-8' />
+                <img src={"./../img/logo.png"} alt="Logo" className='w-20 ml-8' />
                 <button onClick={() => router.push('/Main')}>
                     <div className="ml-4 font-nunito text-4xl text-[#1286CE] font-bold">BK</div>
                 </button>
@@ -89,7 +89,7 @@ function Page({
                             Cuối cùng hãy tạo mật khẩu <br /> cho tài khoản của bạn
                         </div>
                     </div>
-                    <input type={"text"} className='p-2 pl-4 mb-12 w-full font-nunito text-lg rounded border border-gray-300' placeholder="Mật khẩu" />
+                    <input type={"password"} className='p-2 pl-4 mb-12 w-full font-nunito text-lg rounded border border-gray-300' placeholder="Mật khẩu" />
                     <button type="submit" className="bg-[#296EB6] text-white font-nunito p-2 text-xl rounded w-full" ref={buttonRef} onClick={() => setStep(step + 1)}>Hoàn thành</button>
                 </div>
                 )}

@@ -4,11 +4,15 @@ import Footer from "@/app/Component/Footer/Footer";
 import StarRating from "./star_rating";
 import ProductCard from "./ProductFrame_Main";
 import Foto from "@/public/img/Product_Main/foto.png";
+import Foto1 from "@/public/img/Product_Main/foto1.png";
+import Foto3 from "@/public/img/Product_Main/foto3.png";
+import Foto4 from "@/public/img/Product_Main/foto4.png";
+import Foto5 from "@/public/img/Product_Main/foto5.png";
 export default function Product(){
     const products = [
         {
           image: Foto,
-          name: 'Product Name 1',
+          name: 'Test Product 1',
           brand: 'Brand Name 1',
           rating: 4,
           price: 99.99,
@@ -16,40 +20,40 @@ export default function Product(){
         },
         
         {
-            image: Foto,
-            name: 'Product Name 2',
+            image: Foto1,
+            name: 'Test Product 2',
             brand: 'Brand Name 2',
             rating: 5,
             price: 79.99,
             prSalePrice: 99.99
           },
           {
-            image: Foto,
-            name: 'Product Name 2',
+            image: Foto3,
+            name: 'Test Product 3',
             brand: 'Brand Name 2',
             rating: 5,
             price: 79.99,
             prSalePrice: 99.99
           },
           {
-            image: Foto,
-            name: 'Product Name 2',
+            image: Foto4,
+            name: 'Test Product 4',
             brand: 'Brand Name 2',
             rating: 5,
             price: 79.99,
             prSalePrice: 99.99
           },
           {
-            image: Foto,
-            name: 'Product Name 2',
+            image: Foto5,
+            name: 'Test Product 5',
             brand: 'Brand Name 2',
             rating: 5,
             price: 79.99,
             prSalePrice: 99.99
           },
           {
-            image: Foto,
-            name: 'Product Name 2',
+            image: Foto1,
+            name: 'Test Product 6',
             brand: 'Brand Name 2',
             rating: 5,
             price: 79.99,

@@ -84,9 +84,9 @@ export default function Product_Main(){
                     </div>
                     
                     {/* filter */}
-                    <div className='flex flex-wrap justify-between mt-3'>
-                        <div className='flex space-x-4'>
-                            <label className='flex-1'>Giới tính</label>
+                    <div className='flex flex-wrap justify-between mt-3 space-x-9'>
+                        <div className='flex space-x-4 items-center'>
+                            <label className=''>Giới tính</label>
                             <select
                                 value={gender}
                                 onChange={(e) => setGender(e.target.value)}
@@ -97,8 +97,8 @@ export default function Product_Main(){
                                 <option value="female">Cái</option>
                             </select>    
                         </div>
-                        <div className='flex space-x-4'>
-                            <label className='flex-1'>Độ tuổi</label>
+                        <div className='flex space-x-4 items-center'>
+                            <label className=''>Độ tuổi</label>
                             <select
                                 value={age}
                                 onChange={(e) => setAge(e.target.value)}
@@ -111,8 +111,8 @@ export default function Product_Main(){
                             </select>    
                         </div>
 
-                        <div className='flex space-x-4'>
-                            <label className='flex-1'>Cân nặng</label>
+                        <div className='flex space-x-4 items-center'>
+                            <label className=''>Cân nặng</label>
                             <select
                                 value={weight}
                                 onChange={(e) => setWeight(e.target.value)}

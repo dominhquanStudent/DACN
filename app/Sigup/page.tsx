@@ -15,6 +15,7 @@ function Page() {
   const handleSubmit = () => {
     if (validateEmail(email)) {
       setEmailError("");
+      setIsPopup(true);
     } else {
       setEmailError("Email không hợp lệ");
     }

@@ -52,8 +52,10 @@ export default function Header(props: any) {
             <Link href="/Cart">
               <img className="w-7 h-7" src={ShoppingCart.src} alt="" />
             </Link>
+            <Link href="/Profile">
+              <img className="w-7 h-7" src={User.src} alt="" />
+            </Link>
 
-            <img className="w-7 h-7" src={User.src} alt="" />
             <div className="self-center text-3xl font-semibold text-yellow-500">
               {">"}
             </div>
@@ -85,7 +87,7 @@ export default function Header(props: any) {
             )}
           </li>
           <li>
-            <Link className="hover:text-yellow-500" href="/Component/Booking">
+            <Link className="hover:text-yellow-500" href="/Price_Table">
               Đặt lịch hẹn
             </Link>
           </li>

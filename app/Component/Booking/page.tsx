@@ -1,166 +1,192 @@
-'use client';
-import React, { useState, useEffect } from 'react';
+"use client";
+import React, { useState, useEffect } from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import Calendar from 'react-calendar';
-import logo from "../../../public/img/Booking/petcare.png"
+import Calendar from "react-calendar";
+import logo from "../../../public/img/Booking/petcare.png";
+import logoname from "../../../public/img/Booking/pc.jpg";
+import Doggo1 from "../../../public/img/Greet page/Doggo1.png";
 
-import 'react-calendar/dist/Calendar.css'; // Import the calendar CSS
+import "react-calendar/dist/Calendar.css"; // Import the calendar CSS
 
 export default function Booking() {
-    const [activeContainer, setActiveContainer] = useState(1); 
-    const [date, setDate] = useState(new Date()); // State for selected date
+  const [activeContainer, setActiveContainer] = useState(1);
+  const [date, setDate] = useState(new Date()); // State for selected date
+  const [customerName, setCustomerName] = useState(""); // State for customer name
+  const [phoneNumber, setPhoneNumber] = useState(""); // State for phone number
+  const [email, setEmail] = useState(""); // State for email
+  const [bossName, setBossName] = useState(""); // State for boss name
+  const [numnber, setNumber] = useState(""); // State for number
+  const [weight, setWeight] = useState("");
+  const [time, setTime] = useState("");
+  const [age, setAge] = useState("");
+  const [service, setService] = useState("");
+  const [gender, setGender] = useState("");
 
-    useEffect(() => {
+  useEffect(() => {
+    // You can add any side-effects or data fetching logic here if needed
+  }, []);
 
-    }, []);
-  
-    // Function to generate random service name
-    const generateRandomService = (index: number) => {
-        const services = ['','Điều trị','Tiêm phòng','Triệt','Hỗ trợ đẻ', 'Phẫu thuật', 'Tư vấn khám bệnh',''];
-        return services[index % services.length];
-      };
-      
-  
-  // Function to generate random price
-  const generateRandomPrice = (index: number) => {
-    const services = ['Dưới 4kg','500.000đ','300.000đ','500.000đ','400.000đ', '450.000đ', '300.000đ',''];
-    return services[index % services.length];
-  };
-
-  const generateRandomPrice2 = (index: number) => {
-    const services = ['Trên 4kg','550.000đ','350.000đ','550.000đ','450.000đ', '550.000đ', '350.000đ',''];
-    return services[index % services.length];
-  };
-
-  const generateRandomServiceSpa = (index: number) => {
-    const services = ['','Tắm rửa','Tỉa lông','Vệ sinh tai','Cắt móng'];
-    return services[index % services.length];
-  };
-  const generateRandomPriceSpa = (index: number) => {
-    const services = ['Trên 4kg','550.000đ','350.000đ','550.000đ','450.000đ'];
-    return services[index % services.length];
-  };
-  const generateRandomPriceSpa2 = (index: number) => {
-    const services = ['Trên 4kg','550.000đ','350.000đ','550.000đ','450.000đ'];
-    return services[index % services.length];
-  };
-  
   // JSX code with random content in each cell
   return (
-      //global container
-      <>
-          <Header />
-  
-          <div className="flex gap-4 p-4">
-
-              <div className="border-r border-gray-300 mx-4"></div> {/* Divider line */}
-  
-              <div className="flex-[8] p-4">
-                  <div className="flex flex-col items-center">
-                  <h2 className="mb-4 text-center text-orange-500 font-bold text-4xl">Bảng giá dịch vụ</h2>
-
-                      <div className="border-b border-gray-500 w-full my-2"></div> {/* Horizontal line */}
-                        <div className="flex gap-4 p-4">
-
-                            <div>
-                                    <h2 className="mb-4 text-orange-500 font-bold">Kiểm tra sức khỏe</h2>
-                                    <div className="relative overflow-x-auto">
-                                        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                                <tr>
-                                                    <th scope="col" className="px-6 py-3">
-                                                        Dịch vụ
-                                                    </th>
-                                                    <th scope="col" className="px-6 py-3" colspan="2">
-                                                        Giá tiền
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {[...Array(7)].map((_, rowIndex) => (
-                                                    <tr key={rowIndex} className={`bg-white border-b  dark:bg-gray-800 dark:border-gray-700`}>
-                                                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                            {generateRandomService(rowIndex)}
-                                                        </th>
-                                                        <td className="px-6 py-4">
-                                                            {generateRandomPrice(rowIndex)}
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            {generateRandomPrice2(rowIndex)}
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                            </div>
-                            <div className="border-r border-gray-300 mx-4"></div> {/* Divider line */}
-
-                            
-
-                            <div>
-                                    <h2 className="mb-4 text-orange-500 font-bold">Spa and Grooming</h2>
-                                    <div className="relative overflow-x-auto">
-                                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                            <tr>
-                                                <th scope="col" className="px-6 py-3">
-                                                    Dịch vụ
-                                                </th>
-                                                <th scope="col" className="px-6 py-3" colspan="2">
-                                                    Giá tiền
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {[...Array(5)].map((_, rowIndex) => (
-                                                <tr key={rowIndex} className={`bg-white ${rowIndex % 2 === 0 ? 'border-b' : ''} dark:bg-gray-800 dark:border-gray-700`}>
-                                                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                        {generateRandomServiceSpa(rowIndex)}
-                                                    </th>
-                                                    <td className="px-6 py-4">
-                                                        {generateRandomPriceSpa(rowIndex)}
-                                                    </td>
-                                                    <td className="px-6 py-4">
-                                                        {generateRandomPriceSpa2(rowIndex)}
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                    </div>
-
-                            </div>
-                        </div>
-                      <h2 className="mb-4">Lưu ý: Giá tham khảo, có thể thay đổi với mức độ thứ cưng nhưng không quá 20%</h2>
-
-                        <div className="mt-6 mb-4 mx-2">
-                            <button className="bg-orange-500 text-white font-bold py-2 px-4 rounded hover:bg-orange-600 transition duration-300">
-                                Đặt lịch chăm sóc thú cưng tại đây
-                            </button>
-                        </div>
-
-                  </div>
-                  
-              </div>
-              <div className="border-r border-gray-300 mx-4"></div> {/* Divider line */}
-
-              <div className="flex flex-col items-center  min-h-screen">
-                    <h2 className="mb-4 text-orange-500 font-bold">Đặt lịch ngay</h2>
-                    <div className="p-4">
-                        <Calendar onChange={setDate} value={date} />
-                    </div>
-                    <div className="p-4">
-                        <img src={logo.src} alt="Logo" className="w-60" />
-                    </div>
-                </div>
-              
-
+    // Global container
+    <>
+      <Header />
+      <div className="flex gap-4 p-4 bg-background-blue">
+        <div className="relative left-28">
+          <div className="p-3">
+            <img src={logo.src} alt="Logo" className="w-60" />
           </div>
-  
-          <Footer />
-      </>
+          <div className="p-3">
+            <img src={logoname.src} alt="Logo" className="w-60" />
+          </div>
+          <h2 className="text-4xl text-center text-white font">Đặt lịch hẹn</h2>
+          <div className="p-3 mt-7 ">
+            <img src={Doggo1.src} alt="Doggo1" className="w-60" />
+          </div>
+        </div>
+        <div className="bg-white rounded-lg shadow-md p-8 w-1/2 mx-auto">
+          <h2 className="text-lg font-semibold mb-4">
+            Dịch vụ chăm sóc thú cưng
+          </h2>
+          <div className="flex items-center space-x-8">
+            <label className="flex-1">Tên khách hàng</label>
+            <input
+              type="text"
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+              placeholder="Nhập tên khách hàng"
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
+            />
+          </div>
+          <div className="flex items-center space-x-8">
+            <label className="flex-1">SĐT</label>
+            <input
+              type="text"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              placeholder="Nhập số điện thoại"
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
+            />
+          </div>
+          <div className="flex items-center space-x-8">
+            <label className="flex-1">Email</label>
+            <input
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Nhập email"
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
+            />
+          </div>
+          <div className="flex items-center space-x-8">
+            <label className="flex-1">Tên của Boss</label>
+            <input
+              type="text"
+              value={bossName}
+              onChange={(e) => setBossName(e.target.value)}
+              placeholder="Nhập tên cua Boss"
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
+            />
+          </div>
+          <div className="flex items-center mt-4 space-x-8">
+            <label className="flex-1">Giới tính</label>
+            <div className="flex flex-[4]">
+              <div className="">
+                <input
+                  type="radio"
+                  id="male"
+                  name="gender"
+                  value="Đực"
+                  onChange={(e) => setGender(e.target.value)}
+                />
+                <label htmlFor="male">Đực</label>
+              </div>
+              <div className="ml-4">
+                <input
+                  type="radio"
+                  id="female"
+                  name="gender"
+                  value="Cái"
+                  onChange={(e) => setGender(e.target.value)}
+                />
+                <label htmlFor="female">Cái</label>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center mt-4 space-x-8">
+            <label className="flex-1">Cân nặng</label>
+            <select
+              value={weight}
+              onChange={(e) => setWeight(e.target.value)}
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
+            >
+              <option value="">Chọn cân nặng</option>
+              <option value="light">Dưới 2kg</option>
+              <option value="medium">2kg-4kg</option>
+              <option value="heavy">Trên 4kg</option>
+            </select>
+          </div>
+          <div className="flex items-center mt-4 space-x-8">
+            <label className="flex-1">Tuổi</label>
+            <select
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
+            >
+              <option value="">Chọn độ tuổi</option>
+              <option value="age1">Dưới 6 tháng</option>
+              <option value="age2">6 tháng - 12 tháng</option>
+              <option value="age3">12 tháng - 24 tháng</option>
+              <option value="age4">Trên 24 tháng</option>
+            </select>
+          </div>
+          <div className="flex items-center mt-4 space-x-8">
+            <label className="flex-1">Chọn dịch vụ</label>
+            <select
+              value={service}
+              onChange={(e) => setService(e.target.value)}
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
+            >
+              <option value="">Chọn dịch vụ</option>
+              <option value="dv1">Kiểm tra sức khỏe</option>
+              <option value="dv2">Tắm rửa</option>
+              <option value="dv3">Tỉa lông</option>
+              <option value="dv4">Tiêm vắc-xin</option>
+            </select>
+          </div>
+          <div className="flex items-center mt-4 space-x-8">
+            <label className="flex-1">Ngày hẹn</label>
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
+            />
+          </div>
+          <div className="flex items-center mt-4 space-x-8">
+            <label className="flex-1">Thời gian</label>
+            <input
+              type="time"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
+            />
+          </div>
+          <div className="flex justify-center">
+            <button
+              className="mt-8 w-1/2 middle none center rounded-lg bg-yellow-400 py-3 px-6 font-sans text-xs font-bold 
+              uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 
+              focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none 
+              disabled:opacity-50 disabled:shadow-none"
+              data-ripple-light="true"
+            >
+              Đăng ký
+            </button>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </>
   );
-}  
+}
