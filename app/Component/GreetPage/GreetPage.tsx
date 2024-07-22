@@ -78,8 +78,8 @@ export default function GreetPage() {
           {/* Sản Phẩm */}
           <div className="flex flex-col md:flex-row items-center">
             {/* first left container */}
-            <div className=" w-[50%] ">
-              <div className="text-4xl font-bold font-k2d">
+            <div className=" w-[50%] flex flex-col items-center">
+              <div className="text-4xl font-bold font-k2d mb-4">
                 Chúng tôi coi thú cưng của bạn như người nhà
               </div>
               <div className="text-xl font-montserrat">
@@ -110,7 +110,7 @@ export default function GreetPage() {
             </div>
             {/* second right container */}
             <div className=" w-[50%] ">
-              <div className="text-4xl font-bold font-k2d">
+              <div className="text-4xl font-bold font-k2d mb-4">
                 Quan tâm đến những bé thú cưng cần hỗ trợ
               </div>
               <div className="text-xl font-montserrat">
@@ -144,7 +144,7 @@ export default function GreetPage() {
           <div className="flex flex-col md:flex-row items-center">
             {/* third left container */}
             <div className=" w-[50%] ">
-              <div className="text-4xl font-bold font-k2d">
+              <div className="text-4xl font-bold font-k2d mb-4">
                 Bạn không hiểu về người bạn nhỏ của mình? Cần những tư vấn hợp
                 lí ?
               </div>
@@ -181,13 +181,13 @@ export default function GreetPage() {
         </div>
         {/*Bottom Container */}
         <div
-          className={`flex flex-col items-center ${
+          className={`flex flex-col items-center mt-7  ${
             activeContainer === 3
               ? "opacity-100 transition-opacity duration-500"
               : "opacity-0 transition-opacity duration-500"
           }`}
         >
-          <div className="text-4xl font-bold font-k2d max-w-[50%] text-center">
+          <div className="text-4xl font-bold font-k2d max-w-[50%] text-center mb-4 ">
             Cảm ơn vì đã trở thành một phần trong hành trình của chúng tôi
           </div>
           <div className="max-w-[50%] text-center font-montserrat">

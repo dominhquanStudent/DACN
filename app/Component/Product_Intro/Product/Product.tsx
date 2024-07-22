@@ -8,6 +8,7 @@ import Foto1 from "@/public/img/Product_Main/foto1.png";
 import Foto3 from "@/public/img/Product_Main/foto3.png";
 import Foto4 from "@/public/img/Product_Main/foto4.png";
 import Foto5 from "@/public/img/Product_Main/foto5.png";
+import '@/app/Component/CheckboxStyles.css';
 export default function Product(){
     const products = [
         {
@@ -72,34 +73,34 @@ export default function Product(){
                 <div>
                     <h1 className=" text-lg text-center">Bộ lọc tìm kiếm</h1>
                     {/* Theo loại */}
-                    <div className="space-y-3 border-b-[1px] pb-2 ">
+                    <div className="space-y-4 border-b-[1px] pb-2 ">
                         <div className="text-center">Theo danh mục</div>
                         <div>
-                        <input type="checkbox" name="Shampoo" id="Shampoo" className="" />
+                        <input type="checkbox" name="Shampoo" id="Shampoo" className="custom-checkbox" />
                             <label htmlFor="Shampoo">Sữa tắm chó mèo</label>
                         </div>
                         <div>
-                        <input type="checkbox" name="sand" id="sand" className="" />
+                        <input type="checkbox" name="sand" id="sand" className="custom-checkbox" />
                             <label htmlFor="sand">Cát vệ sinh</label>
                         </div>
                         <div>
-                        <input type="checkbox" name="sand" id="sand" className="" />
-                            <label htmlFor="sand">nước hoa thú cưng</label>
+                        <input type="checkbox" name="perfume" id="perfume" className="custom-checkbox" />
+                            <label htmlFor="perfume">nước hoa thú cưng</label>
                         </div>
                     </div>
                     {/* Theo brand */}
                     <div className="space-y-3 border-b-[1px] pb-2 ">
                         <div className="text-center">Theo Thương Hiệu</div>
                         <div>
-                        <input type="checkbox" name="brand1" id="brand1" className="" />
+                        <input type="checkbox" name="brand1" id="brand1" className="custom-checkbox" />
                             <label htmlFor="brand1">PETSOLA</label>
                         </div>
                         <div>
-                        <input type="checkbox" name="brand2" id="brand2" className="" />
+                        <input type="checkbox" name="brand2" id="brand2" className="custom-checkbox" />
                             <label htmlFor="brand2">Calager</label>
                         </div>
                         <div>
-                        <input type="checkbox" name="brand3" id="brand3" className="" />
+                        <input type="checkbox" name="brand3" id="brand3" className="custom-checkbox" />
                             <label htmlFor="brand3">Fay</label>
                         </div>
                     </div>

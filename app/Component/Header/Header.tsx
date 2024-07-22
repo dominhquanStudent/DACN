@@ -6,16 +6,17 @@ import notification from "@/public/img/Header/notification.png";
 import ShoppingCart from "@/public/img/Header/Shopping Cart.png";
 import User from "@/public/img/Header/User.png";
 import Link from "next/link";
+
 export default function Header(props: any) {
   const [showSublist1, setShowSublist1] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   return (
     // global container
-    <div className="flex flex-col mx-8 ">
+    <div className="flex flex-col mx-8 mb-10">
       {/* top part */}
       <div className="flex items-center justify-center space-x-11 border-b-[1px] border-gray-300">
         {/* image */}
-        <Link href="/Component/Product_Intro">
+        <Link href="/Product_Intro">
           <img src={logo.src} alt="Logo" className="w-60 " />
         </Link>
         <SearchBar />
@@ -70,9 +71,7 @@ export default function Header(props: any) {
             onMouseLeave={() => setShowSublist1(false)}
             className={` ${showSublist1 ? "text-yellow-400 " : ""}`}
           >
-            <Link href="/Component/Product_Intro/Product">
-              Sản phẩm thú cưng
-            </Link>
+            <Link href="/Product">Sản phẩm thú cưng</Link>
             {/* sub list 1 */}
             {showSublist1 && (
               <ul className="absolute left-48  p-2 text-black text-base flex justify-center w-[75%] font-normal ">
@@ -90,12 +89,12 @@ export default function Header(props: any) {
             </Link>
           </li>
           <li>
-            <Link className="hover:text-yellow-500" href="/Component/Adopt">
+            <Link className="hover:text-yellow-500" href="/Adopt">
               Nhận nuôi thú cưng
             </Link>
           </li>
           <li>
-            <Link className="hover:text-yellow-500" href="/Component/Rescue">
+            <Link className="hover:text-yellow-500" href="/Rescue">
               Yêu cầu cứu hộ
             </Link>
           </li>

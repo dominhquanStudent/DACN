@@ -1,11 +1,9 @@
-'use client';
-import React from 'react';
-import Product_Main from '../Component/Product_Intro/page';
+"use client";
+import React from "react";
+import Product from "../Component/Product_Intro/Product/Product";
 
 function page() {
-    return (
-    <Product_Main/>
-    )
+  return <Product />;
 }
 
-export default page
+export default page;
