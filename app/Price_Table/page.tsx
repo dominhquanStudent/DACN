@@ -190,7 +190,7 @@ export default function Booking() {
               không quá 20%
             </h2>
             <div className="mt-6 mb-4 mx-2">
-              <Link href="Component/Booking">
+              <Link href="/Booking">
                 <button className="bg-orange-500 text-white font-bold py-2 px-4 rounded hover:bg-orange-600 transition duration-300">
                   Đặt lịch chăm sóc thú cưng tại đây
                 </button>
