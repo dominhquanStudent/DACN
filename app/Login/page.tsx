@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { setCookie } from "cookies-next";
+import { getCookie,setCookie } from "cookies-next";
 function Page() {
   const router = useRouter();
   const [hidepass, sethidepass] = useState(false);
@@ -20,11 +20,24 @@ function Page() {
       };
       const response = await axios.post("http://localhost:8080/auth/login", data);
       setCookie("jwt", response.data.jwt, { maxAge: 60 * 6 * 24 });
-      // router.push("/Main");
+      router.push("/Main");
     } catch (error) {
       console.error(error); // Handle error 
     }
   };
+  const handleValidation = async () => {
+    try {
+      const jwt = getCookie("jwt"); // Use getCookie to retrieve the JWT token
+      console.log(jwt);
+      const response = await axios.get("http://localhost:8080/auth/post", {
+        headers: { Authorization: `Bearer ${jwt}` } // Assuming the API expects a Bearer token
+      });
+      console.log(response);
+      // router.push("/Main");
+    } catch (error) {
+      console.error(error); // Handle error 
+    }
+  }
   return (
     <div className="flex flex-col w-full ">
       <div className="flex items-center">

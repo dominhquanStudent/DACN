@@ -17,6 +17,8 @@
     "@mui/material": "^5.15.17",
     "@next/font": "^14.2.3",
     "@reduxjs/toolkit": "^2.2.6",
+    "axios": "^1.7.2",
+    "cookies-next": "^4.2.1",
     "next": "^14.2.5",
     "next-redux-wrapper": "^8.1.0",
     "react": "^18",

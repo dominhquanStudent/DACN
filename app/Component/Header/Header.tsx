@@ -1,15 +1,38 @@
 "use client";
 import logo from "@/public/img/Header/logo.png";
 import SearchBar from "./searchbar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import notification from "@/public/img/Header/notification.png";
 import ShoppingCart from "@/public/img/Header/Shopping Cart.png";
+import Logout from "@/public/img/Logouthl.svg";
 import User from "@/public/img/Header/User.png";
 import Link from "next/link";
-
+import { getCookie } from "cookies-next";
+import axios from "axios";
 export default function Header(props: any) {
   const [showSublist1, setShowSublist1] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const handleLogout = () => {
+    document.cookie = "jwt=; expires  Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    window.location.reload();
+  }
+  const checkLogin = async () => {
+    try {
+      const jwt = getCookie("jwt");
+      if (jwt !== undefined && jwt !== "") {
+        const response = await axios.get("http://localhost:8080/auth/post", {
+          headers: { Authorization: `Bearer ${jwt}` },
+        });
+        console.log(response);
+        setIsLoggedIn(true);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    checkLogin();
+  }, []);
   return (
     // global container
     <div className="flex flex-col mx-8 mb-10">
@@ -54,7 +77,9 @@ export default function Header(props: any) {
             <Link href="/Profile">
               <img className="w-7 h-7" src={User.src} alt="" />
             </Link>
-
+            <button onClick={handleLogout}>
+              <img className="w-7 h-7" src={Logout.src} alt="" />
+            </button>
             <div className="self-center text-3xl font-semibold text-yellow-500">
               {">"}
             </div>
