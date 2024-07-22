@@ -4,13 +4,26 @@ import Logo from "../../public/img/logo";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { setCookie } from "cookies-next";
 function Page() {
   const router = useRouter();
   const [hidepass, sethidepass] = useState(false);
-  const handleLogin = () => {
-
-    router.push("/");
-    //......
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const handleLogin = async (event:any) => {
+    event.preventDefault();
+    try {
+      const data = {
+        email: email, // Example username
+        password: password  // Example password
+      };
+      const response = await axios.post("http://localhost:8080/auth/login", data);
+      setCookie("jwt", response.data.jwt, { maxAge: 60 * 6 * 24 });
+      // router.push("/Main");
+    } catch (error) {
+      console.error(error); // Handle error 
+    }
   };
   return (
     <div className="flex flex-col w-full ">
@@ -54,7 +67,9 @@ function Page() {
           <input
             type="text"
             className="p-2 pl-4 mb-6 font-nunito rounded border border-gray-300 w-full text-lg"
-            placeholder="Email/SĐT"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)} 
           />
           <div className="mb-2 font-nunito rounded border border-gray-300 w-full text-lg">
             <div className="relative flex items-center font-nunito w-full text-lg">
@@ -62,6 +77,8 @@ function Page() {
                 type={hidepass ? "text" : "password"}
                 className="p-2 pl-4 w-full"
                 placeholder="Mật khẩu"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)} 
               />
               <button onClick={() => sethidepass(!hidepass)}>
                 <img
