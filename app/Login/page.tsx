@@ -3,9 +3,10 @@ import Footer from "../Component/Footer/Footer";
 import Logo from "../../public/img/logo";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { getCookie,setCookie } from "cookies-next";
+import React, { useState, useEffect} from "react";
+import { getCookie, setCookie,deleteCookie } from "cookies-next";
+import useAuth from "@/hooks/useAuth";
+import axios from "@/api/axios";
 function Page() {
   const router = useRouter();
   const [hidepass, sethidepass] = useState(false);
@@ -15,29 +16,19 @@ function Page() {
     event.preventDefault();
     try {
       const data = {
-        email: email, // Example username
-        password: password  // Example password
+        email: email, 
+        password: password  
       };
       const response = await axios.post("http://localhost:8080/auth/login", data);
-      setCookie("jwt", response.data.jwt, { maxAge: 60 * 6 * 24 });
+      const accessToken = response?.data?.jwt;
+      deleteCookie("jwt");
+      setCookie("jwt", accessToken, { maxAge: 60 * 6 * 24 });
       router.push("/Main");
     } catch (error) {
       console.error(error); // Handle error 
     }
   };
-  const handleValidation = async () => {
-    try {
-      const jwt = getCookie("jwt"); // Use getCookie to retrieve the JWT token
-      console.log(jwt);
-      const response = await axios.get("http://localhost:8080/auth/post", {
-        headers: { Authorization: `Bearer ${jwt}` } // Assuming the API expects a Bearer token
-      });
-      console.log(response);
-      // router.push("/Main");
-    } catch (error) {
-      console.error(error); // Handle error 
-    }
-  }
+
   return (
     <div className="flex flex-col w-full ">
       <div className="flex items-center">

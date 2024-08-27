@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Montserrat, Nunito,Poppins,Mulish, K2D } from "next/font/google";
-
+import { AuthProvider } from "@/context/authProvider";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -26,7 +26,11 @@ export default function RootLayout({
   return (
 
     <html lang="en">
-      <body className={[inter.className, montserrat.variable,nunito.variable,poppins.variable,mulish.variable,k2d.variable].join(' ')}>{children}</body>
+      <body className={[inter.className, montserrat.variable,nunito.variable,poppins.variable,mulish.variable,k2d.variable].join(' ')}>
+        <AuthProvider>
+        {children}
+        </AuthProvider>
+        </body>
     </html>
   );
 }
