@@ -3,39 +3,30 @@ import Header from "@/app/Component/Header/Header";
 import Footer from '@/app/Component/Footer/Footer';
 import ProfileNav from "@/app/Component/ProfileNav/ProfileNav";
 import Link from 'next/link';
+import axios from '@/api/axios';
 import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import withAuth from "@/hooks/withAuth";
 import getInfo from "@/hooks/getInfo";
 function Page() {
-    const [startDate, setStartDate] = useState(new Date());
     const [data, setData] = useState<any>({});
     const fetchData = async () => {
-      setData(await getInfo());
+        setData(await getInfo());
     };
-    
     useEffect(() => {
-      fetchData();
+        fetchData();
     }, []);
-    // {
-    //     _id: new ObjectId('66c8125ac9b4f1f742c1b0a5'),
-    //     userName: null,
-    //     email: 'son1@gmail.com',
-    //     password: '$2b$10$ALdfp4W.JPp6QXsaCYAcd.wkN5HEI0b3Nk4ubuOZIH.Y3OG8zJcye',
-    //     phone: null,
-    //     address: null,
-    //     gender: null,
-    //     birthday: null,
-    //     token: [],
-    //     avatar: null,
-    //     role: 'user',
-    //     deleted: false,
-    //     deletedAt: null,
-    //     __v: 0
-    //   }
     const handleSave = () => {
-        //......
+        const id = data._id;
+        const updateProfile = async (id: any) => {
+            try {
+                const response = await axios.put(`/account/${id}`, data);
+            } catch (error) {
+                console.error('Error update account data:', error);
+            }
+        };
+        updateProfile(id);
     }
     const changeAvatar = () => {
         //......
@@ -52,11 +43,7 @@ function Page() {
                     <div className="flex py-2">
                         {/* Left */}
                         <div className="flex-grow flex-col mr-8">
-                            {/* <div className="flex items-center my-4">
-                                <div className="font-nunito w-1/4">Tên đăng nhập</div>
-                                <input type="text" value={data.tendangnhap ? data.tendangnhap : ""} className="p-2 pl-4 font-nunito 
-                                    rounded border border-gray-300 w-full text-lg"  onChange={e => setdata({ ...data, tendangnhap: e.target.value })} placeholder="Chưa có" />
-                            </div> */}
+
                             <div className="flex items-center my-4">
                                 <div className="font-nunito w-1/4">Tên hiển thị</div>
                                 <input type="text" value={data.userName ? data.userName : ""} className="p-2 pl-4 font-nunito 
@@ -64,8 +51,10 @@ function Page() {
                             </div>
                             <div className="flex items-center my-4">
                                 <div className="font-nunito w-1/4">Email</div>
-                                <input type="text" value={data.email ? data.email : ""} className="p-2 pl-4 font-nunito 
-                                rounded border border-gray-300 w-full text-lg" onChange={e => setData({ ...data, email: e.target.value })} placeholder="Chưa có" />
+                                <input type="text" defaultValue={data.email ? data.email : ""} className="p-2 pl-4 font-nunito 
+                                rounded border border-gray-300 w-full text-lg"
+                                    // onChange={e => setData({ ...data, email: e.target.value })} 
+                                    placeholder="Chưa có" />
                             </div>
                             <div className="flex items-center my-4">
                                 <div className="font-nunito w-1/4">Số điện thoại</div>
@@ -96,8 +85,10 @@ function Page() {
                             <div className="flex items-center my-4">
                                 <div className="font-nunito w-1/4">Ngày sinh</div>
                                 <DatePicker
-                                    selected={startDate}
-                                    onChange={(birthday: Date) => setStartDate(birthday)}
+                                    selected={data.birthday ? new Date(data.birthday) : new Date()}
+                                    onChange={(birthday: Date) => {
+                                        setData({ ...data, birthday: birthday });
+                                    }}
                                     dateFormat="dd/MM/yyyy"
                                     className="p-2 pl-4 font-nunito rounded border border-gray-300 text-lg w-full"
                                 />
@@ -111,7 +102,8 @@ function Page() {
                         {/* Right */}
                         <div className="flex flex-col w-1/3 items-center justify-center">
                             <div className="flex flex-col items-center mt-8 w-full">
-                                <img src="/img/Avatar_vinh.png" alt='Avatar' className="w-20 h-20 rounded-full mr-4 mb-4" />
+                                <img loading="lazy" src={data.avatar ? data.avatar : "https://res.cloudinary.com/dzm879qpm/image/upload/v1725541509/448561678_969853814919023_8777083183294999859_n_snlcsx.jpg"}
+                                    alt='Avatar' className="w-20 h-20 rounded-full mr-4 mb-4" />
                                 <button type="submit" className="bg-[#EDB24E] text-white font-nunito p-2 text-lg rounded w-1/2" onClick={changeAvatar}>Thay đổi Avatar</button>
                             </div>
                         </div>
