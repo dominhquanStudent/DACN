@@ -14,22 +14,27 @@ function Product() {
       try {
         const response = await axios.get('/product/list');
         setProducts(response.data.products);
- 
       } catch (error) {
         console.error('Error fetching products:', error);
       }
     };
-
     fetchProducts();
   }, []);
 
   const handleChangeClick = (productId: any) => {
-
     console.log(`Details for product ${productId}`);
     Router.push(`/Admin/Product/${productId}`);
   };
-
-
+  const handleDeleteClick = async (productId: any) => {
+    console.log(`Delete for product ${productId}`);
+    try {
+      await axios.delete(`/product/${productId}`);
+      const newProducts = products.filter((product) => product._id !== productId);
+      setProducts(newProducts);
+    } catch (error) {
+      console.error('Error deleting product:', error);
+  }
+};
   const handleAddClick = () => {
     console.log(`Add for order`);
     Router.push('/Admin/Product/AddProduct');
@@ -72,6 +77,10 @@ function Product() {
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Thêm
                 </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Xóa
+                </th>
+
               </tr>
             </thead>
             <tbody>
@@ -94,6 +103,9 @@ function Product() {
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     <button onClick={() => handleChangeClick(product._id)} className="text-blue-500 hover:text-blue-700">Sửa</button>
+                  </td>
+                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    <button onClick={() => handleDeleteClick(product._id)} className="text-red-500 hover:text-red-700">Xóa</button>
                   </td>
                 </tr>
               ))}

@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import React, { useState, useEffect} from "react";
 import { getCookie, setCookie,deleteCookie } from "cookies-next";
-import useAuth from "@/hooks/useAuth";
+import { useAuth } from "@/context/authProvider"; // Ensure correct import
 import axios from "@/api/axios";
 function Page() {
   const router = useRouter();
+  const {setAuth} = useAuth();
   const [hidepass, sethidepass] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,6 +22,8 @@ function Page() {
       };
       const response = await axios.post("http://localhost:8080/auth/login", data);
       const accessToken = response?.data?.jwt;
+      const role = response?.data?.role;
+      setAuth({ email, password, accessToken, role });
       deleteCookie("jwt");
       setCookie("jwt", accessToken, { maxAge: 60 * 6 * 24 });
       router.push("/Main");
@@ -28,6 +31,7 @@ function Page() {
       console.error(error); // Handle error 
     }
   };
+  
 
   return (
     <div className="flex flex-col w-full ">

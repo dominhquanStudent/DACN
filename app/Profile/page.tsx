@@ -6,6 +6,7 @@ import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import withAuth from "@/hooks/withAuth";
 function Page() {
     const [startDate, setStartDate] = useState(new Date());
     const pulldata = {
@@ -105,4 +106,4 @@ function Page() {
     )
 }
 
-export default Page
+export default withAuth(Page)
