@@ -79,6 +79,19 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
                   disabled={!isEditable}
                 />
               </div>
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label className="text-xs font-bold mb-2" htmlFor="brand">
+                  Nhãn hiệu
+                </label>
+                <input
+                  className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="brand"
+                  type="text"
+                  value={data.brand}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                />
+              </div>
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="image">
                   Hình ảnh
