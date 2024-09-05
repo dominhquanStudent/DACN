@@ -7,16 +7,33 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import withAuth from "@/hooks/withAuth";
+import getInfo from "@/hooks/getInfo";
 function Page() {
     const [startDate, setStartDate] = useState(new Date());
-    const pulldata = {
-        tendangnhap: 'vinhnq123',
-        tenhienthi: 'Nguyễn Quang Vinh',
-        email: 'vinhnq@gmail.com',
-        sdt: "",
-        gender: "male",
+    const [data, setData] = useState<any>({});
+    const fetchData = async () => {
+      setData(await getInfo());
     };
-    const [data, setdata] = useState(pulldata)
+    
+    useEffect(() => {
+      fetchData();
+    }, []);
+    // {
+    //     _id: new ObjectId('66c8125ac9b4f1f742c1b0a5'),
+    //     userName: null,
+    //     email: 'son1@gmail.com',
+    //     password: '$2b$10$ALdfp4W.JPp6QXsaCYAcd.wkN5HEI0b3Nk4ubuOZIH.Y3OG8zJcye',
+    //     phone: null,
+    //     address: null,
+    //     gender: null,
+    //     birthday: null,
+    //     token: [],
+    //     avatar: null,
+    //     role: 'user',
+    //     deleted: false,
+    //     deletedAt: null,
+    //     __v: 0
+    //   }
     const handleSave = () => {
         //......
     }
@@ -35,43 +52,43 @@ function Page() {
                     <div className="flex py-2">
                         {/* Left */}
                         <div className="flex-grow flex-col mr-8">
-                            <div className="flex items-center my-4">
+                            {/* <div className="flex items-center my-4">
                                 <div className="font-nunito w-1/4">Tên đăng nhập</div>
                                 <input type="text" value={data.tendangnhap ? data.tendangnhap : ""} className="p-2 pl-4 font-nunito 
                                     rounded border border-gray-300 w-full text-lg"  onChange={e => setdata({ ...data, tendangnhap: e.target.value })} placeholder="Chưa có" />
-                            </div>
+                            </div> */}
                             <div className="flex items-center my-4">
                                 <div className="font-nunito w-1/4">Tên hiển thị</div>
-                                <input type="text" value={data.tenhienthi ? data.tenhienthi : ""} className="p-2 pl-4 font-nunito 
-                                rounded border border-gray-300 w-full text-lg" onChange={e => setdata({ ...data, tenhienthi: e.target.value })} placeholder="Chưa có" />
+                                <input type="text" value={data.userName ? data.userName : ""} className="p-2 pl-4 font-nunito 
+                                rounded border border-gray-300 w-full text-lg" onChange={e => setData({ ...data, userName: e.target.value })} placeholder="Chưa có" />
                             </div>
                             <div className="flex items-center my-4">
                                 <div className="font-nunito w-1/4">Email</div>
                                 <input type="text" value={data.email ? data.email : ""} className="p-2 pl-4 font-nunito 
-                                rounded border border-gray-300 w-full text-lg" onChange={e => setdata({ ...data, email: e.target.value })} placeholder="Chưa có" />
+                                rounded border border-gray-300 w-full text-lg" onChange={e => setData({ ...data, email: e.target.value })} placeholder="Chưa có" />
                             </div>
                             <div className="flex items-center my-4">
                                 <div className="font-nunito w-1/4">Số điện thoại</div>
-                                <input type="text" value={data.sdt ? data.sdt : ""} className="p-2 pl-4 font-nunito 
-                                rounded border border-gray-300 w-full text-lg" onChange={e => setdata({ ...data, sdt: e.target.value })} placeholder="Chưa có" />
+                                <input type="text" value={data.phone ? data.phone : ""} className="p-2 pl-4 font-nunito 
+                                rounded border border-gray-300 w-full text-lg" onChange={e => setData({ ...data, phone: e.target.value })} placeholder="Chưa có" />
                             </div>
                             <div className="flex items-center my-4">
                                 <div className="font-nunito w-1/4">Giới tính</div>
                                 <div className="flex items-center">
                                     <input type="radio" id="male" name="gender" value="male" checked={data.gender === "male"}
-                                        onChange={e => setdata({ ...data, gender: e.target.value })}
+                                        onChange={e => setData({ ...data, gender: e.target.value })}
                                     />
                                     <label htmlFor="male" className="ml-2">Nam</label>
                                 </div>
                                 <div className="flex items-center ml-8">
                                     <input type="radio" id="female" name="gender" value="female" checked={data.gender === "female"}
-                                        onChange={e => setdata({ ...data, gender: e.target.value })}
+                                        onChange={e => setData({ ...data, gender: e.target.value })}
                                     />
                                     <label htmlFor="female" className="ml-2">Nữ</label>
                                 </div>
                                 <div className="flex items-center ml-8">
                                     <input type="radio" id="other" name="gender" value="other" checked={data.gender === "other"}
-                                        onChange={e => setdata({ ...data, gender: e.target.value })}
+                                        onChange={e => setData({ ...data, gender: e.target.value })}
                                     />
                                     <label htmlFor="other" className="ml-2">Khác</label>
                                 </div>
@@ -80,7 +97,7 @@ function Page() {
                                 <div className="font-nunito w-1/4">Ngày sinh</div>
                                 <DatePicker
                                     selected={startDate}
-                                    onChange={(date: Date) => setStartDate(date)}
+                                    onChange={(birthday: Date) => setStartDate(birthday)}
                                     dateFormat="dd/MM/yyyy"
                                     className="p-2 pl-4 font-nunito rounded border border-gray-300 text-lg w-full"
                                 />

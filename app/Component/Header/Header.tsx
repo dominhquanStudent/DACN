@@ -7,23 +7,20 @@ import ShoppingCart from "@/public/img/Header/Shopping Cart.png";
 import Logout from "@/public/img/Logouthl.svg";
 import User from "@/public/img/Header/User.png";
 import Link from "next/link";
-import { getCookie } from "cookies-next";
+import { getCookie, deleteCookie } from "cookies-next";
+
 import axios from "axios";
 export default function Header(props: any) {
   const [showSublist1, setShowSublist1] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const handleLogout = () => {
-    document.cookie = "jwt=; expires  Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    deleteCookie("jwt");
     window.location.reload();
   }
   const checkLogin = async () => {
     try {
       const jwt = getCookie("jwt");
       if (jwt !== undefined && jwt !== "") {
-        const response = await axios.get("http://localhost:8080/auth/post", {
-          headers: { Authorization: `Bearer ${jwt}` },
-        });
-        console.log(response);
         setIsLoggedIn(true);
       }
     } catch (error) {

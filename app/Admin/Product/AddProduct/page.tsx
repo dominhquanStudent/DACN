@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 function ProductAdd() {
   const [name, setName] = useState('');
+  const [brand, setBrand] = useState('');
   const [price, setPrice] = useState('');
   const [stock, setStock] = useState('');
   const [category, setCategory] = useState('');
@@ -18,6 +19,7 @@ function ProductAdd() {
     try {
       const data = {
         name,
+        brand,
         stock,
         category,
         price,
@@ -57,6 +59,19 @@ function ProductAdd() {
                   placeholder="Enter Product Name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label className="text-xs font-bold mb-2" htmlFor="Brand">
+                  Thương hiệu
+                </label>
+                <input
+                  className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="Brand"
+                  type="text"
+                  placeholder="Enter Brand Name"
+                  value={brand}
+                  onChange={(e) => setBrand(e.target.value)}
                 />
               </div>
               <div className="w-full px-3">

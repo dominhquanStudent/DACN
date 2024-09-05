@@ -1,9 +1,9 @@
 import React from "react";
-import useAuth from "@/hooks/useAuth";
+import requireAuth from "@/hooks/requireAuth";
 
 const withAuth = (WrappedComponent: React.ComponentType) => {
   return (props: any) => {
-    const auth = useAuth();
+    const auth = requireAuth();
 
     if (!auth) {
       return null; // or a loading spinner
