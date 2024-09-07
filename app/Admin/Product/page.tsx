@@ -75,6 +75,9 @@ function Product() {
                   Price
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Discount
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Status
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -103,6 +106,9 @@ function Product() {
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {product.price}
+                  </td>
+                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    {product.discount}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {product.status}
