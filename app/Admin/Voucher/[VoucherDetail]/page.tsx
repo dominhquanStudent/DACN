@@ -1,45 +1,71 @@
 'use client';
-import React, { useState } from 'react';
-import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import axios from '@/api/axios';
 import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
-import axios from '@/api/axios';
 import { ToastContainer, toast } from 'react-toastify';
 
-function VoucherAdd() {
-  const [name, setName] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [usedTime, setUsedTime] = useState('');
-  const [beginDate, setBeginDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [code, setCode] = useState('');
-  const [discountType, setDiscountType] = useState('');
-  const [discountValue, setDiscountValue] = useState('');
-  const [description, setDescription] = useState('');
-  const [status, setStatus] = useState('');
+interface Voucher {
+  _id: string;
+  employee_id: string;
+  name: string;
+  quantity: number;
+  UsedTime: number;
+  beginDate: string;
+  endDate: string;
+  code: string;
+  discount_type: string;
+  discount_value: number;
+  description: string;
+  status: string;
+}
+
+function VoucherDetail() {
+  const [voucher, setVoucher] = useState<Voucher | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const { id } = useParams();
+
+  useEffect(() => {
+    const fetchVoucher = async () => {
+      try {
+        const response = await axios.get(`/voucher/list/${id}`);
+        setVoucher(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching voucher:', error);
+        setLoading(false);
+      }
+    };
+    fetchVoucher();
+  }, [id]);
 
   const handleSaveClick = async () => {
+    if (!voucher) return;
     try {
-      const data = {
-        name,
-        quantity,
-        UsedTime: usedTime,
-        beginDate,
-        endDate,
-        code,
-        discount_type: discountType,
-        discount_value: discountValue,
-        description,
-        status,
-      };
-      const response = await axios.post('/voucher/add', data);
-      toast.success('Voucher saved successfully!');
-      console.log('Voucher saved:', response.data);
+      console.log('Updating voucher with data:', voucher);
+      const response = await axios.put(`/api/vouchers/${voucher._id}`, voucher);
+      toast.success('Voucher updated successfully!');
+      console.log('Voucher updated:', response.data);
     } catch (error) {
-      toast.error('Error saving voucher!');
-      console.error('Error saving voucher:', error);
+      toast.error('Error updating voucher!');
+      console.error('Error updating voucher:', error.response ? error.response.data : error.message);
     }
   };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { id, value } = e.target;
+    setVoucher((prevVoucher) => prevVoucher ? { ...prevVoucher, [id]: value } : null);
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!voucher) {
+    return <div>Voucher not found</div>;
+  }
 
   return (
     <div className='flex flex-col w-full justify-center items-center'>
@@ -48,35 +74,35 @@ function VoucherAdd() {
         <Sidebar />
         <div className='w-3/4 border-l-2 border-gray-200'>
           <div className={'flex font-nunito text-xl font-bold w-full justify-center'}>
-            Thêm voucher
+            Sửa voucher
           </div>
           <form className="w-full mx-4">
             <div className="flex flex-wrap -mx-3 mb-6 space-y-2">
               <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="VoucherName">
+                <label className="text-xs font-bold mb-2" htmlFor="name">
                   Tên voucher
                 </label>
                 <input
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="VoucherName"
+                  id="name"
                   type="text"
-                  placeholder="Enter Voucher Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Nhập tên voucher"
+                  value={voucher.name}
+                  onChange={handleChange}
                 />
               </div>
               <div className='flex w-full'>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="Quantity">
+                  <label className="text-xs font-bold mb-2" htmlFor="quantity">
                     Số lượng
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="Quantity"
+                    id="quantity"
                     type="text"
-                    placeholder="Enter Quantity"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
+                    placeholder="Nhập số lượng"
+                    value={voucher.quantity}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="w-full px-3">
@@ -87,106 +113,106 @@ function VoucherAdd() {
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="UsedTime"
                     type="text"
-                    placeholder="Enter Used Time"
-                    value={usedTime}
-                    onChange={(e) => setUsedTime(e.target.value)}
+                    placeholder="Nhập số lần sử dụng"
+                    value={voucher.UsedTime}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
               <div className='flex w-full'>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="BeginDate">
+                  <label className="text-xs font-bold mb-2" htmlFor="beginDate">
                     Ngày bắt đầu
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="BeginDate"
+                    id="beginDate"
                     type="date"
-                    value={beginDate}
-                    onChange={(e) => setBeginDate(e.target.value)}
+                    value={voucher.beginDate}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="EndDate">
+                  <label className="text-xs font-bold mb-2" htmlFor="endDate">
                     Ngày kết thúc
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="EndDate"
+                    id="endDate"
                     type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
+                    value={voucher.endDate}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
               <div className='flex w-full'>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="Code">
+                  <label className="text-xs font-bold mb-2" htmlFor="code">
                     Mã voucher
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="Code"
+                    id="code"
                     type="text"
-                    placeholder="Enter Code"
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
+                    placeholder="Nhập mã voucher"
+                    value={voucher.code}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="DiscountType">
+                  <label className="text-xs font-bold mb-2" htmlFor="discount_type">
                     Loại giảm giá
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="DiscountType"
+                    id="discount_type"
                     type="text"
-                    placeholder="Enter Discount Type"
-                    value={discountType}
-                    onChange={(e) => setDiscountType(e.target.value)}
+                    placeholder="Nhập loại giảm giá"
+                    value={voucher.discount_type}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
               <div className='flex w-full'>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="DiscountValue">
+                  <label className="text-xs font-bold mb-2" htmlFor="discount_value">
                     Giá trị giảm giá
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="DiscountValue"
+                    id="discount_value"
                     type="text"
-                    placeholder="Enter Discount Value"
-                    value={discountValue}
-                    onChange={(e) => setDiscountValue(e.target.value)}
+                    placeholder="Nhập giá trị giảm giá"
+                    value={voucher.discount_value}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="Status">
+                  <label className="text-xs font-bold mb-2" htmlFor="status">
                     Trạng thái
                   </label>
                   <select
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="Status"
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
+                    id="status"
+                    value={voucher.status}
+                    onChange={handleChange}
                   >
-                    <option value="">Select Status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
+                    <option value="">Chọn trạng thái</option>
+                    <option value="active">Hoạt động</option>
+                    <option value="inactive">Không hoạt động</option>
                   </select>
                 </div>
               </div>
               <div className="w-full px-3">
-                <label className="text-xs font-bold mb-2" htmlFor="Description">
+                <label className="text-xs font-bold mb-2" htmlFor="description">
                   Mô tả
                 </label>
                 <textarea
                   className="block w-full h-24 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="Description"
-                  placeholder="Enter Description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  id="description"
+                  placeholder="Nhập mô tả"
+                  value={voucher.description}
+                  onChange={handleChange}
                 ></textarea>
               </div>
             </div>
@@ -203,4 +229,4 @@ function VoucherAdd() {
   );
 }
 
-export default VoucherAdd;
+export default VoucherDetail;
