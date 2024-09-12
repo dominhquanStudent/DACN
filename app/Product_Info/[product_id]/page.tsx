@@ -2,14 +2,39 @@
 import React from "react";
 import Header from "@/app/Component/Header/Header";
 import Foto from "@/public/img/Product_Main/foto.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StarRating from "@/app/Component/Product_Intro/Product/star_rating";
-import Comment from "./comment";
+import Comment from "@/app/Component/Product_Intro/Product_Info/comment";
 import Footer from "@/app/Component/Footer/Footer";
+import { useRouter } from "next/navigation";
+import axios from "@/api/axios";
+import { FaStar } from "react-icons/fa";
 
-export default function ProductDetailPage() {
+export default function ProductDetailPage({
+  params,
+}: {
+  params: { product_id: string };
+}) {
+  const productId = params.product_id;
+  const [data, setData] = useState<any>({});
+  const router = useRouter();
   const [selectedVolume, setSelectedVolume] = useState(null);
-
+  useEffect(() => {
+    const fetchProductData = async (id: any) => {
+      try {
+        const response = await axios.get(`/product/${productId}`);
+        const productData = response.data;
+        setData(productData.product);
+        const log = await axios.post(`/test`, productData.product);
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      }
+    };
+    if (productId) {
+      fetchProductData(productId);
+    }
+  }, [productId]);
+  console.log(data);
   const handleButtonClick = (volume: any) => {
     setSelectedVolume(volume);
   };
@@ -24,24 +49,21 @@ export default function ProductDetailPage() {
           <div className="flex border-b-2 mb-4">
             <img src={Foto.src} alt="Product" className="ml-32 mr-8 mb-16" />
             <div className="ml-4">
-              <h2 className="text-2xl font-bold">
-                Cát vệ sinh cho mèo Me-O hương táo
-              </h2>
+              <h2 className="text-2xl font-bold">{data.name}</h2>
               <div className="flex">
                 {/* Replace with your star rating component */}
-                <span>⭐⭐⭐⭐⭐</span>
-                <div className="text-yellow-400 mb-8">Lượt đánh giá (340)</div>
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar
+                      key={i}
+                      color={i < data.rating ? "yellow" : "gray"}
+                      size={20}
+                    />
+                  ))}
+                </div>
+                <div className="text-yellow-400 mb-8 ml-3">Lượt đánh giá (340)</div>
               </div>
-              <p className="">
-                This is a detailed description of the product. It includes
-                information about the product's features, benefits, and usage
-                instructions.
-              </p>
-              <p className="">
-                This is a detailed description of the product. It includes
-                information about the product's features, benefits, and usage
-                instructions.
-              </p>
+              <p className="">{data.description}</p>
             </div>
           </div>
 
@@ -111,12 +133,12 @@ export default function ProductDetailPage() {
           {/* Price and buy button */}
           <div className="mt-4">
             <div className="flex items-center">
-              <p className="text-2xl ">38.000đ</p>
-              <div className="bg-blue-500 text-white px-2 py-1 ml-2 font-bold">
+              <p className="text-2xl ">{data.price}đ</p>
+              {/* <div className="bg-blue-500 text-white px-2 py-1 ml-2 font-bold">
                 40% off
-              </div>
+              </div> */}
             </div>
-            <p className="text-red-500 line-through mb-3">60.000đ</p>
+            {/* <p className="text-red-500 line-through mb-3">60.000đ</p> */}
             <button
               className="w-9/12 rounded-md bg-blue-500 py-2 px-6 font-kd2 text-xs font-bold 
                         uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 

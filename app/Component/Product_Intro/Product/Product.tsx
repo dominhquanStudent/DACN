@@ -3,11 +3,8 @@ import Header from "@/app/Component/Header/Header";
 import Footer from "@/app/Component/Footer/Footer";
 import StarRating from "./star_rating";
 import ProductCard from "./ProductFrame_Main";
-import Foto from "@/public/img/Product_Main/foto.png";
-import Foto1 from "@/public/img/Product_Main/foto1.png";
-import Foto3 from "@/public/img/Product_Main/foto3.png";
-import Foto4 from "@/public/img/Product_Main/foto4.png";
-import Foto5 from "@/public/img/Product_Main/foto5.png";
+import { useRouter } from "next/navigation";
+
 import "@/app/Component/CheckboxStyles.css";
 import axios from "@/api/axios";
 
@@ -26,59 +23,81 @@ export default function Product() {
 
     fetchProducts();
   }, []);
-  console.log(products);
-//   const products = [
-//     {
-//       image: Foto,
-//       name: "Test Product 1",
-//       brand: "Brand Name 1",
-//       rating: 4,
-//       price: 99.99,
-//       prSalePrice: 99.99,
-//     },
 
-//     {
-//       image: Foto1,
-//       name: "Test Product 2",
-//       brand: "Brand Name 2",
-//       rating: 5,
-//       price: 79.99,
-//       prSalePrice: 99.99,
-//     },
-//     {
-//       image: Foto3,
-//       name: "Test Product 3",
-//       brand: "Brand Name 2",
-//       rating: 5,
-//       price: 79.99,
-//       prSalePrice: 99.99,
-//     },
-//     {
-//       image: Foto4,
-//       name: "Test Product 4",
-//       brand: "Brand Name 2",
-//       rating: 5,
-//       price: 79.99,
-//       prSalePrice: 99.99,
-//     },
-//     {
-//       image: Foto5,
-//       name: "Test Product 5",
-//       brand: "Brand Name 2",
-//       rating: 5,
-//       price: 79.99,
-//       prSalePrice: 99.99,
-//     },
-//     {
-//       image: Foto1,
-//       name: "Test Product 6",
-//       brand: "Brand Name 2",
-//       rating: 5,
-//       price: 79.99,
-//       prSalePrice: 99.99,
-//     },
-//     // Add more products as needed
-//   ];
+  const brands = Array.from(new Set(products.map((product) => product.brand)));
+  const category = Array.from(
+    new Set(products.map((product) => product.category))
+  );
+  //LOGIC FOR FILTERING PRODUCTS
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
+  const [minPrice, setMinPrice] = useState<number | null>(null);
+  const [maxPrice, setMaxPrice] = useState<number | null>(null);
+  const [selectedRating, setSelectedRating] = useState<number | null>(null);
+  const [searchPerformed, setSearchPerformed] = useState<boolean>(false);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+  const handleCheckboxChange = (brand: string) => {
+    setSelectedBrands((prevSelectedBrands) =>
+      prevSelectedBrands.includes(brand)
+        ? prevSelectedBrands.filter((b) => b !== brand)
+        : [...prevSelectedBrands, brand]
+    );
+  };
+  const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMinPrice(e.target.value ? parseFloat(e.target.value) : null);
+  };
+
+  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMaxPrice(e.target.value ? parseFloat(e.target.value) : null);
+  };
+  const handleRatingChange = (rating: number) => {
+    setSelectedRating(rating);
+  };
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategories((prevSelectedCategories) =>
+      prevSelectedCategories.includes(category)
+        ? prevSelectedCategories.filter((c) => c !== category)
+        : [...prevSelectedCategories, category]
+    );
+  };
+
+  const handleApplyClick = () => {
+    setSearchPerformed(true);
+    let filtered = products;
+
+    if (selectedBrands.length > 0) {
+      filtered = filtered.filter((product: any) =>
+        selectedBrands.includes(product.brand)
+      );
+    }
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter((product: any) =>
+        selectedCategories.includes(product.category)
+      );
+    }
+
+    if (minPrice !== null) {
+      filtered = filtered.filter((product: any) => product.price >= minPrice);
+    }
+
+    if (maxPrice !== null) {
+      filtered = filtered.filter((product: any) => product.price <= maxPrice);
+    }
+    if (selectedRating !== null) {
+      filtered = filtered.filter(
+        (product: any) => product.rating == selectedRating
+      );
+    }
+
+    setFilteredProducts(filtered);
+  };
+  useEffect(() => {
+    console.log(filteredProducts);
+  }, [filteredProducts]);
+  //LOGIC FOR PAGINATION
+  
+
   return (
     <>
       <Header />
@@ -89,104 +108,90 @@ export default function Product() {
           <div>
             <h1 className=" text-lg text-center">Bộ lọc tìm kiếm</h1>
             {/* Theo loại */}
-            <div className="space-y-4 border-b-[1px] pb-2 ">
+            <div className="space-y-4 border-b-[1px] pb-2">
               <div className="text-center">Theo danh mục</div>
-              <div>
-                <input
-                  type="checkbox"
-                  name="Shampoo"
-                  id="Shampoo"
-                  className="custom-checkbox"
-                />
-                <label htmlFor="Shampoo">Sữa tắm chó mèo</label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  name="sand"
-                  id="sand"
-                  className="custom-checkbox"
-                />
-                <label htmlFor="sand">Cát vệ sinh</label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  name="perfume"
-                  id="perfume"
-                  className="custom-checkbox"
-                />
-                <label htmlFor="perfume">nước hoa thú cưng</label>
-              </div>
+              {category.map((cat, index) => (
+                <div key={index}>
+                  <input
+                    type="checkbox"
+                    name={cat}
+                    id={cat}
+                    className="custom-checkbox"
+                    onChange={() => handleCategoryChange(cat)}
+                  />
+                  <label htmlFor={cat}>{cat}</label>
+                </div>
+              ))}
             </div>
             {/* Theo brand */}
-            <div className="space-y-3 border-b-[1px] pb-2 ">
+            <div className="space-y-3 border-b-[1px] pb-2">
               <div className="text-center">Theo Thương Hiệu</div>
-              <div>
-                <input
-                  type="checkbox"
-                  name="brand1"
-                  id="brand1"
-                  className="custom-checkbox"
-                />
-                <label htmlFor="brand1">PETSOLA</label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  name="brand2"
-                  id="brand2"
-                  className="custom-checkbox"
-                />
-                <label htmlFor="brand2">Calager</label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  name="brand3"
-                  id="brand3"
-                  className="custom-checkbox"
-                />
-                <label htmlFor="brand3">Fay</label>
-              </div>
+              {brands.map((brand, index) => (
+                <div key={index}>
+                  <input
+                    type="checkbox"
+                    name={`brand${index + 1}`}
+                    id={`brand${index + 1}`}
+                    className="custom-checkbox"
+                    onChange={() => handleCheckboxChange(brand)}
+                  />
+                  <label htmlFor={`brand${index + 1}`}>{brand}</label>
+                </div>
+              ))}
             </div>
             {/* Min and max price searching */}
             <div className="space-y-3 border-b-[1px] pb-2 ">
               <div className="text-center">Theo giá</div>
               <div>
                 <input
-                  type="text"
+                  type="number"
                   className="border-[1px] w-20"
                   placeholder="Từ"
+                  onChange={handleMinPriceChange}
                 />
                 -
                 <input
-                  type="text"
+                  type="number"
                   className="border-[1px] w-20"
                   placeholder="Đến"
+                  onChange={handleMaxPriceChange}
                 />
               </div>
+              {/* rating by stars */}
+              <div className="text-center">Đánh Giá</div>
+              <StarRating handleRatingChange={handleRatingChange} />
               <button
                 className="w-full rounded-md bg-search-button-orange py-2 px-6 font-kd2 text-xs font-bold 
-                        uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 
-                        focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none 
-                        disabled:opacity-50 disabled:shadow-none"
+                uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 
+                focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none active:bg-cyan-700 active:scale-95 
+                disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                 data-ripple-light="true"
+                onClick={handleApplyClick}
               >
                 Áp dụng
               </button>
             </div>
-            {/* rating by stars */}
-            <div className="text-center">Đánh Giá</div>
-            <StarRating />
           </div>
         </div>
         {/* Product side*/}
-        <div className="w-5/6  grid grid-cols-3 gap-14 ml-16">
-          {products.map((product, index) => (
-            <ProductCard key={index} product={product} />
-          ))}
+        <div className="w-5/6 grid grid-cols-3 gap-14 ml-16">
+          {searchPerformed && filteredProducts.length === 0 ? (
+            <div className="col-span-3 text-center p-6 bg-gray-100 border border-gray-300 rounded-lg shadow-md">
+              <h2 className="text-xl font-semibold mb-2">No items found</h2>
+              <p className="text-gray-600">
+                Try adjusting your search criteria.
+              </p>
+            </div>
+          ) : (
+            (filteredProducts && filteredProducts.length > 0
+              ? filteredProducts
+              : products
+            ).map((product, index) => (
+              <ProductCard key={index} product={product} />
+            ))
+          )}
         </div>
+
       </div>
       <Footer />
     </>
