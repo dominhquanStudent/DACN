@@ -4,34 +4,26 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
 import { useRouter } from 'next/navigation';
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
-}
-
-function VoucherDetail({ params }: { params: { Detail: string } }) {
-  const voucherId = params.Detail;
+function PetDetail({ params }: { params: { Detail: string } }) {
+  const petId = params.Detail;
   const [data, setData] = useState<any>({});
   const [isEditable, setIsEditable] = useState(false);
   const router = useRouter();
   useEffect(() => {
-    const fetchVoucherData = async (id: any) => {
+    const fetchPetData = async (id: any) => {
       try {
-        const response = await axios.get(`/voucher/${voucherId}`);
-        const vouherData = response.data;
-        setData(vouherData.voucher);
-        const log = await axios.post(`/test`, vouherData.voucher);
+        const response = await axios.get(`/pet/${petId}`);
+        const petData = response.data;
+        setData(petData.pet);
+        // const log = await axios.post(`/test`, petData.pet);
       } catch (error) {
-        console.error('Error fetching product data:', error);
+        console.error('Error fetching pet data:', error);
       }
     };
-    if (voucherId) {
-      fetchVoucherData(voucherId);
+    if (petId) {
+      fetchPetData(petId);
     }
-  }, [voucherId]);
+  }, [petId]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
@@ -40,30 +32,40 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
       [id]: value,
     }));
   };
+  const handleImage = (e: any) =>{
+    const file = e.target.files[0];
+    setFileToBase(file);
+    console.log(file);
+}
 
+const setFileToBase = (file: any) =>{
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () =>{
+        setData( {...data, image: reader.result as string});
+    }
+}
   const handleSaveClick = () => {
-    const updateVoucherData = async (id: any) => {
+    const updatePetData = async (id: any) => {
       try {
-        const response = await axios.put(`/voucher/${voucherId}`,data);
-        console.log('Voucher updated:', response.data);
+        const response = await axios.put(`/pet/${petId}`,data);
       } catch (error) {
-        console.error('Error fetching voucher data:', error);
+        console.error('Error fetching pet data:', error);
       }
     };
-    updateVoucherData(data);
+      updatePetData(data);
     
-    router.push('/Admin/Voucher');
+    router.push('/Admin/Pet');
   };
 
   const handleChangeClick = async () => {
     setIsEditable(true);
-    const log = await axios.post(`/test`, data);
+    // const log = await axios.post(`/test`, data);
   };
 
   if (!data) {
     return <div>Loading...</div>;
   }
-
   return (
     <div className='flex flex-col w-full justify-center items-center'>
       <Header />
@@ -73,11 +75,12 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
           <div className={'flex font-nunito text-xl font-bold w-full justify-center'}>
             Chi tiết voucher
           </div>
-          <form className="w-full mx-4" key={data.id}>
+          <form className="w-full mx-4" key={data._id}>
+          {/* <form className="w-full mx-4" > */}
             <div className="flex flex-wrap -mx-3 mb-6 space-y-2">
               <div className="w-full px-3 mb-6 md:mb-0">
                 <label className="text-xs font-bold mb-2" htmlFor="name">
-                  Tên voucher
+                  Tên thú cưng
                 </label>
                 <input
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
@@ -88,123 +91,121 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                   disabled={!isEditable}
                 />
               </div>
+              {/* <div className="w-full px-3">
+                <label className="text-xs font-bold mb-2" htmlFor="ImageUpload">
+                  Tải hình ảnh
+                </label>
+                <input
+                  type="file"
+                  id="ImageUpload"
+                  name="image"
+                  accept="image/*"
+                  className="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-violet-50 file:text-violet-700
+                    hover:file:bg-violet-100"
+                />
+              </div> */}
               <div className='flex w-full'>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="quantity">
-                    Số lượng
-                  </label>
-                  <input
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="quantity"
-                    type="text"
-                    value={data.quantity}
-                    onChange={handleInputChange}
-                    disabled={!isEditable}
-                  />
-                </div>
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="UsedTime">
-                    Số lần sử dụng
-                  </label>
-                  <input
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="UsedTime"
-                    type="text"
-                    value={data.UsedTime}
-                    onChange={handleInputChange}
-                    disabled={!isEditable}
-                  />
-                </div>
-              </div>
-              <div className='flex w-full'>
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="beginDate">
-                    Ngày bắt đầu
-                  </label>
-                  <input
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="beginDate"
-                    type="date"
-                    value={formatDate(data.beginDate)}
-                    onChange={handleInputChange}
-                    disabled={!isEditable}
-                  />
-                </div>
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="endDate">
-                    Ngày kết thúc
-                  </label>
-                  <input
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="endDate"
-                    type="date"
-                    value={formatDate(data.endDate)}
-                    onChange={handleInputChange}
-                    disabled={!isEditable}
-                  />
-                </div>
-              </div>
-              <div className='flex w-full'>
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="code">
-                    Mã voucher
-                  </label>
-                  <input
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="code"
-                    type="text"
-                    value={data.code}
-                    onChange={handleInputChange}
-                    disabled={!isEditable}
-                  />
-                </div>
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="discount_type">
-                    Loại giảm giá
-                  </label>
-                  <input
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="discount_type"
-                    type="text"
-                    value={data.discount_type}
-                    onChange={handleInputChange}
-                    disabled={!isEditable}
-                  />
-                </div>
-              </div>
-              <div className='flex w-full'>
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="discount_value">
-                    Giá trị giảm giá
-                  </label>
-                  <input
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="discount_value"
-                    type="text"
-                    value={data.discount_value}
-                    onChange={handleInputChange}
-                    disabled={!isEditable}
-                  />
-                </div>
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="status">
-                    Trạng thái
+                  <label className="text-xs font-bold mb-2" htmlFor="gender">
+                    Giới tính
                   </label>
                   <select
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="status"
-                    value={data.status}
+                    id="gender"
+                    value={data.gender}
                     onChange={handleInputChange}
                     disabled={!isEditable}
                   >
-                    <option value="">Chọn trạng thái</option>
-                    <option value="active">Hoạt động</option>
-                    <option value="inactive">Không hoạt động</option>
+                    <option value="">Select Gender</option>
+                    <option value="Đực">Đực</option>
+                    <option value="Cái">Cái</option>
                   </select>
                 </div>
+                <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="age">
+                    Tuổi
+                  </label>
+                  <input
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="age"
+                    type="text"
+                    value={data.age}
+                    onChange={handleInputChange}
+                    disabled={!isEditable}
+                  />
+                </div>
+              </div>
+              <div className='flex w-full'>
+                <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="race">
+                    Giống
+                  </label>
+                  <input
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="race"
+                    type="text"
+                    value={data.race}
+                    onChange={handleInputChange}
+                    disabled={!isEditable}
+                  />
+                </div>
+                <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="species">
+                    Loài
+                  </label>
+                  <select
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="species"
+                    value={data.species}
+                    onChange={handleInputChange}
+                    disabled={!isEditable}
+                  >
+                    <option value="">Select Species</option>
+                    <option value="Chó">Chó</option>
+                    <option value="Mèo">Mèo</option>
+                  </select>
+                </div>
+ 
+
+              </div>
+
+              <div className="w-full px-3">
+                <label className="text-xs font-bold mb-2" htmlFor="AdoptStatus">
+                  Tình trạng nhận nuôi
+                </label>
+                <select
+                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="adoptStatus"
+                  value={data.adoptStatus}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                >
+                  <option value="">Select Species</option>
+                  <option value="Rồi">Rồi</option>
+                  <option value="Chưa">Chưa</option>
+                </select>
               </div>
               <div className="w-full px-3">
-                <label className="text-xs font-bold mb-2" htmlFor="description">
+                <label className="text-xs font-bold mb-2" htmlFor="RecieveDay">
+                  Ngày nhận nuôi
+                </label>
+                <input
+                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="eecieveDay"
+                  type="date"
+                  value={data.recieveDay}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                />
+              </div>
+                
+
+              <div className="w-full px-3">
+                <label className="text-xs font-bold mb-2" htmlFor="Description">
                   Mô tả
                 </label>
                 <textarea
@@ -232,4 +233,4 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
   );
 }
 
-export default VoucherDetail;
+export default PetDetail;

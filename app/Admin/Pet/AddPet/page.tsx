@@ -53,7 +53,7 @@ function PetAdd() {
           <form className="w-full mx-4">
             <div className="flex flex-wrap -mx-3 mb-6 space-y-2">
               <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="ProductName">
+                <label className="text-xs font-bold mb-2" htmlFor="PetName">
                   Tên thú cưng
                 </label>
                 <input
@@ -84,29 +84,29 @@ function PetAdd() {
               </div> */}
               <div className='flex w-full'>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="Price">
+                  <label className="text-xs font-bold mb-2" htmlFor="Gender">
                     Giới tính
                   </label>
                   <select
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="Status"
+                    id="Gender"
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
                   >
                     <option value="">Select Gender</option>
-                    <option value="inactive">Đực</option>
-                    <option value="active">Cái</option>
+                    <option value="Đực">Đực</option>
+                    <option value="Cái">Cái</option>
                   </select>
                 </div>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="Quantity">
+                  <label className="text-xs font-bold mb-2" htmlFor="Age">
                     Tuổi
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="Age"
                     type="text"
-                    placeholder="Enter Quantity"
+                    placeholder="Enter Age"
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
                   />
@@ -114,20 +114,20 @@ function PetAdd() {
               </div>
               <div className='flex w-full'>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="Category">
+                  <label className="text-xs font-bold mb-2" htmlFor="Race">
                     Giống
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="Race"
                     type="text"
-                    placeholder="Enter Category"
+                    placeholder="Enter Race"
                     value={race}
                     onChange={(e) => setRace(e.target.value)}
                   />
                 </div>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="Status">
+                  <label className="text-xs font-bold mb-2" htmlFor="Species">
                     Loài
                   </label>
                   <select
@@ -137,8 +137,8 @@ function PetAdd() {
                     onChange={(e) => setSpecies(e.target.value)}
                   >
                     <option value="">Select Species</option>
-                    <option value="inactive">Chó</option>
-                    <option value="active">Mèo</option>
+                    <option value="Chó">Chó</option>
+                    <option value="Mèo">Mèo</option>
                   </select>
                 </div>
  
@@ -146,7 +146,7 @@ function PetAdd() {
               </div>
 
               <div className="w-full px-3">
-                <label className="text-xs font-bold mb-2" htmlFor="Status">
+                <label className="text-xs font-bold mb-2" htmlFor="AdoptStatus">
                   Tình trạng nhận nuôi
                 </label>
                 <select
