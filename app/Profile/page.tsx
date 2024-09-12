@@ -28,9 +28,19 @@ function Page() {
         };
         updateProfile(id);
     }
-    const changeAvatar = () => {
-        //......
-    }
+    const handleImage = (e: any) => {
+        const file = e.target.files[0];
+        setFileToBase(file);
+        console.log(file);
+      }
+    const setFileToBase = (file: any) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          setData({...data, avatar: reader.result as string});
+        }
+      }
+
     return (
         <div className="flex flex-col w-full ">
             <Header />
@@ -102,9 +112,10 @@ function Page() {
                         {/* Right */}
                         <div className="flex flex-col w-1/3 items-center justify-center">
                             <div className="flex flex-col items-center mt-8 w-full">
-                                <img loading="lazy" src={data.avatar ? data.avatar : "https://res.cloudinary.com/dzm879qpm/image/upload/v1725541509/448561678_969853814919023_8777083183294999859_n_snlcsx.jpg"}
+                                <img loading="lazy" src={data.avatar ? data.avatar : "https://res.cloudinary.com/dzm879qpm/image/upload/v1724509562/defautProduct_mlmwsw.png"}
                                     alt='Avatar' className="w-20 h-20 rounded-full mr-4 mb-4" />
-                                <button type="submit" className="bg-[#EDB24E] text-white font-nunito p-2 text-lg rounded w-1/2" onClick={changeAvatar}>Thay đổi Avatar</button>
+                                <input type="file" accept="image/*" onChange={handleImage} className="mb-4" />
+                                {/* <button type="submit" className="bg-[#EDB24E] text-white font-nunito p-2 text-lg rounded w-1/2" onClick={changeAvatar}>Thay đổi Avatar</button> */}
                             </div>
                         </div>
                     </div>

@@ -15,7 +15,7 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
         const response = await axios.get(`/product/${productId}`);
         const productData = response.data;
         setData(productData.product);
-        const log = await axios.post(`/test`, productData.product);
+        // const log = await axios.post(`/test`, productData.product);
       } catch (error) {
         console.error('Error fetching product data:', error);
       }
@@ -32,7 +32,19 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
       [id]: value,
     }));
   };
+  const handleImage = (e: any) =>{
+    const file = e.target.files[0];
+    setFileToBase(file);
+    console.log(file);
+}
 
+const setFileToBase = (file: any) =>{
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () =>{
+        setData( {...data, image: reader.result as string});
+    }
+}
   const handleSaveClick = () => {
     const updateProductData = async (id: any) => {
       try {
@@ -48,7 +60,7 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
 
   const handleChangeClick = async () => {
     setIsEditable(true);
-    const log = await axios.post(`/test`, data);
+    // const log = await axios.post(`/test`, data);
   };
 
   if (!data) {
@@ -114,6 +126,7 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
                   id="image"
                   name="image"
                   accept="image/*"
+                  onChange={handleImage}
                   className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
                   disabled={!isEditable}
                 />

@@ -6,7 +6,7 @@ const getInfo = async () => {
     headers: { Authorization: `Bearer ${jwt}` },
   });
   return response.data;
-      // {
+      // { example
     //     _id: new ObjectId('66c8125ac9b4f1f742c1b0a5'),
     //     userName: null,
     //     email: 'son1@gmail.com',

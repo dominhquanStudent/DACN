@@ -14,7 +14,7 @@ export default function ProfileNav() {
     return(<div className="flex flex-col pl-12 mt-12 w-4/12 font-nunito ">
     {/* Left */}
     <div className="flex items-center w-full mb-4">
-        <img src={data.avatar?data.avatar: "https://res.cloudinary.com/dzm879qpm/image/upload/v1725541509/448561678_969853814919023_8777083183294999859_n_snlcsx.jpg"}
+        <img src={data.avatar?data.avatar: "https://res.cloudinary.com/dzm879qpm/image/upload/v1724509562/defautProduct_mlmwsw.png"}
          alt='Avatar' className="w-12 h-12 rounded-full mr-4" />
         <div className="text-xl font-bold">{data.userName?data.userName:data.email}</div>
     </div>

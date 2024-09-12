@@ -4,7 +4,7 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import { useRouter } from 'next/navigation';
 import axios from '@/api/axios';
-
+import { toast } from 'react-toastify';
 function Product() {
   const [products, setProducts] = useState<any[]>([]);
   const Router = useRouter();
@@ -93,7 +93,7 @@ function Product() {
               {Array.isArray(products) && products.map((product: any) => (
                 <tr key={product._id}>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <img src={product.image} alt={product.name} className="h-16 rounded-full" />
+                    <img loading="lazy" src={product.image} alt={product.name} className="h-16 rounded-full" />
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {product.name}
