@@ -120,18 +120,24 @@ function ProductAdd() {
                 </div>
               </div>
               <div className='flex w-full'>
+              
                 <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="Category">
-                    Phân loại
+                  Phân loại
                   </label>
-                  <input
+                  <select
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="Category"
-                    type="text"
-                    placeholder="Enter Category"
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                  />
+                  >
+                    <option value="">Select Status</option>
+                    <option value="Thức ăn thú cưng">Thức ăn thú cưng</option>
+                    <option value="Phụ kiện & Đồ chơi">Phụ kiện & Đồ chơi</option>
+                    <option value="Đồ dùng vệ sinh">Đồ dùng vệ sinh</option>
+                    <option value="Nhà thú cưng">Nhà thú cưng</option>
+                    <option value="Đồ dùng thú y">Đồ dùng thú y</option>
+                  </select>
                 </div>
                 <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="Status">
