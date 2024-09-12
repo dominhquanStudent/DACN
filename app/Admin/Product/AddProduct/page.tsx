@@ -4,35 +4,52 @@ import Link from 'next/link';
 import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
-import { ToastContainer, toast } from 'react-toastify';
-
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 function ProductAdd() {
+  const router = useRouter();
   const [name, setName] = useState('');
+  const [brand, setBrand] = useState('');
   const [price, setPrice] = useState('');
   const [stock, setStock] = useState('');
   const [category, setCategory] = useState('');
   const [status, setStatus] = useState('');
   const [description, setDescription] = useState('');
+  const [image, setImage] = useState('');
 
   const handleSaveClick = async () => {
     try {
       const data = {
         name,
+        brand,
         stock,
         category,
         price,
         description,
         status,
+        image
       };
       const response = await axios.post('/product/add', data);
       toast.success('Product saved successfully!');
-      console.log('Product saved:', response.data);
+      router.push('/Admin/Product');
     } catch (error) {
       toast.error('Error saving product!');
       console.error('Error saving product:', error);
     }
   };
+  const handleImage = (e: any) => {
+    const file = e.target.files[0];
+    setFileToBase(file);
+    console.log(file);
+  }
 
+  const setFileToBase = (file: any) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setImage(reader.result as string);
+    }
+  }
   return (
     <div className='flex flex-col w-full justify-center items-center'>
       {/* //Header */}
@@ -59,6 +76,19 @@ function ProductAdd() {
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label className="text-xs font-bold mb-2" htmlFor="Brand">
+                  Thương hiệu
+                </label>
+                <input
+                  className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="Brand"
+                  type="text"
+                  placeholder="Enter Brand Name"
+                  value={brand}
+                  onChange={(e) => setBrand(e.target.value)}
+                />
+              </div>
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="ImageUpload">
                   Tải hình ảnh
@@ -68,6 +98,7 @@ function ProductAdd() {
                   id="ImageUpload"
                   name="image"
                   accept="image/*"
+                  onChange={handleImage}
                   className="block w-full text-sm text-gray-500
                     file:mr-4 file:py-2 file:px-4
                     file:rounded-full file:border-0
@@ -155,7 +186,6 @@ function ProductAdd() {
           </div>
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 }

@@ -87,6 +87,9 @@ function VoucherList() {
                   Name
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Mã Voucher
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Quantity
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -111,6 +114,9 @@ function VoucherList() {
                 <tr key={voucher._id}>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {voucher.name}
+                  </td>
+                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    {voucher.code}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {voucher.quantity}

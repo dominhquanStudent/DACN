@@ -4,7 +4,7 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import { useRouter } from 'next/navigation';
 import axios from '@/api/axios';
-
+import { toast } from 'react-toastify';
 function Product() {
   const [products, setProducts] = useState<any[]>([]);
   const Router = useRouter();
@@ -38,7 +38,7 @@ function Product() {
   const handleAddClick = () => {
     console.log(`Add for order`);
     Router.push('/Admin/Product/AddProduct');
-    // Here you can  navigate to a detail page or open a modal
+    // Here you can navigate to a detail page or open a modal
   };
 
   return (
@@ -66,10 +66,16 @@ function Product() {
                   Name
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Brand
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Quantity
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Price
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Discount
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Status
@@ -87,16 +93,22 @@ function Product() {
               {Array.isArray(products) && products.map((product: any) => (
                 <tr key={product._id}>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <img src={product.image} alt={product.name} className="h-16 rounded-full" />
+                    <img loading="lazy" src={product.image} alt={product.name} className="h-16 rounded-full" />
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {product.name}
+                  </td>
+                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    {product.brand}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {product.stock}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {product.price}
+                  </td>
+                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    {product.discount}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {product.status}

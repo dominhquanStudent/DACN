@@ -4,26 +4,34 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
 import { useRouter } from 'next/navigation';
-function ProductDetail({ params }: { params: { Detail: string } }) {
-  const productId = params.Detail;
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
+function VoucherDetail({ params }: { params: { Detail: string } }) {
+  const voucherId = params.Detail;
   const [data, setData] = useState<any>({});
   const [isEditable, setIsEditable] = useState(false);
   const router = useRouter();
   useEffect(() => {
-    const fetchProductData = async (id: any) => {
+    const fetchVoucherData = async (id: any) => {
       try {
-        const response = await axios.get(`/product/${productId}`);
-        const productData = response.data;
-        setData(productData.product);
-        // const log = await axios.post(`/test`, productData.product);
+        const response = await axios.get(`/voucher/${voucherId}`);
+        const vouherData = response.data;
+        setData(vouherData.voucher);
+        const log = await axios.post(`/test`, vouherData.voucher);
       } catch (error) {
         console.error('Error fetching product data:', error);
       }
     };
-    if (productId) {
-      fetchProductData(productId);
+    if (voucherId) {
+      fetchVoucherData(voucherId);
     }
-  }, [productId]);
+  }, [voucherId]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
@@ -32,35 +40,24 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
       [id]: value,
     }));
   };
-  const handleImage = (e: any) =>{
-    const file = e.target.files[0];
-    setFileToBase(file);
-    console.log(file);
-}
 
-const setFileToBase = (file: any) =>{
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () =>{
-        setData( {...data, image: reader.result as string});
-    }
-}
   const handleSaveClick = () => {
-    const updateProductData = async (id: any) => {
+    const updateVoucherData = async (id: any) => {
       try {
-        const response = await axios.put(`/product/${productId}`,data);
+        const response = await axios.put(`/voucher/${voucherId}`,data);
+        console.log('Voucher updated:', response.data);
       } catch (error) {
-        console.error('Error fetching product data:', error);
+        console.error('Error fetching voucher data:', error);
       }
     };
-      updateProductData(data);
+    updateVoucherData(data);
     
-    router.push('/Admin/Product');
+    router.push('/Admin/Voucher');
   };
 
   const handleChangeClick = async () => {
     setIsEditable(true);
-    // const log = await axios.post(`/test`, data);
+    const log = await axios.post(`/test`, data);
   };
 
   if (!data) {
@@ -74,13 +71,13 @@ const setFileToBase = (file: any) =>{
         <Sidebar />
         <div className='w-3/4 border-l-2 border-gray-200'>
           <div className={'flex font-nunito text-xl font-bold w-full justify-center'}>
-            Chi tiết sản phẩm
+            Chi tiết voucher
           </div>
-          <form className="w-full mx-4" key={data._id}>
+          <form className="w-full mx-4" key={data.id}>
             <div className="flex flex-wrap -mx-3 mb-6 space-y-2">
               <div className="w-full px-3 mb-6 md:mb-0">
                 <label className="text-xs font-bold mb-2" htmlFor="name">
-                  Tên sản phẩm
+                  Tên voucher
                 </label>
                 <input
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
@@ -91,69 +88,29 @@ const setFileToBase = (file: any) =>{
                   disabled={!isEditable}
                 />
               </div>
-              <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="brand">
-                  Nhãn hiệu
-                </label>
-                <input
-                  className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="brand"
-                  type="text"
-                  value={data.brand}
-                  onChange={handleInputChange}
-                  disabled={!isEditable}
-                />
-              </div>
-              <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="discount">
-                  Giảm giá
-                </label>
-                <input
-                  className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="discount"
-                  type="text"
-                  value={data.discount}
-                  onChange={handleInputChange}
-                  disabled={!isEditable}
-                />
-              </div>
-              <div className="w-full px-3">
-                <label className="text-xs font-bold mb-2" htmlFor="image">
-                  Hình ảnh
-                </label>
-                <input
-                  type="file"
-                  id="image"
-                  name="image"
-                  accept="image/*"
-                  onChange={handleImage}
-                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
-                  disabled={!isEditable}
-                />
-              </div>
               <div className='flex w-full'>
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="price">
-                    Giá sản phẩm
-                  </label>
-                  <input
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="price"
-                    type="text"
-                    value={data.price}
-                    onChange={handleInputChange}
-                    disabled={!isEditable}
-                  />
-                </div>
                 <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="quantity">
                     Số lượng
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="stock"
+                    id="quantity"
                     type="text"
-                    value={data.stock}
+                    value={data.quantity}
+                    onChange={handleInputChange}
+                    disabled={!isEditable}
+                  />
+                </div>
+                <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="UsedTime">
+                    Số lần sử dụng
+                  </label>
+                  <input
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="UsedTime"
+                    type="text"
+                    value={data.UsedTime}
                     onChange={handleInputChange}
                     disabled={!isEditable}
                   />
@@ -161,14 +118,70 @@ const setFileToBase = (file: any) =>{
               </div>
               <div className='flex w-full'>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="category">
-                    Phân loại
+                  <label className="text-xs font-bold mb-2" htmlFor="beginDate">
+                    Ngày bắt đầu
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="category"
+                    id="beginDate"
+                    type="date"
+                    value={formatDate(data.beginDate)}
+                    onChange={handleInputChange}
+                    disabled={!isEditable}
+                  />
+                </div>
+                <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="endDate">
+                    Ngày kết thúc
+                  </label>
+                  <input
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="endDate"
+                    type="date"
+                    value={formatDate(data.endDate)}
+                    onChange={handleInputChange}
+                    disabled={!isEditable}
+                  />
+                </div>
+              </div>
+              <div className='flex w-full'>
+                <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="code">
+                    Mã voucher
+                  </label>
+                  <input
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="code"
                     type="text"
-                    value={data.category}
+                    value={data.code}
+                    onChange={handleInputChange}
+                    disabled={!isEditable}
+                  />
+                </div>
+                <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="discount_type">
+                    Loại giảm giá
+                  </label>
+                  <input
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="discount_type"
+                    type="text"
+                    value={data.discount_type}
+                    onChange={handleInputChange}
+                    disabled={!isEditable}
+                  />
+                </div>
+              </div>
+              <div className='flex w-full'>
+                <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="discount_value">
+                    Giá trị giảm giá
+                  </label>
+                  <input
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="discount_value"
+                    type="text"
+                    value={data.discount_value}
                     onChange={handleInputChange}
                     disabled={!isEditable}
                   />
@@ -184,9 +197,9 @@ const setFileToBase = (file: any) =>{
                     onChange={handleInputChange}
                     disabled={!isEditable}
                   >
-                    <option value="">Select Status</option>
-                    <option value="inactive">Private</option>
-                    <option value="active">Public</option>
+                    <option value="">Chọn trạng thái</option>
+                    <option value="active">Hoạt động</option>
+                    <option value="inactive">Không hoạt động</option>
                   </select>
                 </div>
               </div>
@@ -197,7 +210,6 @@ const setFileToBase = (file: any) =>{
                 <textarea
                   className="block w-full h-24 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="description"
-                  placeholder="Nhập mô tả sản phẩm"
                   value={data.description}
                   onChange={handleInputChange}
                   disabled={!isEditable}
@@ -215,8 +227,9 @@ const setFileToBase = (file: any) =>{
           </div>
         </div>
       </div>
+      {/* <ToastContainer /> */}
     </div>
   );
 }
 
-export default ProductDetail;
+export default VoucherDetail;
