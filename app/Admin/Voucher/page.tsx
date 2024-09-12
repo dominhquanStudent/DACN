@@ -1,103 +1,139 @@
 'use client';
-import React from 'react';
-import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
-import { useRouter } from 'next/navigation'
-function Voucher() {
-  const voucher = [
-    { id: '001', vouchercode:"XINCHAO", startdate: '2023-04-01', enddate:"2023-10-01", Category: 'Giảm theo %', amount: "20%" , condition:"Tối thiểu 100.000đ" },
-    { id: '002', vouchercode:"TAMBIET", startdate: '2023-04-02', enddate:"2023-10-02", Category: 'Giảm trực tiếp', amount: "20.000" ,condition:"Tối thiểu 100.000đ"},
-  ];
-  const Router = useRouter();
-  const handleDetailClick = (orderId: any) => {
-    console.log(`Details for order ${orderId}`);
-    Router.push('/Admin/Voucher/VoucherDetail');
-    // Here you can navigate to a detail page or open a modal
+import { useRouter } from 'next/navigation';
+import axios from '@/api/axios';
+import Link from 'next/link';
+
+interface Voucher {
+  _id: string;
+  employee_id: string;
+  name: string;
+  quantity: number;
+  UsedTime: number;
+  beginDate: string;
+  endDate: string;
+  code: string;
+  discount_type: string;
+  discount_value: number;
+  description: string;
+  status: string;
+}
+
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
+function VoucherList() {
+  const [vouchers, setVouchers] = useState<Voucher[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchVouchers = async () => {
+      try {
+        const response = await axios.get('/voucher/list');
+        setVouchers(response.data);
+      } catch (error) {
+        console.error('Error fetching vouchers:', error);
+      }
+    };
+    fetchVouchers();
+  }, []);
+
+  const handleDetailClick = (voucherId: string) => {
+    console.log(`Details for voucher ${voucherId}`);
+    router.push(`/Admin/Voucher/${voucherId}`);
   };
+
+  const handleDeleteClick = async (voucherId: string) => {
+    console.log(`Delete for voucher ${voucherId}`);
+    try {
+      await axios.delete(`/voucher/${voucherId}`);
+      const newVouchers = vouchers.filter((voucher) => voucher._id !== voucherId);
+      setVouchers(newVouchers);
+    } catch (error) {
+      console.error('Error deleting voucher:', error);
+    }
+  };
+
   const handleAddClick = () => {
-    console.log(`Add for order`);
-    Router.push('/Admin/Voucher/AddVoucher');
-    // Here you can navigate to a detail page or open a modal
+    console.log(`Add new voucher`);
+    router.push('/Admin/Voucher/AddVoucher');
   };
+
   return (
     <div className='flex flex-col w-full justify-center items-center'>
-      {/* //Header */}
-      <Header></Header>
+      <Header />
       <div className='flex w-full'>
-        <Sidebar></Sidebar>
-        <div className='w-3/4 border-l-2 border-gray-200'>
-          {/* content */}
-          <div className={'flex font-nunito text-xl font-bold w-full justify-center'}>
+        <Sidebar />
+        <div className='w-3/4 border-l-2 border-gray-200 px-4'>
+          <div className={'flex font-nunito text-xl font-bold w-full justify-center mb-4'}>
             Quản lý voucher
           </div>
-          {/* table */}
           <div className='flex w-full space-x-2 mt-4'>
-                    <button onClick={handleAddClick} className="bg-transparent border border-[#CCCCCC] text-black font-bold py-1 px-4 rounded-xl mb-2">
-                      Thêm
-                    </button>
-                  </div>
-
-          <table className="min-w-full leading-normal mt-4 mx-2">
+            <button onClick={handleAddClick} className="bg-transparent border border-[#CCCCCC] text-black font-bold py-1 px-4 rounded-xl mb-2">
+              Thêm mới
+            </button>
+          </div>
+          <table className="min-w-full leading-normal">
             <thead>
               <tr>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Voucher ID
+                  Name
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Mã voucher
+                  Quantity
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Ngày bắt đầu
+                  Used Time
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Ngày kết thúc
+                  Discount Type
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Loại giảm giá
+                  Discount Value
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Giá trị giảm
+                  Begin Date
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Điều kiện
-                </th>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Xem chi tiết
+                  End Date
                 </th>
               </tr>
             </thead>
             <tbody>
-              {voucher.map((order) => (
-                <tr key={order.id}>
+              {Array.isArray(vouchers) && vouchers.map((voucher: Voucher) => (
+                <tr key={voucher._id}>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {order.id}
+                    {voucher.name}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {order.vouchercode}
+                    {voucher.quantity}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {order.startdate}
+                    {voucher.UsedTime}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {order.enddate}
+                    {voucher.discount_type}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {order.Category}
+                    {voucher.discount_value}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {order.amount}
+                    {formatDate(voucher.beginDate)}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {order.condition}
+                  {formatDate(voucher.endDate)}
+
                   </td>
-                  <td className="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                    <button
-                      onClick={() => handleDetailClick(order.id)}
-                      className="text-blue-500 hover:text-blue-700"
-                    >
-                      Chi tiết
-                    </button>
+                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    <button onClick={() => handleDetailClick(voucher._id)} className="text-blue-500 hover:text-blue-700">Sửa</button>
+                    <button onClick={() => handleDeleteClick(voucher._id)} className="text-red-500 hover:text-red-700 ml-2">Xóa</button>
                   </td>
                 </tr>
               ))}
@@ -106,8 +142,7 @@ function Voucher() {
         </div>
       </div>
     </div>
-
-  )
+  );
 }
 
-export default Voucher
+export default VoucherList;

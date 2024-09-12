@@ -38,7 +38,7 @@ function Product() {
   const handleAddClick = () => {
     console.log(`Add for order`);
     Router.push('/Admin/Product/AddProduct');
-    // Here you can navigate to a detail page or open a modal
+    // Here you can  navigate to a detail page or open a modal
   };
 
   return (
