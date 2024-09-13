@@ -3,9 +3,25 @@ import Link from 'next/link';
 import { lazy, useEffect, useState } from 'react';
 import getInfo from '@/hooks/getInfo';
 export default function ProfileNav() {
-    const [data, setData] = useState<any>({});
+    const [data, setData] = useState<any>({
+      avatar: {
+        public_id: '',
+        url: ''
+      },
+      _id: '',
+      userName: null,
+      email: '',
+      password: '',
+      phone: null,
+      address: null,
+      gender: null,
+      birthday: null,
+      token: [],
+      role: 'user',});
+
     const fetchData = async () => {
-      setData(await getInfo());
+      const Data = await getInfo();
+      setData(Data);
     };
     useEffect(() => {
       fetchData();
@@ -14,7 +30,7 @@ export default function ProfileNav() {
     return(<div className="flex flex-col pl-12 mt-12 w-4/12 font-nunito ">
     {/* Left */}
     <div className="flex items-center w-full mb-4">
-        <img src={data.avatar?data.avatar: "https://res.cloudinary.com/dzm879qpm/image/upload/v1724509562/defautProduct_mlmwsw.png"}
+        <img src={data.avatar.url?data.avatar.url: "https://res.cloudinary.com/dzm879qpm/image/upload/v1724509562/defautProduct_mlmwsw.png"}
          alt='Avatar' className="w-12 h-12 rounded-full mr-4" />
         <div className="text-xl font-bold">{data.userName?data.userName:data.email}</div>
     </div>

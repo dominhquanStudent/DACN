@@ -10,9 +10,25 @@ import 'react-datepicker/dist/react-datepicker.css';
 import withAuth from "@/hooks/withAuth";
 import getInfo from "@/hooks/getInfo";
 function Page() {
-    const [data, setData] = useState<any>({});
+    const [data, setData] = useState<any>({
+        avatar: {
+          public_id: '',
+          url: ''
+        },
+        _id: '',
+        userName: null,
+        email: '',
+        password: '',
+        phone: null,
+        address: null,
+        gender: null,
+        birthday: null,
+        token: [],
+        role: 'user',});
     const fetchData = async () => {
-        setData(await getInfo());
+        const Data = await getInfo();
+        setData(Data);
+
     };
     useEffect(() => {
         fetchData();
@@ -37,7 +53,7 @@ function Page() {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = () => {
-          setData({...data, avatar: reader.result as string});
+          setData({...data, avatar: {public_id: "", url: reader.result as string}});
         }
       }
 
@@ -112,7 +128,7 @@ function Page() {
                         {/* Right */}
                         <div className="flex flex-col w-1/3 items-center justify-center">
                             <div className="flex flex-col items-center mt-8 w-full">
-                                <img loading="lazy" src={data.avatar ? data.avatar : "https://res.cloudinary.com/dzm879qpm/image/upload/v1724509562/defautProduct_mlmwsw.png"}
+                                <img loading="lazy" src={data.avatar.url ? data.avatar.url : "https://res.cloudinary.com/dzm879qpm/image/upload/v1724509562/defautProduct_mlmwsw.png"}
                                     alt='Avatar' className="w-20 h-20 rounded-full mr-4 mb-4" />
                                 <input type="file" accept="image/*" onChange={handleImage} className="mb-4" />
                                 {/* <button type="submit" className="bg-[#EDB24E] text-white font-nunito p-2 text-lg rounded w-1/2" onClick={changeAvatar}>Thay đổi Avatar</button> */}
