@@ -47,7 +47,7 @@ function ProductAdd() {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      setImage({public_id: 'null', url: reader.result as string});
+    setImage({public_id: 'null', url: reader.result as string});
     }
   }
   return (
