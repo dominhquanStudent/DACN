@@ -7,23 +7,20 @@ import ShoppingCart from "@/public/img/Header/Shopping Cart.png";
 import Logout from "@/public/img/Logouthl.svg";
 import User from "@/public/img/Header/User.png";
 import Link from "next/link";
-import { getCookie } from "cookies-next";
+import { getCookie, deleteCookie } from "cookies-next";
+
 import axios from "axios";
 export default function Header(props: any) {
   const [showSublist1, setShowSublist1] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const handleLogout = () => {
-    document.cookie = "jwt=; expires  Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    deleteCookie("jwt");
     window.location.reload();
-  }
+  };
   const checkLogin = async () => {
     try {
       const jwt = getCookie("jwt");
       if (jwt !== undefined && jwt !== "") {
-        const response = await axios.get("http://localhost:8080/auth/post", {
-          headers: { Authorization: `Bearer ${jwt}` },
-        });
-        console.log(response);
         setIsLoggedIn(true);
       }
     } catch (error) {
@@ -98,32 +95,44 @@ export default function Header(props: any) {
           >
             <Link href="/Product">Sản phẩm thú cưng</Link>
             {/* sub list 1 */}
-            {showSublist1 && (
-              <ul className="absolute left-48  p-2 text-black text-base flex justify-center w-[75%] font-normal ">
-                <li className="px-10">Thức ăn thú cưng</li>
-                <li className="px-10">Phụ kiện & Đồ chơi</li>
-                <li className="px-10">Đồ dùng vệ sinh</li>
-                <li className="px-10">Nhà thú cưng</li>
-                <li className="px-10">Đồ dùng thú y </li>
-              </ul>
-            )}
+            <ul
+              className={`absolute left-48 p-2 text-black text-base flex justify-center w-[75%] font-normal transition-all duration-300 ease-in-out ${
+                showSublist1 ? "opacity-100 max-h-96" : "opacity-0 max-h-0"
+              }`}
+            >
+              <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
+                Thức ăn thú cưng
+              </li>
+              <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
+                Phụ kiện & Đồ chơi
+              </li>
+              <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
+                Đồ dùng vệ sinh
+              </li>
+              <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
+                Nhà thú cưng
+              </li>
+              <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
+                Đồ dùng thú y
+              </li>
+            </ul>
           </li>
-          <li>
+          <li className="transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95">
             <Link className="hover:text-yellow-500" href="/Price_Table">
               Đặt lịch hẹn
             </Link>
           </li>
-          <li>
+          <li className="transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95">
             <Link className="hover:text-yellow-500" href="/Adopt">
               Nhận nuôi thú cưng
             </Link>
           </li>
-          <li>
+          <li className="transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95">
             <Link className="hover:text-yellow-500" href="/Rescue">
               Yêu cầu cứu hộ
             </Link>
           </li>
-          <li>
+          <li className="transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95">
             <Link className="hover:text-yellow-500" href="/Main">
               Về chúng tôi
             </Link>
