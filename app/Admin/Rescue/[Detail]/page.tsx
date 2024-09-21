@@ -4,6 +4,14 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
 import { useRouter } from 'next/navigation';
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
 function RescueDetail({ params }: { params: { Detail: string } }) {
   const rescueId = params.Detail;
   const [data, setData] = useState<any>({});
@@ -87,7 +95,7 @@ const setFileToBase = (file: any) =>{
                   id="user_name"
                   type="text"
                   value={data.user_name}
-                  onChange={handleInputChange}
+                  // onChange={handleInputChange}
                   disabled={!isEditable}
                 />
               </div>
@@ -102,7 +110,7 @@ const setFileToBase = (file: any) =>{
                     id="location"
                     type="text"
                     value={data.location}
-                    onChange={handleInputChange}
+                    // onChange={handleInputChange}
                     disabled={!isEditable}
                   />
                 </div>
@@ -115,7 +123,7 @@ const setFileToBase = (file: any) =>{
                     id="contactPhone"
                     type="text"
                     value={data.contactPhone}
-                    onChange={handleInputChange}
+                    // onChange={handleInputChange}
                     disabled={!isEditable}
                   />
                 </div>
@@ -125,14 +133,6 @@ const setFileToBase = (file: any) =>{
                   Hình ảnh
                 </label>
                 
-                {/* <input
-                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="image"
-                  type="file"
-                  value={data.image}
-                  onChange={handleInputChange}
-                  disabled={!isEditable}
-                /> */}
                 {data.image && (
                   <img
                     className="mt-4"
@@ -152,7 +152,7 @@ const setFileToBase = (file: any) =>{
                   className="block w-full h-24 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="message"
                   value={data.message}
-                  onChange={handleInputChange}
+                  // onChange={handleInputChange}
                   disabled={!isEditable}
                 ></textarea>
               </div>
@@ -164,13 +164,22 @@ const setFileToBase = (file: any) =>{
 
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="RequestTime">
-                  Ngày nhận nuôi
+                  Ngày yêu cầu
+                </label>
+                <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
+                    {formatDate(data.RequestTime)}
+                </div>
+              </div>
+
+              <div className="w-full px-3">
+                <label className="text-xs font-bold mb-2" htmlFor="employeeName">
+                  Nhân viên xử lý
                 </label>
                 <input
                   className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="RequestTime"
-                  type="date"
-                  value={data.RequestTime}
+                  id="employeeName"
+                  type="text"
+                  value={data.employeeName}
                   onChange={handleInputChange}
                   disabled={!isEditable}
                 />
@@ -201,7 +210,7 @@ const setFileToBase = (file: any) =>{
           </form>
           <div className='flex items-center justify-center w-full space-x-4'>
             <button onClick={handleChangeClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Sửa
+              Cập nhật trạng thái
             </button>
             <button onClick={handleSaveClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Lưu

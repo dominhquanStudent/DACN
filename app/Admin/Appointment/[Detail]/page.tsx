@@ -4,6 +4,15 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
 import { useRouter } from 'next/navigation';
+
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
 function AppointmentDetail({ params }: { params: { Detail: string } }) {
   const appointmentId = params.Detail;
   const [data, setData] = useState<any>({});
@@ -123,7 +132,7 @@ const setFileToBase = (file: any) =>{
                     Ngày hẹn
                   </label>
                   <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
-                    {data.date}
+                    {formatDate(data.date)}
                   </div>
                 </div>
                 <div className="w-full px-3">
@@ -191,7 +200,7 @@ const setFileToBase = (file: any) =>{
           </form>
           <div className='flex items-center justify-center w-full space-x-4'>
             <button onClick={handleChangeClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Sửa
+              Cập nhật trạng thái
             </button>
             <button onClick={handleSaveClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Lưu

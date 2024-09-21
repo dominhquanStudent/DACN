@@ -4,6 +4,14 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
 import { useRouter } from 'next/navigation';
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
 function AdoptDetail({ params }: { params: { Detail: string } }) {
   const adoptId = params.Detail;
   const [data, setData] = useState<any>({});
@@ -87,7 +95,7 @@ const setFileToBase = (file: any) =>{
                   id="userName"
                   type="text"
                   value={data.userName}
-                  onChange={handleInputChange}
+                  // onChange={handleInputChange}
                   disabled={!isEditable}
                 />
               </div>
@@ -102,7 +110,7 @@ const setFileToBase = (file: any) =>{
                     id="address"
                     type="text"
                     value={data.address}
-                    onChange={handleInputChange}
+                    // onChange={handleInputChange}
                     disabled={!isEditable}
                   />
                 </div>
@@ -115,7 +123,7 @@ const setFileToBase = (file: any) =>{
                     id="phoneNumber"
                     type="text"
                     value={data.phoneNumber}
-                    onChange={handleInputChange}
+                    // onChange={handleInputChange}
                     disabled={!isEditable}
                   />
                 </div>
@@ -131,7 +139,7 @@ const setFileToBase = (file: any) =>{
                     id="petName"
                     type="text"
                     value={data.petName}
-                    onChange={handleInputChange}
+                    // onChange={handleInputChange}
                     disabled={!isEditable}
                   />
                 </div>
@@ -144,7 +152,7 @@ const setFileToBase = (file: any) =>{
                     id="petId"
                     type="text"
                     value={data.petId}
-                    onChange={handleInputChange}
+                    // onChange={handleInputChange}
                     disabled={!isEditable}
                   />
                 </div>
@@ -182,7 +190,7 @@ const setFileToBase = (file: any) =>{
                   className="block w-full h-24 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="message"
                   value={data.message}
-                  onChange={handleInputChange}
+                  // onChange={handleInputChange}
                   disabled={!isEditable}
                 ></textarea>
               </div>
@@ -196,11 +204,20 @@ const setFileToBase = (file: any) =>{
                 <label className="text-xs font-bold mb-2" htmlFor="resquestDay">
                   Ngày yêu cầu
                 </label>
+                <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
+                    {formatDate(data.resquestDay)}
+                </div>
+
+              </div>
+              <div className="w-full px-3">
+                <label className="text-xs font-bold mb-2" htmlFor="employeeName">
+                  Nhân viên xử lý
+                </label>
                 <input
                   className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="resquestDay"
-                  type="date"
-                  value={data.resquestDay}
+                  id="employeeName"
+                  type="text"
+                  value={data.employeeName}
                   onChange={handleInputChange}
                   disabled={!isEditable}
                 />
@@ -231,7 +248,7 @@ const setFileToBase = (file: any) =>{
           </form>
           <div className='flex items-center justify-center w-full space-x-4'>
             <button onClick={handleChangeClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Sửa
+              Cập nhật trạng thái
             </button>
             <button onClick={handleSaveClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Lưu
