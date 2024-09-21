@@ -138,8 +138,10 @@ function VoucherList() {
 
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <button onClick={() => handleDetailClick(voucher._id)} className="text-blue-500 hover:text-blue-700">Sửa</button>
-                    <button onClick={() => handleDeleteClick(voucher._id)} className="text-red-500 hover:text-red-700 ml-2">Xóa</button>
+                    <button onClick={() => handleDetailClick(voucher._id)} className="text-blue-500 hover:text-blue-700">Xem chi tiết</button>
+                  </td>
+                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    <button onClick={() => handleDeleteClick(voucher._id)} className="text-red-500 hover:text-red-700">Xóa</button>
                   </td>
                 </tr>
               ))}

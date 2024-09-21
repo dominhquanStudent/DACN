@@ -4,7 +4,13 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import { useRouter } from 'next/navigation';
 import axios from '@/api/axios';
-
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
 function Pet() {
   const [pets, setPets] = useState<any[]>([]);
   const Router = useRouter();
@@ -30,8 +36,8 @@ function Pet() {
     console.log(`Delete for pet ${petId}`);
     try {
       await axios.delete(`/pet/${petId}`);
-      const newProducts = pets.filter((pet) => pet._id !== petId);
-      setPets(newProducts);
+      const newPets = pets.filter((pet) => pet._id !== petId);
+      setPets(newPets);
     } catch (error) {
       console.error('Error deleting pet:', error);
   }
@@ -67,6 +73,9 @@ function Pet() {
                   Tên thú cưng
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Mã số
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Giới tính
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -78,9 +87,7 @@ function Pet() {
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Loài
                 </th>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Mô tả
-                </th>
+
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Trình trạng được nhận nuôi
                 </th>
@@ -100,6 +107,11 @@ function Pet() {
                     {pet.name}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    {pet.pet_id}
+                  </td>
+
+                
+                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {pet.gender}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
@@ -111,19 +123,17 @@ function Pet() {
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {pet.species}
                   </td>
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {pet.description}
-                  </td>
+
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {pet.adoptStatus}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {pet.recieveDay}
+                    {formatDate(pet.recieveDay)}
                   </td>
 
 
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <button onClick={() => handleChangeClick(pet._id)} className="text-blue-500 hover:text-blue-700">Sửa</button>
+                    <button onClick={() => handleChangeClick(pet._id)} className="text-blue-500 hover:text-blue-700">Xem chi tiết</button>
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     <button onClick={() => handleDeleteClick(pet._id)} className="text-red-500 hover:text-red-700">Xóa</button>

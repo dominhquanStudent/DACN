@@ -4,26 +4,26 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
 import { useRouter } from 'next/navigation';
-function PetDetail({ params }: { params: { Detail: string } }) {
-  const petId = params.Detail;
+function AdoptDetail({ params }: { params: { Detail: string } }) {
+  const adoptId = params.Detail;
   const [data, setData] = useState<any>({});
   const [isEditable, setIsEditable] = useState(false);
   const router = useRouter();
   useEffect(() => {
-    const fetchPetData = async (id: any) => {
+    const fetchAdoptData = async (id: any) => {
       try {
-        const response = await axios.get(`/pet/${petId}`);
-        const petData = response.data;
-        setData(petData.pet);
-        // const log = await axios.post(`/test`, petData.pet);
+        const response = await axios.get(`/adopt/${adoptId}`);
+        const adoptData = response.data;
+        setData(adoptData.adopt);
+        // const log = await axios.post(`/test`, adoptData.adopt);
       } catch (error) {
-        console.error('Error fetching pet data:', error);
+        console.error('Error fetching adopt data:', error);
       }
     };
-    if (petId) {
-      fetchPetData(petId);
+    if (adoptId) {
+      fetchAdoptData(adoptId);
     }
-  }, [petId]);
+  }, [adoptId]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
@@ -46,16 +46,16 @@ const setFileToBase = (file: any) =>{
     }
 }
   const handleSaveClick = () => {
-    const updatePetData = async (id: any) => {
+    const updateAdoptData = async (id: any) => {
       try {
-        const response = await axios.put(`/pet/${petId}`,data);
+        const response = await axios.put(`/adopt/${adoptId}`,data);
       } catch (error) {
-        console.error('Error fetching pet data:', error);
+        console.error('Error fetching adopt data:', error);
       }
     };
-      updatePetData(data);
+      updateAdoptData(data);
     
-    router.push('/Admin/Pet');
+    router.push('/Admin/Adoption');
   };
 
   const handleChangeClick = async () => {
@@ -73,33 +73,20 @@ const setFileToBase = (file: any) =>{
         <Sidebar />
         <div className='w-3/4 border-l-2 border-gray-200'>
           <div className={'flex font-nunito text-xl font-bold w-full justify-center'}>
-            Chi tiết voucher
+            Thông tin cứu hộ
           </div>
           <form className="w-full mx-4" key={data._id}>
           {/* <form className="w-full mx-4" > */}
             <div className="flex flex-wrap -mx-3 mb-6 space-y-2">
               <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="name">
-                  Tên thú cưng
+                <label className="text-xs font-bold mb-2" htmlFor="userName">
+                  Tên khách hàng
                 </label>
                 <input
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="name"
+                  id="userName"
                   type="text"
-                  value={data.name}
-                  onChange={handleInputChange}
-                  disabled={!isEditable}
-                />
-              </div>
-              <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="pet_id">
-                  Mã thú cưng
-                </label>
-                <input
-                  className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="pet_id"
-                  type="text"
-                  value={data.pet_id}
+                  value={data.userName}
                   onChange={handleInputChange}
                   disabled={!isEditable}
                 />
@@ -107,112 +94,139 @@ const setFileToBase = (file: any) =>{
 
               <div className='flex w-full'>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="gender">
-                    Giới tính
-                  </label>
-                  <select
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="gender"
-                    value={data.gender}
-                    onChange={handleInputChange}
-                    disabled={!isEditable}
-                  >
-                    <option value="">Select Gender</option>
-                    <option value="Đực">Đực</option>
-                    <option value="Cái">Cái</option>
-                  </select>
-                </div>
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="age">
-                    Tuổi
+                  <label className="text-xs font-bold mb-2" htmlFor="address">
+                    Địa chỉ
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="age"
+                    id="address"
                     type="text"
-                    value={data.age}
+                    value={data.address}
+                    onChange={handleInputChange}
+                    disabled={!isEditable}
+                  />
+                </div>
+                <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="phoneNumber">
+                    SĐT liên lạc
+                  </label>
+                  <input
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="phoneNumber"
+                    type="text"
+                    value={data.phoneNumber}
                     onChange={handleInputChange}
                     disabled={!isEditable}
                   />
                 </div>
               </div>
+
               <div className='flex w-full'>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="race">
-                    Giống
+                  <label className="text-xs font-bold mb-2" htmlFor="petName">
+                    Tên thú cưng
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="race"
+                    id="petName"
                     type="text"
-                    value={data.race}
+                    value={data.petName}
                     onChange={handleInputChange}
                     disabled={!isEditable}
                   />
                 </div>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="species">
-                    Loài
+                  <label className="text-xs font-bold mb-2" htmlFor="petId">
+                    Mã số thú cưng
                   </label>
-                  <select
+                  <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="species"
-                    value={data.species}
+                    id="petId"
+                    type="text"
+                    value={data.petId}
                     onChange={handleInputChange}
                     disabled={!isEditable}
-                  >
-                    <option value="">Select Species</option>
-                    <option value="Chó">Chó</option>
-                    <option value="Mèo">Mèo</option>
-                  </select>
+                  />
                 </div>
- 
-
               </div>
 
               <div className="w-full px-3">
-                <label className="text-xs font-bold mb-2" htmlFor="AdoptStatus">
-                  Tình trạng nhận nuôi
+                <label className="text-xs font-bold mb-2" htmlFor="image">
+                  Hình ảnh
                 </label>
-                <select
-                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="adoptStatus"
-                  value={data.adoptStatus}
-                  onChange={handleInputChange}
-                  disabled={!isEditable}
-                >
-                  <option value="">Select Species</option>
-                  <option value="Rồi">Rồi</option>
-                  <option value="Chưa">Chưa</option>
-                </select>
-              </div>
-              <div className="w-full px-3">
-                <label className="text-xs font-bold mb-2" htmlFor="RecieveDay">
-                  Ngày nhận nuôi
-                </label>
-                <input
-                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="eecieveDay"
-                  type="date"
-                  value={data.recieveDay}
-                  onChange={handleInputChange}
-                  disabled={!isEditable}
-                />
-              </div>
                 
+                {/* <input
+                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="image"
+                  type="file"
+                  value={data.image}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                /> */}
+                {data.image && (
+                  <img
+                    className="mt-4"
+                    src={data.image}
+                    alt="Database Image"
+                    style={{ maxWidth: '100%', height: 'auto' }}
+                  />
+                )}
 
+              </div>
+              <div className='flex w-full'>
               <div className="w-full px-3">
-                <label className="text-xs font-bold mb-2" htmlFor="Description">
-                  Mô tả
+                <label className="text-xs font-bold mb-2" htmlFor="message">
+                  Lời nhắn
                 </label>
                 <textarea
                   className="block w-full h-24 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="description"
-                  value={data.description}
+                  id="message"
+                  value={data.message}
                   onChange={handleInputChange}
                   disabled={!isEditable}
                 ></textarea>
               </div>
+               
+ 
+
+              </div>
+
+
+              <div className="w-full px-3">
+                <label className="text-xs font-bold mb-2" htmlFor="resquestDay">
+                  Ngày yêu cầu
+                </label>
+                <input
+                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="resquestDay"
+                  type="date"
+                  value={data.resquestDay}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                />
+              </div>
+              <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="adoptStatus">
+                    Trạng thái
+                  </label>
+                  <select
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="adoptStatus"
+                    value={data.adoptStatus}
+                    onChange={handleInputChange}
+                    disabled={!isEditable}
+                  >
+                    <option value="">Chọn trạng thái</option>
+                    <option value="Chưa xử lý">Chưa xử lý</option>
+                    <option value="Đang xử lý">Đang xử lý</option>
+                    <option value="Đã xử lý">Đã xử lý</option>
+
+                  </select>
+                </div>
+              
+                
+
+
             </div>
           </form>
           <div className='flex items-center justify-center w-full space-x-4'>
@@ -230,4 +244,6 @@ const setFileToBase = (file: any) =>{
   );
 }
 
-export default PetDetail;
+export default AdoptDetail;
+
+

@@ -5,9 +5,14 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
+
 
 function PetAdd() {
+  const router = useRouter();
   const [name, setName] = useState('');
+  const [pet_id, setpet_id] = useState('');
+
   const [gender, setGender] = useState('');
   const [age, setAge] = useState('');
   const [race, setRace] = useState('');
@@ -22,6 +27,7 @@ function PetAdd() {
     try {
       const data = {
         name,
+        pet_id,
         gender,
         age,
         race,
@@ -32,7 +38,7 @@ function PetAdd() {
       };
       const response = await axios.post('/pet/add', data);
       toast.success('Pet saved successfully!');
-      console.log('Pet saved:', response.data);
+      router.push('/Admin/Pet');
     } catch (error) {
       toast.error('Error saving pet!');
       console.error('Error saving pet:', error);
@@ -63,6 +69,19 @@ function PetAdd() {
                   placeholder="Enter Pet Name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label className="text-xs font-bold mb-2" htmlFor="PetId">
+                  Mã số thú cưng
+                </label>
+                <input
+                  className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="PetId"
+                  type="text"
+                  placeholder="Enter Pet Name"
+                  value={pet_id}
+                  onChange={(e) => setpet_id(e.target.value)}
                 />
               </div>
               {/* <div className="w-full px-3">

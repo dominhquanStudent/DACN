@@ -5,8 +5,10 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 function VoucherAdd() {
+  const router = useRouter();
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('');
   const [usedTime, setUsedTime] = useState('');
@@ -34,7 +36,7 @@ function VoucherAdd() {
       };
       const response = await axios.post('/voucher/add', data);
       toast.success('Voucher saved successfully!');
-      console.log('Voucher saved:', response.data);
+      router.push('/Admin/Voucher');
     } catch (error) {
       toast.error('Error saving voucher!');
       console.error('Error saving voucher:', error);
