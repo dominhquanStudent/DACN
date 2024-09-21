@@ -38,7 +38,7 @@ function Product() {
   const handleAddClick = () => {
     console.log(`Add for order`);
     Router.push('/Admin/Product/AddProduct');
-    // Here you can  navigate to a detail page or open a modal
+    // Here you can navigate to a detail page or open a modal
   };
 
   return (
@@ -93,7 +93,7 @@ function Product() {
               {Array.isArray(products) && products.map((product: any) => (
                 <tr key={product._id}>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <img loading="lazy" src={product.image.url} alt={product.name} className="h-16 rounded-full" />
+                  <img loading="lazy" src={product.image.url} alt={product.name} className="h-16 rounded-full" />
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {product.name}
@@ -114,7 +114,7 @@ function Product() {
                     {product.status}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <button onClick={() => handleChangeClick(product._id)} className="text-blue-500 hover:text-blue-700">Sửa</button>
+                    <button onClick={() => handleChangeClick(product._id)} className="text-blue-500 hover:text-blue-700">Xem chi tiết</button>
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     <button onClick={() => handleDeleteClick(product._id)} className="text-red-500 hover:text-red-700">Xóa</button>
