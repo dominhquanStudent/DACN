@@ -1,5 +1,5 @@
 import User from "@/public/img/Header/User.png";
-export default function Comment() {
+export default function Comment(props: any) {
   return (
     <div className="mt-4 m-9">
       {/* Top part */}
@@ -10,9 +10,13 @@ export default function Comment() {
           className="w-8 h-8 rounded-full"
         />
         <div className="flex space-x-4 items-center">
-          <div className="font-bold">Do Min Kuan</div>
-          <span>⭐⭐⭐⭐⭐</span>
-          <div className="text-sm text-gray-500">25 tháng 3 năm 2024</div>
+          <div className="font-bold">{props.user_name}</div>
+          <span>
+            {Array.from({ length: props.rating }, (_, i) => (
+              <span key={i}>⭐</span>
+            ))}
+          </span>
+          <div className="text-sm text-gray-500">{props.createdAt}</div>
         </div>
         <div>
           <svg
@@ -33,7 +37,7 @@ export default function Comment() {
       </div>
 
       {/* Bottom part */}
-      <div className="mt-2">尊い貴方を心から愛してると</div>
+      <div className="mt-2">{props.content}</div>
     </div>
   );
 }

@@ -101,19 +101,19 @@ export default function Header(props: any) {
               }`}
             >
               <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
-                Thức ăn thú cưng
+                <Link href={{ pathname: '/Product', query: { filterMode: 1 } }}>Thức ăn thú cưng</Link>
               </li>
               <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
-                Phụ kiện & Đồ chơi
+              <Link href={{ pathname: '/Product', query: { filterMode: 2 } }}>Phụ kiện & Đồ chơi</Link>
               </li>
               <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
-                Đồ dùng vệ sinh
+                <Link href={{ pathname: '/Product', query: { filterMode: 3 } }}>Đồ dùng vệ sinh</Link>
               </li>
               <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
-                Nhà thú cưng
+                <Link href={{ pathname: '/Product', query: { filterMode: 4 } }}>Nhà thú cưng</Link>
               </li>
               <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
-                Đồ dùng thú y
+                <Link href={{ pathname: '/Product', query: { filterMode: 5 } }}>Đồ dùng thú y</Link>
               </li>
             </ul>
           </li>
