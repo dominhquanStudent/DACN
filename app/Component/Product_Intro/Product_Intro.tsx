@@ -10,7 +10,8 @@ import Brand4 from '@/public/img/Product_Main/Brand_Pedigree.png';
 import Brand5 from '@/public/img/Product_Main/Brand_Premier.png';
 import Brand6 from '@/public/img/Product_Main/Brand_RoyalCanin.png';
 import Brand7 from '@/public/img/Product_Main/Brand_Whiskas.png';
-import { Slider } from '@mui/material';
+import { useState, useEffect } from 'react';
+import axios from '@/api/axios';
 export default function Product_Main(){
     const shownProducts = [
         { name: 'Thức ăn cho chó Pedigree', weight: '1kg', price: '100.000đ' },
@@ -18,8 +19,23 @@ export default function Product_Main(){
         { name: 'Thức ăn cho chó Pug', weight: '3kg', price: '300.000đ' },
         { name: 'Thức ăn cho chó Cỏ', weight: '4kg', price: '400.000đ' },
       ];
-
-
+      const [products, setProducts] = useState<any[]>([]);
+      //get products from server
+      useEffect(() => {
+        const fetchProducts = async () => {
+          try {
+            const response = await axios.get("/product/list");
+            setProducts(response.data.products);
+            
+          } catch (error) {
+            console.error("Error fetching products:", error);
+          }
+        };
+    
+        fetchProducts();
+      }, []);
+      const sampleProducts = products.slice(0, 4);
+        console.log(sampleProducts);
     return(
         <>
         <Header></Header>
@@ -30,8 +46,8 @@ export default function Product_Main(){
                
                 <div className='font-montserrat text-2xl font-semibold my-10'>Sản phẩm nổi bật</div>
                 <div className='flex space-x-4'>
-                    {shownProducts.map((item) => (
-                        <Product_Frame name={item.name} price={item.price} weight={item.weight}/>
+                    {sampleProducts.map((item) => (
+                        <Product_Frame name={item.name} price={item.price} image={item.image.url} id={item._id}/>
                             ))}
   
                 </div>
@@ -40,8 +56,8 @@ export default function Product_Main(){
             <div className='mx-40'> 
                 <div className='font-montserrat text-2xl font-semibold my-10'>Sản phẩm nổi bật</div>
                 <div className='flex space-x-4'>
-                    {shownProducts.map((item) => (
-                        <Product_Frame name={item.name} price={item.price} weight={item.weight}/>
+                    {sampleProducts.map((item) => (
+                        <Product_Frame name={item.name} price={item.price} image={item.image.url} id={item._id}/>
                             ))}
   
                 </div>

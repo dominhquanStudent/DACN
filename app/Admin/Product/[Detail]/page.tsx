@@ -42,7 +42,7 @@ const setFileToBase = (file: any) =>{
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () =>{
-        setData( {...data, image: reader.result as string});
+        setData( {...data, image: {public_id: "null", url: reader.result as string}});
     }
 }
   const handleSaveClick = () => {

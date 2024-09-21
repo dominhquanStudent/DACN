@@ -9,6 +9,10 @@ const ProductCard = (props: any) => {
 
     Router.push(`/Product_Info/${productId}`);
   };
+  const discountString = props.product.discount; // e.g., "20%"
+  const discountPercentage = parseFloat(discountString.replace('%', ''));
+  const originalPrice = props.product.price;
+  const discountedPrice = originalPrice - (originalPrice * (discountPercentage / 100));
   return (
     <div
       className="flex flex-col border rounded-lg overflow-hidden w-60 transform transition-transform duration-300 hover:scale-110 hover:shadow-lg active:scale-95"
@@ -17,7 +21,7 @@ const ProductCard = (props: any) => {
       {/* Product Image */}
       <div className="w-full flex justify-center items-center">
         <img
-          src={Foto.src}
+          src={props.product.image.url || Foto}
           alt={props.product.name}
           className="object-cover w-full "
         />
@@ -61,9 +65,9 @@ const ProductCard = (props: any) => {
 
         {/* Price */}
         <div className="mt-2 flex justify-between">
-          <span className="text-lg font-semibold">${props.product.price}</span>
+          <span className="text-lg font-semibold">${discountedPrice}</span>
           <span className="text-lg font-semibold text-red-500 line-through ml-2">
-            ${props.product.discount}
+            ${props.product.price}
           </span>
         </div>
       </div>

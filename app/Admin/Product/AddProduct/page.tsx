@@ -15,7 +15,7 @@ function ProductAdd() {
   const [category, setCategory] = useState('');
   const [status, setStatus] = useState('');
   const [description, setDescription] = useState('');
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState({public_id: '', url: ''});
 
   const handleSaveClick = async () => {
     try {
@@ -47,7 +47,7 @@ function ProductAdd() {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      setImage(reader.result as string);
+      setImage({public_id: 'null', url: reader.result as string});
     }
   }
   return (
