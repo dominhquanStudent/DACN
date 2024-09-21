@@ -3,19 +3,25 @@ import Header from "@/app/Component/Header/Header";
 import Footer from "@/app/Component/Footer/Footer";
 import StarRating from "./star_rating";
 import ProductCard from "./ProductFrame_Main";
-import { useRouter } from "next/navigation";
+import { useSearchParams  } from "next/navigation";
 
 import "@/app/Component/CheckboxStyles.css";
 import axios from "@/api/axios";
 
 import { useState, useEffect } from "react";
+
 export default function Product() {
+  const searchParams = useSearchParams();
+  const queryFilterMode = Number(searchParams.get('filterMode') ?? "0");
+
   const [products, setProducts] = useState<any[]>([]);
+  //get products from server
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("/product/list");
         setProducts(response.data.products);
+        
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -23,7 +29,7 @@ export default function Product() {
 
     fetchProducts();
   }, []);
-
+  console.log(products);
   const brands = Array.from(new Set(products.map((product) => product.brand)));
   const category = Array.from(
     new Set(products.map((product) => product.category))
@@ -36,7 +42,57 @@ export default function Product() {
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
   const [searchPerformed, setSearchPerformed] = useState<boolean>(false);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-
+  //if queryFilterMode is not 0 then filter products
+  const [Params, setParams] = useState(0);
+  useEffect(() => {
+    if (queryFilterMode === 1) {
+      console.log("Filtering products by category 'Thức ăn thú cưng'");
+      console.log("Products before filtering:", products);
+      
+      const filtered = products.filter(product => product.category === "Thức ăn thú cưng");
+  
+      setParams(1);
+      setFilteredProducts(filtered);
+      console.log("Filtered products:", filteredProducts);
+    }
+    else if (queryFilterMode === 2) {
+      console.log("Filtering products by category 'Phụ kiện & Đồ chơi'");
+      console.log("Products before filtering:", products);
+  
+      const filtered = products.filter(product => product.category === "Phụ kiện & Đồ chơi");
+      setParams(2);
+      setFilteredProducts(filtered);
+      console.log("Filtered products:", filteredProducts);
+    }
+    else if (queryFilterMode === 3) {
+      console.log("Filtering products by category 'Đồ dùng vệ sinh'");
+      console.log("Products before filtering:", products);
+  
+      const filtered = products.filter(product => product.category === "Đồ dùng vệ sinh");
+      setParams(3);
+      setFilteredProducts(filtered);
+      console.log("Filtered products:", filteredProducts);
+    }
+    else if (queryFilterMode === 4) {
+      console.log("Filtering products by category 'Nhà thú cưng'");
+      console.log("Products before filtering:", products);
+  
+      const filtered = products.filter(product => product.category === "Nhà thú cưng");
+      setParams(4);
+      setFilteredProducts(filtered);
+      console.log("Filtered products:", filteredProducts);
+    }
+    else if (queryFilterMode === 5) {
+      console.log("Filtering products by category 'Đồ dùng thú y'");
+      console.log("Products before filtering:", products);
+  
+      const filtered = products.filter(product => product.category === "Đồ dùng thú y");
+      setParams(5);
+      setFilteredProducts(filtered);
+      console.log("Filtered products:", filteredProducts);
+    }
+  }, [queryFilterMode, products]);
+////////////////////////////////////////
   const handleCheckboxChange = (brand: string) => {
     setSelectedBrands((prevSelectedBrands) =>
       prevSelectedBrands.includes(brand)
@@ -175,7 +231,7 @@ export default function Product() {
         </div>
         {/* Product side*/}
         <div className="w-5/6 grid grid-cols-3 gap-14 ml-16">
-          {searchPerformed && filteredProducts.length === 0 ? (
+          {(searchPerformed && filteredProducts.length === 0)||(Params!=0 && filteredProducts.length === 0)  ? (
             <div className="col-span-3 text-center p-6 bg-gray-100 border border-gray-300 rounded-lg shadow-md">
               <h2 className="text-xl font-semibold mb-2">No items found</h2>
               <p className="text-gray-600">

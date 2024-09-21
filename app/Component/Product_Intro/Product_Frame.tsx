@@ -1,10 +1,18 @@
 import Product1 from "@/public/img/Product_Main/Product1.png";
+import { useRouter } from "next/navigation";
 export default function Product_Frame(props: any){
+    const Router = useRouter();
+    const handleChangeClick = (productId: any) => {
+                
+        Router.push(`/Product_Info/${productId}`);
+      };
     return(
-        <div className="flex border-solid rounded-md border-[1px] border-sky-500 p-5 w-[300px] overflow-auto hover:border-yellow-500 hover:shadow-lg transform hover:scale-110  transition duration-200">
+        <div className="flex border-solid rounded-md border-[1px] border-sky-500 p-5 w-[300px] overflow-auto hover:border-yellow-500 hover:shadow-lg transform hover:scale-110  transition duration-200 active:scale-95"
+        onClick={() => handleChangeClick(props.id)}
+        >
 
             {/* Image */}
-            <img src={Product1.src} alt="" className=""/>
+            <img src={props.image} alt="" className="w-24 h-24"/>
             {/* Description */}
             <div>
                 <div className="font-montserrat font-bold text-2xl">{props.price}</div>
