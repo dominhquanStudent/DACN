@@ -87,6 +87,9 @@ const setFileToBase = (file: any) =>{
           <form className="w-full mx-4" key={data._id}>
           {/* <form className="w-full mx-4" > */}
             <div className="flex flex-wrap -mx-3 mb-6 space-y-2">
+              <div className={'flex font-nunito text-xl font-bold w-full '}>
+                Thông tin khách hàng
+              </div>
               <div className="w-full px-3 mb-6 md:mb-0">
                 <label className="text-xs font-bold mb-2" htmlFor="userName">
                   Tên khách hàng
@@ -116,6 +119,38 @@ const setFileToBase = (file: any) =>{
                   </div>
                 </div>
               </div>
+              <div className={'flex font-nunito text-xl font-bold w-full '}>
+                Thông tin thú cưng
+              </div>
+
+              <div className='flex w-full'>
+                <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="petAge">
+                    Tuổi
+                  </label>
+                  <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
+                    {data.petAge}
+                  </div>
+
+                </div>
+                <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="weight">
+                    Cân nặng
+                  </label>
+                  <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
+                    {data.weight}
+                  </div>
+                </div>
+                <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="petGender">
+                    Giới tính
+                  </label>
+                  <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
+                    {data.petGender}
+                  </div>
+                </div>
+              </div>
+              
               <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="service">
                     Dịch vụ
@@ -154,7 +189,7 @@ const setFileToBase = (file: any) =>{
                     Ghi chú
                   </label>
                   <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
-                    {data.note}
+                    {data.note}    
                   </div>
                 </div>
                
