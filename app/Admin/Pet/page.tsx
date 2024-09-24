@@ -104,7 +104,7 @@ function Pet() {
                     <img src={pet.image} alt={pet.name} className="h-16 rounded-full" />
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {pet.name}
+                    {pet.petName}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {pet.pet_id}
