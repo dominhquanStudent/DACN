@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 
 function PetAdd() {
   const router = useRouter();
-  const [name, setName] = useState('');
+  const [petName, setPetName] = useState('');
   const [pet_id, setpet_id] = useState('');
   const [gender, setGender] = useState('');
   const [age, setAge] = useState('');
@@ -25,7 +25,7 @@ function PetAdd() {
   const handleSaveClick = async () => {
     try {
       const data = {
-        name,
+        petName,
         pet_id,
         gender,
         age,
@@ -79,8 +79,8 @@ function PetAdd() {
                   id="PetName"
                   type="text"
                   placeholder="Enter Pet Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={petName}
+                  onChange={(e) => setPetName(e.target.value)}
                 />
               </div>
               {/* <div className="w-full px-3 mb-6 md:mb-0">

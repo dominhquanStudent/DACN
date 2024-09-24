@@ -13,25 +13,25 @@ function formatDate(dateString: string): string {
 }
 
 function AdoptDetail({ params }: { params: { Detail: string } }) {
-  const adoptId = params.Detail;
+  const petId = params.Detail;
   const [data, setData] = useState<any>({});
   const [isEditable, setIsEditable] = useState(false);
   const router = useRouter();
   useEffect(() => {
     const fetchAdoptData = async (id: any) => {
       try {
-        const response = await axios.get(`/adopt/${adoptId}`);
-        const adoptData = response.data;
-        setData(adoptData.adopt);
-        // const log = await axios.post(`/test`, adoptData.adopt);
+        const response = await axios.get(`/pet/${petId}`);
+        const petData = response.data;
+        setData(petData.pet);
+        // const log = await axios.post(`/test`, petData.pet);
       } catch (error) {
-        console.error('Error fetching adopt data:', error);
+        console.error('Error fetching pet data:', error);
       }
     };
-    if (adoptId) {
-      fetchAdoptData(adoptId);
+    if (petId) {
+      fetchAdoptData(petId);
     }
-  }, [adoptId]);
+  }, [petId]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
@@ -56,9 +56,9 @@ const setFileToBase = (file: any) =>{
   const handleSaveClick = () => {
     const updateAdoptData = async (id: any) => {
       try {
-        const response = await axios.put(`/adopt/${adoptId}`,data);
+        const response = await axios.put(`/pet/${petId}`,data);
       } catch (error) {
-        console.error('Error fetching adopt data:', error);
+        console.error('Error fetching pet data:', error);
       }
     };
       updateAdoptData(data);

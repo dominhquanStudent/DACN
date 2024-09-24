@@ -78,14 +78,14 @@ const setFileToBase = (file: any) =>{
           {/* <form className="w-full mx-4" > */}
             <div className="flex flex-wrap -mx-3 mb-6 space-y-2">
               <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="name">
+                <label className="text-xs font-bold mb-2" htmlFor="petName">
                   Tên thú cưng
                 </label>
                 <input
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="name"
+                  id="petName"
                   type="text"
-                  value={data.name}
+                  value={data.petName}
                   onChange={handleInputChange}
                   disabled={!isEditable}
                 />
@@ -107,21 +107,22 @@ const setFileToBase = (file: any) =>{
 
               <div className='flex w-full'>
                 <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="gender">
-                    Giới tính
-                  </label>
-                  <select
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="gender"
-                    value={data.gender}
-                    onChange={handleInputChange}
-                    disabled={!isEditable}
-                  >
-                    <option value="">Select Gender</option>
-                    <option value="Đực">Đực</option>
-                    <option value="Cái">Cái</option>
-                  </select>
-                </div>
+                    <label className="text-xs font-bold mb-2" htmlFor="gender">
+                      Giới tính
+                    </label>
+                    <select
+                      className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                      id="gender"
+                      value={data.gender}
+                      onChange={handleInputChange}
+                      disabled={!isEditable}
+                    >
+                      <option value="">Chọn giới tính</option>
+                      <option value="Đực">Đực</option>
+                      <option value="Cái">Cái</option>
+
+                    </select>
+                  </div>
                 <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="age">
                     Tuổi
@@ -155,16 +156,17 @@ const setFileToBase = (file: any) =>{
                     Loài
                   </label>
                   <select
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="species"
-                    value={data.species}
-                    onChange={handleInputChange}
-                    disabled={!isEditable}
-                  >
-                    <option value="">Select Species</option>
-                    <option value="Chó">Chó</option>
-                    <option value="Mèo">Mèo</option>
-                  </select>
+                      className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                      id="species"
+                      value={data.species}
+                      onChange={handleInputChange}
+                      disabled={!isEditable}
+                    >
+                      <option value="">Chọn loài</option>
+                      <option value="Chó">Chó</option>
+                      <option value="Mèo">Mèo</option>
+
+                    </select>
                 </div>
  
 

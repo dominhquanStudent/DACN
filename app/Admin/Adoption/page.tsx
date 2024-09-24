@@ -4,6 +4,7 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import { useRouter } from 'next/navigation';
 import axios from '@/api/axios';
+
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, '0');
@@ -11,58 +12,50 @@ function formatDate(dateString: string): string {
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 }
+
 function Adopt() {
-  const [adopts, setAdopts] = useState<any[]>([]);
-  const Router = useRouter();
+  const [pets, setPets] = useState<any[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
-    const fetchAdopts = async () => {
+    const fetchPets = async () => {
       try {
-        const response = await axios.get('/adopt/list');
-        setAdopts(response.data.adopts);
+        const response = await axios.get('/pet/list');
+        // Filter out pets with userName "anonymous"
+        const filteredPets = response.data.pets.filter((pet: any) => pet.userName !== 'anonymous');
+        setPets(filteredPets);
       } catch (error) {
-        console.error('Error fetching adopts:', error);
+        console.error('Error fetching pets:', error);
       }
     };
-    fetchAdopts();
+    fetchPets();
   }, []);
 
-  const handleChangeClick = (adoptId: any) => {
-    console.log(`Details for adopt ${adoptId}`);
-    Router.push(`/Admin/Adoption/${adoptId}`);
-    
+  const handleChangeClick = (petId: any) => {
+    console.log(`Details for pet ${petId}`);
+    router.push(`/Admin/Adoption/${petId}`);
   };
-  const handleDeleteClick = async (adoptId: any) => {
-    console.log(`Delete for adopt ${adoptId}`);
+
+  const handleDeleteClick = async (petId: any) => {
+    console.log(`Delete for pet ${petId}`);
     try {
-      await axios.delete(`/adopt/${adoptId}`);
-      const newProducts = adopts.filter((adopt) => adopt._id !== adoptId);
-      setAdopts(newProducts);
+      await axios.delete(`/pet/${petId}`);
+      const newPets = pets.filter((pet) => pet._id !== petId);
+      setPets(newPets);
     } catch (error) {
-      console.error('Error deleting adopt:', error);
-  }
-};
-  // const handleAddClick = () => {
-  //   console.log(`Add for order`);
-  //   Router.push('/Admin/Adopt/AddAdopt');
-  //   // Here you can  navigate to a detail page or open a modal
-  // };
+      console.error('Error deleting pet:', error);
+    }
+  };
 
   return (
     <div className='flex flex-col w-full justify-center items-center'>
-      <Header></Header>
+      <Header />
       <div className='flex w-full'>
-        <Sidebar></Sidebar>
+        <Sidebar />
         <div className='w-3/4 border-l-2 border-gray-200 px-4'>
           <div className={'flex font-nunito text-xl font-bold w-full justify-center mb-4'}>
             Yêu cầu nhận nuôi thú cưng
           </div>
-          {/* Table */}
-          {/* <div className='flex w-full space-x-2 mt-4'>
-            <button onClick={handleAddClick} className="bg-transparent border border-[#CCCCCC] text-black font-bold py-1 px-4 rounded-xl mb-2">
-              Thêm
-            </button>
-          </div> */}
           <table className="min-w-full leading-normal">
             <thead>
               <tr>
@@ -85,44 +78,49 @@ function Adopt() {
                   Trạng thái
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Xem 
+                  Xem chi tiết
                 </th>
+
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Xóa
                 </th>
-
-
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(adopts) && adopts.map((adopt: any) => (
-                <tr key={adopt._id}>
- 
+              {Array.isArray(pets) && pets.map((pet: any) => (
+                <tr key={pet._id}>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {adopt.userName}
+                    {pet.userName}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {adopt.phoneNumber}
+                    {pet.phoneNumber}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {adopt.address}
+                    {pet.address}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {adopt.petName}
+                    {pet.petName}
                   </td>
+                  {/* <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    {pet.pet_id}
+                  </td> */}
                   {/* <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {adopt._id}
                   </td> */}
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {adopt.adoptStatus}
+                    {pet.adoptStatus}
+                    {/* {adopt.adoptStatus} */}
                   </td> 
 
 
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                  {/* <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     <button onClick={() => handleChangeClick(adopt._id)} className="text-blue-500 hover:text-blue-700">Chi tiết</button>
+                  </td> */}
+                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    <button onClick={() => handleChangeClick(pet._id)} className="text-blue-500 hover:text-blue-700">Xem chi tiết</button>
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <button onClick={() => handleDeleteClick(adopt._id)} className="text-red-500 hover:text-red-700">Xóa</button>
+                    <button onClick={() => handleDeleteClick(pet._id)} className="text-red-500 hover:text-red-700 ml-4">Xóa</button>
                   </td>
                 </tr>
               ))}
