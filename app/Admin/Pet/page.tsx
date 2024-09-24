@@ -67,14 +67,14 @@ function Pet() {
             <thead>
               <tr>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Image
+                  Ảnh
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Tên thú cưng
                 </th>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                {/* <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Mã số
-                </th>
+                </th> */}
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Giới tính
                 </th>
@@ -89,11 +89,18 @@ function Pet() {
                 </th>
 
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Trình trạng được nhận nuôi
+                  Nhận nuôi ?
+                </th>
+                {/* <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Ngày được nhận nuôi
+                </th> */}
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Chi tiết
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Ngày được nhận nuôi
+                  Xóa
                 </th>
+                
 
               </tr>
             </thead>
@@ -101,16 +108,14 @@ function Pet() {
               {Array.isArray(pets) && pets.map((pet: any) => (
                 <tr key={pet._id}>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <img src={pet.image} alt={pet.name} className="h-16 rounded-full" />
+                    <img src={pet.image.url} alt={pet.name} className="h-16 rounded-full" />
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {pet.petName}
                   </td>
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {pet.pet_id}
-                  </td>
-
-                
+                  {/* <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    {pet._id}
+                  </td> */}
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {pet.gender}
                   </td>
@@ -127,13 +132,13 @@ function Pet() {
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {pet.adoptStatus}
                   </td>
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                  {/* <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {formatDate(pet.recieveDay)}
-                  </td>
+                  </td> */}
 
 
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <button onClick={() => handleChangeClick(pet._id)} className="text-blue-500 hover:text-blue-700">Xem chi tiết</button>
+                    <button onClick={() => handleChangeClick(pet._id)} className="text-blue-500 hover:text-blue-700">Xem </button>
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     <button onClick={() => handleDeleteClick(pet._id)} className="text-red-500 hover:text-red-700">Xóa</button>

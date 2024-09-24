@@ -38,6 +38,7 @@ function Page() {
         const updateProfile = async (id: any) => {
             try {
                 const response = await axios.put(`/account/${id}`, data);
+                window.location.reload();
             } catch (error) {
                 console.error('Error update account data:', error);
             }
@@ -53,10 +54,12 @@ function Page() {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = () => {
-          setData({...data, avatar: {public_id: "", url: reader.result as string}});
+          setData({...data, avatar: {public_id: "null", url: reader.result as string}});
         }
       }
-
+    const triggerFileInput = () => {
+        document.getElementById('fileInput')?.click();
+    };
     return (
         <div className="flex flex-col w-full ">
             <Header />
@@ -80,6 +83,13 @@ function Page() {
                                 <input type="text" defaultValue={data.email ? data.email : ""} className="p-2 pl-4 font-nunito 
                                 rounded border border-gray-300 w-full text-lg"
                                     // onChange={e => setData({ ...data, email: e.target.value })} 
+                                    placeholder="Chưa có" />
+                            </div>
+                            <div className="flex items-center my-4">
+                                <div className="font-nunito w-1/4">Address</div>
+                                <input type="text" defaultValue={data.address ? data.address : ""} className="p-2 pl-4 font-nunito 
+                                rounded border border-gray-300 w-full text-lg"
+                                    onChange={e => setData({ ...data, address: e.target.value })} 
                                     placeholder="Chưa có" />
                             </div>
                             <div className="flex items-center my-4">
@@ -129,9 +139,9 @@ function Page() {
                         <div className="flex flex-col w-1/3 items-center justify-center">
                             <div className="flex flex-col items-center mt-8 w-full">
                                 <img loading="lazy" src={data.avatar.url ? data.avatar.url : "https://res.cloudinary.com/dzm879qpm/image/upload/v1724509562/defautProduct_mlmwsw.png"}
-                                    alt='Avatar' className="w-20 h-20 rounded-full mr-4 mb-4" />
-                                <input type="file" accept="image/*" onChange={handleImage} className="mb-4" />
-                                {/* <button type="submit" className="bg-[#EDB24E] text-white font-nunito p-2 text-lg rounded w-1/2" onClick={changeAvatar}>Thay đổi Avatar</button> */}
+                                    alt='Avatar'  className="w-24 h-24 rounded-full mr-4 mb-4" />
+                                <input type="file" id="fileInput" accept="image/*" onChange={handleImage} className="mb-4 hidden" />
+                                <button type="submit" className="bg-[#EDB24E] text-white font-nunito p-1 text-lg rounded w-1/2" onClick={triggerFileInput}>Thay đổi Avatar</button>
                             </div>
                         </div>
                     </div>

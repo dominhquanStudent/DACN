@@ -33,21 +33,6 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
       [id]: value,
     }));
   };
-
-  const handleImage = (e: any) => {
-    const file = e.target.files[0];
-    setFileToBase(file);
-    console.log(file);
-  };
-
-  const setFileToBase = (file: any) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setData({ ...data, image: reader.result as string });
-    };
-  };
-
   const handleSaveClick = () => {
     const updateOrderData = async (id: any) => {
       try {
@@ -96,71 +81,6 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
                 </div>
               </div>
               <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="order_date">
-                  Ngày đặt hàng
-                </label>
-                <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
-                  {new Date(data.order_date).toLocaleDateString()}
-                </div>
-              </div>
-              <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="delivery_date">
-                  Ngày giao hàng
-                </label>
-                <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
-                  {data.delivery_date ? new Date(data.delivery_date).toLocaleDateString() : 'Chưa giao'}
-                </div>
-              </div>
-              <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="order_status">
-                  Trạng thái đơn hàng
-                </label>
-                <select
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="order_status"
-                    value={data.order_status}
-                    onChange={handleInputChange}
-                    disabled={!isEditable}
-                  >
-                    <option value="">Chọn trạng thái</option>
-                    <option value="Chưa xử lý">Chưa xử lý</option>
-                    <option value="Đang xử lý">Đang xử lý</option>
-                    <option value="Đã xử lý">Đã xử lý</option>
-
-                  </select>
-
-              </div>
-              <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="order_address">
-                  Địa chỉ giao hàng
-                </label>
-                <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
-                  {data.order_address}
-                </div>
-              </div>
-              <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="payment_method">
-                  Phương thức thanh toán
-                </label>
-                <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
-                  {data.payment_method}
-                </div>
-              </div>
-              <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="employee_id">
-                  Mã nhân viên
-                </label>
-                <input
-                  className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="employee_id"
-                  type="text"
-                  value={data.employee_id}
-                  onChange={handleInputChange}
-                  disabled={!isEditable}
-                />
-
-              </div>
-              <div className="w-full px-3 mb-6 md:mb-0">
                 <label className="text-xs font-bold mb-2" htmlFor="productQuantity">
                   Số lượng sản phẩm
                 </label>
@@ -168,14 +88,7 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
                   {data.product_list?.reduce((acc: number, product: { quantity: number }) => acc + product.quantity, 0)}
                 </div>
               </div>
-              <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="total_price">
-                  Tổng giá
-                </label>
-                <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
-                  {data.total_price}
-                </div>
-              </div>
+
               <div className="block w-full border border-gray-200 rounded-lg py-2 px-4">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
@@ -206,8 +119,83 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
                   </tbody>
                 </table>
               </div>
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label className="text-xs font-bold mb-2" htmlFor="total_price">
+                  Tổng giá
+                </label>
+                <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
+                  {data.total_price}
+                </div>
+              </div>
+              <div className="flex w-full px-3 mb-6 md:mb-0">
+                <div className="w-1/3 pr-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="order_date">
+                    Ngày đặt hàng
+                  </label>
+                  <div className="block border border-gray-200 rounded-lg py-2 px-4">
+                    {new Date(data.order_date).toLocaleDateString()}
+                  </div>
+                </div>
+                <div className="w-1/3 pl-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="delivery_date">
+                    Ngày giao hàng
+                  </label>
+                  <div className="block border border-gray-200 rounded-lg py-2 px-4">
+                    {data.delivery_date ? new Date(data.delivery_date).toLocaleDateString() : 'Chưa giao'}
+                  </div>
+                </div>
+              </div>
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label className="text-xs font-bold mb-2" htmlFor="order_status">
+                  Trạng thái đơn hàng
+                </label>
+                <select
+                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="order_status"
+                  value={data.order_status}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                >
+                  <option value="">Chọn trạng thái</option>
+                  <option value="Chưa xử lý">Chưa xử lý</option>
+                  <option value="Đang xử lý">Đang xử lý</option>
+                  <option value="Đã xử lý">Đã xử lý</option>
+
+                </select>
+
+              </div>
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label className="text-xs font-bold mb-2" htmlFor="order_address">
+                  Địa chỉ giao hàng
+                </label>
+                <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
+                  {data.order_address}
+                </div>
+              </div>
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label className="text-xs font-bold mb-2" htmlFor="payment_method">
+                  Phương thức thanh toán
+                </label>
+                <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
+                  {data.payment_method}
+                </div>
+              </div>
+              <div className="w-full px-3 mb-6 md:mb-0">
+                <label className="text-xs font-bold mb-2" htmlFor="employee_id">
+                  Mã nhân viên
+                </label>
+                <input
+                  className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="employee_id"
+                  type="text"
+                  value={data.employee_id}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                />
+              </div>
+
             </div>
-            
+
           </div>
           <div className='flex items-center justify-center w-full space-x-4'>
             <button onClick={handleChangeClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
