@@ -95,7 +95,9 @@ export default function ProductDetailPage({
         rating: selectedRating,
         content: comment,
         image: [], // Add image URLs if any
+        user_avatar: accountData.avatar.url,
       };
+      console.log(reviewInfo);
       const response = await axios.post('/review/add', reviewInfo);
       console.log("Review submitted:", response.data);
     } catch (error) {
