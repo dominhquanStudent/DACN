@@ -12,7 +12,6 @@ function PetAdd() {
   const router = useRouter();
   const [name, setName] = useState('');
   const [pet_id, setpet_id] = useState('');
-
   const [gender, setGender] = useState('');
   const [age, setAge] = useState('');
   const [race, setRace] = useState('');
@@ -20,7 +19,7 @@ function PetAdd() {
   const [description, setDescription] = useState('');
   const [adoptStatus, setAdoptStatus] = useState('');
   const [recieveDay, setRecieveDay] = useState('');
-  
+  const [image, setImage] = useState({public_id: '', url: ''});
 
 
   const handleSaveClick = async () => {
@@ -35,6 +34,7 @@ function PetAdd() {
         description,
         adoptStatus,
         recieveDay,
+        image
       };
       const response = await axios.post('/pet/add', data);
       toast.success('Pet saved successfully!');
@@ -44,6 +44,18 @@ function PetAdd() {
       console.error('Error saving pet:', error);
     }
   };
+  const handleImage = (e: any) => {
+    const file = e.target.files[0];
+    setFileToBase(file);
+  }
+
+  const setFileToBase = (file: any) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+    setImage({public_id: 'null', url: reader.result as string});
+    }
+  }
 
   return (
     <div className='flex flex-col w-full justify-center items-center'>
@@ -71,7 +83,7 @@ function PetAdd() {
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
-              <div className="w-full px-3 mb-6 md:mb-0">
+              {/* <div className="w-full px-3 mb-6 md:mb-0">
                 <label className="text-xs font-bold mb-2" htmlFor="PetId">
                   Mã số thú cưng
                 </label>
@@ -83,8 +95,8 @@ function PetAdd() {
                   value={pet_id}
                   onChange={(e) => setpet_id(e.target.value)}
                 />
-              </div>
-              {/* <div className="w-full px-3">
+              </div> */}
+              <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="ImageUpload">
                   Tải hình ảnh
                 </label>
@@ -93,6 +105,7 @@ function PetAdd() {
                   id="ImageUpload"
                   name="image"
                   accept="image/*"
+                  onChange={handleImage}
                   className="block w-full text-sm text-gray-500
                     file:mr-4 file:py-2 file:px-4
                     file:rounded-full file:border-0
@@ -100,7 +113,7 @@ function PetAdd() {
                     file:bg-violet-50 file:text-violet-700
                     hover:file:bg-violet-100"
                 />
-              </div> */}
+              </div>
               <div className='flex w-full'>
                 <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="Gender">

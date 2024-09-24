@@ -78,11 +78,17 @@ function Adopt() {
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Tên thú cưng
                 </th>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                {/* <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Mã số
+                </th> */}
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Trạng thái
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Trạn thái
+                  Xem 
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Xóa
                 </th>
 
 
@@ -104,16 +110,16 @@ function Adopt() {
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {adopt.petName}
                   </td>
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {adopt.petId}
-                  </td>
+                  {/* <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    {adopt._id}
+                  </td> */}
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {adopt.adoptStatus}
                   </td> 
 
 
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <button onClick={() => handleChangeClick(adopt._id)} className="text-blue-500 hover:text-blue-700">Xem chi tiết</button>
+                    <button onClick={() => handleChangeClick(adopt._id)} className="text-blue-500 hover:text-blue-700">Chi tiết</button>
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     <button onClick={() => handleDeleteClick(adopt._id)} className="text-red-500 hover:text-red-700">Xóa</button>

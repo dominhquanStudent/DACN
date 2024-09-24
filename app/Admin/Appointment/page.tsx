@@ -79,7 +79,7 @@ function Appointment() {
                   Ngày hẹn
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Thời gian hẹn
+                  Giờ hẹn
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Dịch vụ
@@ -87,7 +87,12 @@ function Appointment() {
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Bác sĩ chỉ định
                 </th>
-
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Xem 
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Xóa
+                </th>
 
 
               </tr>
@@ -120,7 +125,7 @@ function Appointment() {
 
 
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <button onClick={() => handleChangeClick(appointment._id)} className="text-blue-500 hover:text-blue-700">Xem chi tiết</button>
+                    <button onClick={() => handleChangeClick(appointment._id)} className="text-blue-500 hover:text-blue-700">Chi tiết</button>
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     <button onClick={() => handleDeleteClick(appointment._id)} className="text-red-500 hover:text-red-700">Xóa</button>

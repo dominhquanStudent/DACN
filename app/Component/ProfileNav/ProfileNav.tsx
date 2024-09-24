@@ -43,8 +43,6 @@ export default function ProfileNav() {
             <div className="ml-8 font-normal">
                 <div className={`my-2 ${usePathname() == "/Profile" ? "text-[#EDB24E] font-bold" : ""}`}>
                     <Link href="/Profile">Hồ sơ </Link></div>
-                <div className={`my-2 ${usePathname() == "/Profile/Address" ? "text-[#EDB24E] font-bold" : ""}`}>
-                    <Link href="/Profile/Address">Địa chỉ </Link></div>
                 <div className={`my-2 ${usePathname() == "/Profile/ChangePass" ? "text-[#EDB24E] font-bold" : ""}`}>
                     <Link href="/Profile/ChangePass">Đổi mật khẩu</Link></div>
             </div>

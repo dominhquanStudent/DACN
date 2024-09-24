@@ -4,7 +4,10 @@ import Footer from '@/app/Component/Footer/Footer';
 import ProfileNav from "@/app/Component/ProfileNav/ProfileNav";
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
+import axios from '@/api/axios';
+import getInfo from '@/hooks/getInfo';
 function Page() {
+    const [data, setData] = useState<any>({}); 
     const [passwords, setPasswords] = useState(["", "", ""]);
     const [hidepass, setHidepass] = useState([false, false, false]);
 
@@ -25,7 +28,26 @@ function Page() {
         newHidepass[index] = !newHidepass[index];
         setHidepass(newHidepass);
     };
-    const handleSave = () => {
+    useEffect(() => {
+        const fetchData = async () => {
+            const Data = await getInfo();
+            setData(Data);
+        };
+        fetchData();
+    });
+    const handleSave = async () => {
+        console.log("savePass");
+        const updatePassword = async () => {
+            try {
+                console.log(data._id);
+                const response = await axios.post(`/account/changepass/${data._id}`, { oldpassword: passwords[0], newpassword: passwords[1] });
+                console.log(response);
+                window.location.reload();
+            } catch (error) {
+                console.error('Error update password:', error);
+            }
+        };
+        updatePassword();
 
     }
     return (
@@ -44,7 +66,7 @@ function Page() {
                                 <div className="relative flex items-center font-nunito w-1/2 text-lg">
                                     <input
                                         type={hidepass[field.hidepassIndex] ? "text" : "password"}
-                                        className='p-2 pl-4 w-full rounded border border-gray-300'
+                                        className='p-1 pl-4 w-full rounded border border-gray-300'
                                         value={passwords[field.passwordIndex]}
                                         onChange={(e) => handlePasswordChange(field.passwordIndex, e.target.value)}
                                     />

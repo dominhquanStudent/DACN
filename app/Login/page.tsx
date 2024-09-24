@@ -25,7 +25,7 @@ function Page() {
       const role = response?.data?.role;
       setAuth({ email, password, accessToken, role });
       deleteCookie("jwt");
-      setCookie("jwt", accessToken, { maxAge: 60 * 6 * 24 });
+      setCookie("jwt", accessToken, { maxAge: 60 * 60 });
       router.push("/Main");
     } catch (error) {
       console.error(error); // Handle error 

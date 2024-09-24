@@ -35,14 +35,13 @@ function PetDetail({ params }: { params: { Detail: string } }) {
   const handleImage = (e: any) =>{
     const file = e.target.files[0];
     setFileToBase(file);
-    console.log(file);
 }
 
 const setFileToBase = (file: any) =>{
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () =>{
-        setData( {...data, image: reader.result as string});
+    setData( {...data, image: {public_id: "null", url: reader.result as string}});
     }
 }
   const handleSaveClick = () => {
@@ -91,16 +90,17 @@ const setFileToBase = (file: any) =>{
                   disabled={!isEditable}
                 />
               </div>
-              <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="pet_id">
-                  Mã thú cưng
+              <div className="w-full px-3">
+                <label className="text-xs font-bold mb-2" htmlFor="image">
+                  Hình ảnh
                 </label>
                 <input
-                  className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="pet_id"
-                  type="text"
-                  value={data.pet_id}
-                  onChange={handleInputChange}
+                  type="file"
+                  id="image"
+                  name="image"
+                  accept="image/*"
+                  onChange={handleImage}
+                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
                   disabled={!isEditable}
                 />
               </div>

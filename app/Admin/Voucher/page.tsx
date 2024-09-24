@@ -84,28 +84,34 @@ function VoucherList() {
             <thead>
               <tr>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Name
+                  Tên
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Mã Voucher
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Quantity
+                  Số lượng
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Used Time
+                  Lần sử dụng
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Discount Type
+                  Loại giảm
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Discount Value
+                  Giá trị giảm
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Begin Date
+                  Từ ngày
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  End Date
+                  Đến ngày
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Xem 
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Xóa
                 </th>
               </tr>
             </thead>
@@ -138,7 +144,7 @@ function VoucherList() {
 
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <button onClick={() => handleDetailClick(voucher._id)} className="text-blue-500 hover:text-blue-700">Xem chi tiết</button>
+                    <button onClick={() => handleDetailClick(voucher._id)} className="text-blue-500 hover:text-blue-700">Chi tiết</button>
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     <button onClick={() => handleDeleteClick(voucher._id)} className="text-red-500 hover:text-red-700">Xóa</button>
