@@ -58,11 +58,12 @@ export default function Booking() {
     console.log(file);
   }
 
+
   const setFileToBase = (file: any) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-    // setImage({public_id: 'null', url: reader.result as string});
+    setImage({public_id: 'null', url: reader.result as string});
     }
   }
 
@@ -132,7 +133,7 @@ export default function Booking() {
                     file:bg-violet-50 file:text-violet-700
                     hover:file:bg-violet-100"
                 />
-            </div>
+              </div>
 
             <div className="flex items-center space-x-8">
               <label className="flex-1">Địa điểm cần cứu hộ</label>

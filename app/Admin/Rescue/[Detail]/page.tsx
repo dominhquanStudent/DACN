@@ -14,7 +14,7 @@ function formatDate(dateString: string): string {
 
 function RescueDetail({ params }: { params: { Detail: string } }) {
   const rescueId = params.Detail;
-  const [data, setData] = useState<any>({});
+  const [data, setData] = useState<any>({ "image":{"url":[""]}, });  
   const [isEditable, setIsEditable] = useState(false);
   const router = useRouter();
   useEffect(() => {
@@ -132,15 +132,20 @@ const setFileToBase = (file: any) =>{
                 <label className="text-xs font-bold mb-2" htmlFor="image">
                   Hình ảnh
                 </label>
+
+                <img loading="lazy" src={data.image.url} alt={data.name} className="h-16 rounded-full" />
+
                 
-                {data.image && (
-                  <img
-                    className="mt-4"
-                    src={data.image}
-                    alt="Database Image"
-                    style={{ maxWidth: '100%', height: 'auto' }}
-                  />
-                )}
+                {/* {data.image && ( */}
+                  
+                    {/* className="mt-4"
+                  // <img loading="lazy" src={data.image.url} alt={product.name} className="h-16 rounded-full" />
+
+                  src={typeof data.image === 'string' ? data.image : data.image.url}
+                  alt="Database Image"
+                    style={{ maxWidth: '100%', height: 'auto' }} */}
+                  
+                {/* )} */}
 
               </div>
               <div className='flex w-full'>
