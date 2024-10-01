@@ -2,7 +2,12 @@
 import { createContext, useState, useContext, ReactNode } from 'react';
 
 interface AuthContextType {
-  auth: any;
+  Auth: {
+    email: string;
+    accessToken: string;
+    role: string;
+    id: string;
+  };
   setAuth: React.Dispatch<React.SetStateAction<any>>;
 }
 
@@ -13,10 +18,15 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [auth, setAuth] = useState<any>({});
+  const [Auth, setAuth] = useState<any>({
+    email: '',
+    accessToken: '',
+    role: '',
+    id: '',
+  });
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth }}>
+    <AuthContext.Provider value={{ Auth, setAuth }}>
       {children}
     </AuthContext.Provider>
   );

@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import React, { useState, useEffect} from "react";
 import { getCookie, setCookie,deleteCookie } from "cookies-next";
-import { useAuth } from "@/context/authProvider"; // Ensure correct import
+import { useAuth } from "@/context/authProvider";
 import axios from "@/api/axios";
 function Page() {
   const router = useRouter();
-  const {setAuth} = useAuth();
+  const { Auth, setAuth } = useAuth();
   const [hidepass, sethidepass] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,9 +23,10 @@ function Page() {
       const response = await axios.post("http://localhost:8080/auth/login", data);
       const accessToken = response?.data?.jwt;
       const role = response?.data?.role;
-      setAuth({ email, password, accessToken, role });
+      const id = response?.data?.id;
+      setAuth({ email, accessToken, role, id });
       deleteCookie("jwt");
-      setCookie("jwt", accessToken, { maxAge: 60 * 60 });
+      setCookie("jwt", accessToken, { maxAge: 60 * 60 * 24 });
       router.push("/Main");
     } catch (error) {
       console.error(error); // Handle error 
@@ -35,6 +36,7 @@ function Page() {
 
   return (
     <div className="flex flex-col w-full ">
+      <button>{Auth.email}</button>
       <div className="flex items-center">
         <img src={"./img/logo.png"} alt="Logo" className=" w-20  ml-8" />
         <button onClick={() => router.push("/Main")}>
