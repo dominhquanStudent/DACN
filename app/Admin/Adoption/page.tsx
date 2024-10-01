@@ -22,7 +22,7 @@ function Adopt() {
       try {
         const response = await axios.get('/pet/list');
         // Filter out pets with userName "anonymous"
-        const filteredPets = response.data.pets.filter((pet: any) => pet.userName !== 'anonymous');
+        const filteredPets = response.data.pets.filter((pet: any) => (pet.userName !== 'anonymous' && pet.userName !== ''));
         setPets(filteredPets);
       } catch (error) {
         console.error('Error fetching pets:', error);
@@ -71,18 +71,14 @@ function Adopt() {
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Tên thú cưng
                 </th>
-                {/* <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Mã số
-                </th> */}
+                </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Trạng thái
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Xem chi tiết
-                </th>
-
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Xóa
+                  Hành động
                 </th>
               </tr>
             </thead>
@@ -101,25 +97,14 @@ function Adopt() {
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {pet.petName}
                   </td>
-                  {/* <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {pet.pet_id}
-                  </td> */}
-                  {/* <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {adopt._id}
-                  </td> */}
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {pet.adoptStatus}
-                    {/* {adopt.adoptStatus} */}
-                  </td> 
-
-
-                  {/* <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <button onClick={() => handleChangeClick(adopt._id)} className="text-blue-500 hover:text-blue-700">Chi tiết</button>
-                  </td> */}
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <button onClick={() => handleChangeClick(pet._id)} className="text-blue-500 hover:text-blue-700">Xem chi tiết</button>
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    {pet.adoptStatus}
+                  </td>
+                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    <button onClick={() => handleChangeClick(pet._id)} className="text-blue-500 hover:text-blue-700">Xem chi tiết</button>
                     <button onClick={() => handleDeleteClick(pet._id)} className="text-red-500 hover:text-red-700 ml-4">Xóa</button>
                   </td>
                 </tr>

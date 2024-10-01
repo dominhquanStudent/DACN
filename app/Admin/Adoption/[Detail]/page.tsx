@@ -174,9 +174,9 @@ const setFileToBase = (file: any) =>{
                 {data.image && (
                   <img
                     className="mt-4"
-                    src={data.image}
+                    src={data.image.url}
                     alt="Database Image"
-                    style={{ maxWidth: '100%', height: 'auto' }}
+                    style={{ maxWidth: '300px', height: '300px' }}
                   />
                 )}
 

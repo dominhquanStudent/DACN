@@ -1,59 +1,53 @@
 "use client";
 import React, { useState, useEffect } from "react";
-
+import { useRouter } from "next/navigation";
 import Header from "@/app/Component/Header/Header";
 import Footer from "@/app/Component/Footer/Footer";
 import Pet_Frame from "../Component/Adopt/Pet_Frame";
-import Bull from "@/public/img/Pet/bull.png";
-import Vang from "@/public/img/Pet/Vàng.png";
-import Na from "@/public/img/Pet/Gau.png";
-import LuLu from "@/public/img/Pet/Lu.png";
+import axios from "@/api/axios";
 import Paw from "@/public/img/Pet/paw.png";
-
 import { Slider } from "@mui/material";
+const handleChangeClick = (petId: any) => {
+  const router = useRouter();
+  console.log(`Details for rescue ${petId}`);
+  router.push(`/Adopt/${petId}`);
+};
 export default function Product_Main() {
   const [weight, setWeight] = useState("");
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
+  interface Pet { // giống trong model
+    _id: string;
+    image: { url: string[] };
+    petName: string;
+    gender: string;
+    age: string;
+    race: string;
+    vaccinated: boolean;
+  }
 
-  const shownProducts = [
-    {
-      image: Bull,
-      name: "Bull",
-      gender: "Cái",
-      age: "1 tuổi",
-      vaccination: "Đã tiêm ",
-    },
-    {
-      image: Vang,
-      name: "LuLu",
-      gender: "Đực",
-      age: "1.5 tuổi",
-      vaccination: "Đã tiêm ",
-    },
-    {
-      image: Na,
-      name: "Vàng",
-      gender: "Đực",
-      age: "2 tuổi",
-      vaccination: "Đã tiêm ",
-    },
-    {
-      image: LuLu,
-      name: "Na",
-      gender: "Cái",
-      age: "7 tháng",
-      vaccination: "Đã tiêm ",
-    },
-  ];
+  const [shownProducts, setShownProducts] = useState<Pet[]>([]);
+
+  useEffect(() => {
+    const fetchPets = async () => {
+      try {
+        const response = await axios.get("/pet/list");
+        console.log(response.data);
+        setShownProducts(response.data.pets);
+      } catch (error) {
+        console.error("Error fetching pets:", error);
+      }
+    };
+
+    fetchPets();
+  }, []);
 
   return (
     <>
       <Header></Header>
       <div className="flex flex-col font-montserrat">
         <div className="text-center my-3 font-bold">
-          {" "}
-          Nhắc nhỏ trước khi nhận nuôi thú cưng{" "}
+          Nhắc nhỏ trước khi nhận nuôi thú cưng
         </div>
         <div className="flex mx-24">
           <div className="mx-auto w-[70%] mr-5">
@@ -66,7 +60,7 @@ export default function Product_Main() {
             <div className="text-center font-semibold mt-3 text-xl">
               Xem quy trình nhận nuôi tại{" "}
               <span className="text-red-500">đây</span>
-            </div>{" "}
+            </div>
           </div>
           <div className="mx-auto w-[30%] bg-gray-300 border rounded-xl border-solid border-gray-300">
             <div className="text-center my-3 font-bold">
@@ -76,7 +70,6 @@ export default function Product_Main() {
               <img src={Paw.src} alt="" className="mx-2" />
               Có khả năng nuôi dưỡng thú cưng
             </div>
-
             <div className="flex mb-3">
               <img
                 src={Paw.src}
@@ -164,14 +157,11 @@ export default function Product_Main() {
             Các bé thú cưng của cửa hàng
           </div>
           <div className="flex flex-wrap justify-center mx-auto">
-            {shownProducts.map((item) => (
-              <div className="w-1/2 p-4 flex items-center justify-center space-x-4">
+            {shownProducts.map((pet) => (
+              <div className="w-1/2 p-4 flex items-center justify-center space-x-4" key={pet._id}>
                 <Pet_Frame
-                  image={item.image}
-                  name={item.name}
-                  gender={item.gender}
-                  age={item.age}
-                  vaccination={item.vaccination}
+                  pet={pet}
+                  // onClick={() => handleChangeClick(pet._id)}
                 />
               </div>
             ))}
@@ -224,7 +214,7 @@ export default function Product_Main() {
               </li>
               <li>
                 3. Trường hợp không nuôi được tiếp cần trả lại cho Nhóm, không
-                tự ý đem cho người khác.)
+                tự ý đem cho người khác. )
               </li>
             </ul>
           </div>
