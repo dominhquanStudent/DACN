@@ -21,7 +21,7 @@ export default function Pet_Frame({pet}:  {pet: any}){
 
             {/* Description */}
             <div className="ml-20">
-                <div className="font-montserrat font-bold text-2xl">{pet.name}</div>
+                <div className="font-montserrat font-bold text-2xl">{pet.petName}</div>
         
                 <div className="font-montserrat flex flex-col space-y-4">
                     <div className="flex space-x-4 justify-between"> 
