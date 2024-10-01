@@ -2,7 +2,8 @@
 import Footer from "../Component/Footer/Footer";
 import Logo from "../../public/img/logo";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import axios from "@/api/axios";
 function Page() {
   const [isPopup, setIsPopup] = useState(false);
   const [email, setEmail] = useState("");
@@ -16,6 +17,17 @@ function Page() {
     if (validateEmail(email)) {
       setEmailError("");
       setIsPopup(true);
+      try{
+        const response = axios.post("/otp/create", { email: email, job: "register" });
+        console.log(response);
+      } catch (error) {
+        console.error('Error sending email:', error);
+        if (error instanceof Error) {
+          setEmailError(error.message);
+        } else {
+          setEmailError("Có vấn đề xảy ra, vui lòng thử lại sau");  
+        }
+      }
     } else {
       setEmailError("Email không hợp lệ");
     }
@@ -148,7 +160,7 @@ function Page() {
             className="p-4 text-center text-black"
           >
             Tiếp theo chúng tôi sẽ gửi mã OTP đến email <br />{" "}
-            <text className="font-bold">{email}</text> <br />
+            <div className="font-bold">{email}</div> <br />
             <Link href={{ pathname: "Sigup/next", query: { email: email } }}>
               <button
                 type="submit"
