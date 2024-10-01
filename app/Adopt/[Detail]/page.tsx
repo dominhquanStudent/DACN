@@ -1,23 +1,61 @@
-'use client';
-import useSWR, { mutate } from 'swr';
+// 'use client';
+// import { getCookie } from "cookies-next";
+// import getInfo from "@/hooks/getInfo";
+// import { useState, useEffect, use } from "react";
+// export default function Adopt_Detail() 
+// {
+//     const jtw = getCookie("jwt");
+//     const [account, setAccount] = useState<any>();
+//     const fetchData = async () => {
+//         const getAccount = await getInfo();
+//         setAccount(getAccount);
+//     }
+//     useEffect(() => {
+//         if (jtw) {
+//             fetchData();
+//         }
+//     }, []);
+//     console.log(account);
+//     console.log(account.email);
 
-import React, { useEffect, useState } from 'react';
+
+//     return (
+//         <div>Hello Dinh So</div>
+//     )
+       
+// }
+'use client';
+import React, { useEffect, useState, use } from 'react';
+
+import { mutate } from 'swr';
 import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
 import { useRouter } from 'next/navigation';
+import { getCookie } from "cookies-next";
+import getInfo from "@/hooks/getInfo";
+
+
+
 function PetDetail({ params }: { params: { Detail: string } }) {
   const petId = params.Detail;
   const [data, setData] = useState<any>({});
   const [isEditable, setIsEditable] = useState(false);
   const router = useRouter();
+    const jtw = getCookie("jwt");
+    const [account, setAccount] = useState<any>();
+    const fetchData = async () => {
+        const getAccount = await getInfo();
+        setAccount(getAccount);
+    }
+
   useEffect(() => {
     const fetchPetData = async (id: any) => {
       try {
         const response = await axios.get(`/pet/${petId}`);
         const petData = response.data;
+        console.log('API Response:', petData); // Log the API response
         setData(petData.pet);
-        // const log = await axios.post(`/test`, petData.pet);
       } catch (error) {
         console.error('Error fetching pet data:', error);
       }
@@ -25,7 +63,14 @@ function PetDetail({ params }: { params: { Detail: string } }) {
     if (petId) {
       fetchPetData(petId);
     }
+        if (jtw) {
+            fetchData();
+        }
   }, [petId]);
+
+  useEffect(() => {
+    console.log('Pet Data:', data); // Log the state
+  }, [data]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
@@ -34,54 +79,66 @@ function PetDetail({ params }: { params: { Detail: string } }) {
       [id]: value,
     }));
   };
-  const handleImage = (e: any) =>{
+
+  const handleImage = (e: any) => {
     const file = e.target.files[0];
     setFileToBase(file);
-}
+  };
 
-const setFileToBase = (file: any) =>{
+  const setFileToBase = (file: any) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onloadend = () =>{
-    setData( {...data, image: {public_id: "null", url: reader.result as string}});
-    }
-}
+    reader.onloadend = () => {
+      setData({ ...data, image: { public_id: "null", url: reader.result as string } });
+    };
+  };
+
   const handleSaveClick = () => {
     const updatePetData = async (id: any) => {
       try {
-        const response = await axios.put(`/pet/${petId}`,data);
+        const response = await axios.put(`/pet/${petId}`, data);
         mutate(`/pet/${petId}`);
-
         router.push('/Admin/Pet');
-
       } catch (error) {
-        console.error('Error fetching pet data:', error);
+        console.error('Error updating pet data:', error);
       }
     };
-      updatePetData(data);
-    
-    // router.push('/Admin/Pet');
+    updatePetData(data);
   };
 
   const handleChangeClick = async () => {
     setIsEditable(true);
-    // const log = await axios.post(`/test`, data);
+  };
+
+  const handleAdoptClick = async () => {
+    try {
+      const updatedData = { ...data, userName: account.userName };
+      const response = await axios.put(`/pet/${petId}`, updatedData);
+      // Revalidate the data
+      mutate(`/pet/${petId}`);
+      alert('Đăng kí nhận nuôi thành công!');
+    } catch (error) {
+      console.error('Error updating pet data:', error);
+    }
   };
 
   if (!data) {
     return <div>Loading...</div>;
   }
+//   console.log(account);
+
+
   return (
     <div className='flex flex-col w-full justify-center items-center'>
       <Header />
       <div className='flex w-full'>
-        <Sidebar />
+        {/* <Sidebar /> */}
+        
         <div className='w-3/4 border-l-2 border-gray-200'>
           <div className={'flex font-nunito text-xl font-bold w-full justify-center'}>
-            Thông tin thú cưng chi tiết
+            Thông tin chi tiết thú cưng (Khách Hàng)
           </div>
           <form className="w-full mx-4" key={data._id}>
-          {/* <form className="w-full mx-4" > */}
             <div className="flex flex-wrap -mx-3 mb-6 space-y-2">
               <div className="w-full px-3 mb-6 md:mb-0">
                 <label className="text-xs font-bold mb-2" htmlFor="petName">
@@ -91,7 +148,7 @@ const setFileToBase = (file: any) =>{
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="petName"
                   type="text"
-                  value={data.petName}
+                  value={data.petName || ''}
                   onChange={handleInputChange}
                   disabled={!isEditable}
                 />
@@ -113,22 +170,21 @@ const setFileToBase = (file: any) =>{
 
               <div className='flex w-full'>
                 <div className="w-full px-3">
-                    <label className="text-xs font-bold mb-2" htmlFor="gender">
-                      Giới tính
-                    </label>
-                    <select
-                      className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                      id="gender"
-                      value={data.gender}
-                      onChange={handleInputChange}
-                      disabled={!isEditable}
-                    >
-                      <option value="">Chọn giới tính</option>
-                      <option value="Đực">Đực</option>
-                      <option value="Cái">Cái</option>
-
-                    </select>
-                  </div>
+                  <label className="text-xs font-bold mb-2" htmlFor="gender">
+                    Giới tính
+                  </label>
+                  <select
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="gender"
+                    value={data.gender || ''}
+                    onChange={handleInputChange}
+                    disabled={!isEditable}
+                  >
+                    <option value="">Chọn giới tính</option>
+                    <option value="Đực">Đực</option>
+                    <option value="Cái">Cái</option>
+                  </select>
+                </div>
                 <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="age">
                     Tuổi
@@ -137,7 +193,7 @@ const setFileToBase = (file: any) =>{
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="age"
                     type="text"
-                    value={data.age}
+                    value={data.age || ''}
                     onChange={handleInputChange}
                     disabled={!isEditable}
                   />
@@ -152,7 +208,7 @@ const setFileToBase = (file: any) =>{
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="race"
                     type="text"
-                    value={data.race}
+                    value={data.race || ''}
                     onChange={handleInputChange}
                     disabled={!isEditable}
                   />
@@ -162,30 +218,27 @@ const setFileToBase = (file: any) =>{
                     Loài
                   </label>
                   <select
-                      className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                      id="species"
-                      value={data.species}
-                      onChange={handleInputChange}
-                      disabled={!isEditable}
-                    >
-                      <option value="">Chọn loài</option>
-                      <option value="Chó">Chó</option>
-                      <option value="Mèo">Mèo</option>
-
-                    </select>
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="species"
+                    value={data.species || ''}
+                    onChange={handleInputChange}
+                    disabled={!isEditable}
+                  >
+                    <option value="">Chọn loài</option>
+                    <option value="Chó">Chó</option>
+                    <option value="Mèo">Mèo</option>
+                  </select>
                 </div>
- 
-
               </div>
 
               <div className="w-full px-3">
-                <label className="text-xs font-bold mb-2" htmlFor="AdoptStatus">
+                <label className="text-xs font-bold mb-2" htmlFor="adoptStatus">
                   Tình trạng nhận nuôi
                 </label>
                 <select
                   className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="adoptStatus"
-                  value={data.adoptStatus}
+                  value={data.adoptStatus || ''}
                   onChange={handleInputChange}
                   disabled={!isEditable}
                 >
@@ -195,45 +248,39 @@ const setFileToBase = (file: any) =>{
                 </select>
               </div>
               <div className="w-full px-3">
-                <label className="text-xs font-bold mb-2" htmlFor="RecieveDay">
+                <label className="text-xs font-bold mb-2" htmlFor="recieveDay">
                   Ngày nhận nuôi
                 </label>
                 <input
                   className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="eecieveDay"
+                  id="recieveDay"
                   type="date"
-                  value={data.recieveDay}
+                  value={data.recieveDay || ''}
                   onChange={handleInputChange}
                   disabled={!isEditable}
                 />
               </div>
-                
 
               <div className="w-full px-3">
-                <label className="text-xs font-bold mb-2" htmlFor="Description">
+                <label className="text-xs font-bold mb-2" htmlFor="description">
                   Mô tả
                 </label>
                 <textarea
                   className="block w-full h-24 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="description"
-                  value={data.description}
+                  value={data.description || ''}
                   onChange={handleInputChange}
                   disabled={!isEditable}
                 ></textarea>
               </div>
             </div>
           </form>
-          <div className='flex items-center justify-center w-full space-x-4'>
-            <button onClick={handleChangeClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Sửa
+          <button onClick={handleAdoptClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Đăng kí nhận nuôi
             </button>
-            <button onClick={handleSaveClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Lưu
-            </button>
-          </div>
+
         </div>
       </div>
-      {/* <ToastContainer /> */}
     </div>
   );
 }

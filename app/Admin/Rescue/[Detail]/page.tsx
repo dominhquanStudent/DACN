@@ -1,4 +1,5 @@
 'use client';
+import useSWR, { mutate } from 'swr';
 import React, { useEffect, useState } from 'react';
 import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
@@ -53,18 +54,21 @@ const setFileToBase = (file: any) =>{
         setData( {...data, image: reader.result as string});
     }
 }
-  const handleSaveClick = () => {
-    const updateRescueData = async (id: any) => {
-      try {
-        const response = await axios.put(`/rescueRequest/${rescueId}`,data);
-      } catch (error) {
-        console.error('Error fetching rescue data:', error);
-      }
-    };
-      updateRescueData(data);
-    
-    router.push('/Admin/Rescue');
+const handleSaveClick = () => {
+  const updateRescueData = async (id: any) => {
+    try {
+      const response = await axios.put(`/rescueRequest/${rescueId}`, data);
+      // Revalidate the data
+      mutate(`/rescueRequest/${rescueId}`);
+      // Navigate back to the list page
+      router.push('/Admin/Rescue');
+    } catch (error) {
+      console.error('Error updating rescue data:', error);
+    }
   };
+
+  updateRescueData(data);
+};
 
   const handleChangeClick = async () => {
     setIsEditable(true);
@@ -133,7 +137,11 @@ const setFileToBase = (file: any) =>{
                   Hình ảnh
                 </label>
 
-                <img loading="lazy" src={data.image.url} alt={data.name} className="h-16 rounded-full" />
+                <img  src={data.image.url} alt={data.name} 
+                    style={{ maxWidth: '300px', height: '300px' }}
+                    className="mt-4"
+                
+                />
 
                 
                 {/* {data.image && ( */}
