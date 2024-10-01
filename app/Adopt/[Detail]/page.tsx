@@ -112,8 +112,8 @@ function PetDetail({ params }: { params: { Detail: string } }) {
 
   const handleAdoptClick = async () => {
     try {
-      const updatedData = { ...data, userName: account.userName };
-      const response = await axios.put(`/pet/${petId}`, updatedData);
+      const updatedData = { ...data, userName: account.userName, phoneNumber : account.phone, address: account.address };
+      const response = await axios.put(`/pet/${petId}`, updatedData)
       // Revalidate the data
       mutate(`/pet/${petId}`);
       alert('Đăng kí nhận nuôi thành công!');
