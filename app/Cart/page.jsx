@@ -3,7 +3,46 @@ import Header from "@/app/Component/Header/Header";
 import Footer from "@/app/Component/Footer/Footer";
 import Product_Frame from "./Product_Frame";
 import Momo from "@/public/img/Momo.png";
+import axios from "@/api/axios";
+import { getCookie } from "cookies-next";
+import { useEffect, useState } from "react";
+import getInfo from "@/hooks/getInfo";
+
 export default function Cart() {
+  //get account data
+  const jwt = getCookie("jwt");
+  const [accountData, setAccountData] = useState("");
+  const fetchData = async () => {
+    const getaccountData = await getInfo();
+     setAccountData(getaccountData); 
+     
+   };
+   //get account data upon access
+    useEffect(() => {
+      if(jwt){fetchData();}
+    }, []);
+    const AccountID=accountData._id;
+    //get cart data
+    const [cartData, setCartData] = useState({
+      "cart": {
+          "_id": "",
+          "user_id": "",
+          "product_list": [],
+          "createdAt": "2024-09-14T12:22:23.395Z",
+          "updatedAt": "2024-09-29T17:01:07.043Z",
+          "__v": 5
+      }
+  });
+    const fetchCartData = async () => {
+      const response = await axios.get(`/cart/${accountData._id}`);
+ 
+      setCartData(response.data);
+    };
+    useEffect(() => {
+      if (accountData) {
+        fetchCartData();
+      }
+    }, [accountData]);
   return (
     <>
       <Header></Header>
@@ -18,7 +57,7 @@ export default function Cart() {
                   Giỏ Hàng
                 </h2>
                 <h2 class="font-manrope font-bold text-xl leading-8 text-gray-600">
-                  3 sản phẩm
+                  {cartData.cart.product_list.length} sản phẩm
                 </h2>
               </div>
               <div class="grid grid-cols-12 mt-8 max-md:hidden pb-6 border-b border-gray-200">
@@ -42,9 +81,9 @@ export default function Cart() {
                   </div>
                 </div>
               </div>
-              <Product_Frame></Product_Frame>
-              <Product_Frame></Product_Frame>
-              <Product_Frame></Product_Frame>
+              {cartData && cartData.cart && cartData.cart.product_list.map((product, index) => (
+                <Product_Frame key={index} product={product} AccountID={AccountID}/>
+              ))}
             </div>
             {/* Right side */}
             <div class=" col-span-12 xl:col-span-4 bg-gray-50 w-full max-xl:px-6 max-w-3xl xl:max-w-lg mx-auto lg:pl-8 py-24">

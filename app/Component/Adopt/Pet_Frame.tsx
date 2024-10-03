@@ -38,6 +38,18 @@ export default function Pet_Frame({pet}:  {pet: any}){
                         <div className="font-bold">Giống:</div> 
                         <div>{pet.race}</div>
                     </div>
+                    <div className="flex space-x-4 justify-between">
+                        <div className="font-bold">Nhận nuôi:</div> 
+                        <div className={
+                            pet.adoptStatus === 'Chưa có chủ' 
+                                ? 'text-green-500' 
+                                : pet.adoptStatus === 'Đã có chủ' 
+                                ? 'text-red-500' 
+                                : 'text-yellow-500'
+                            }>
+                            {pet.adoptStatus}
+                        </div>
+                    </div>
                 </div>  
 
             </div>

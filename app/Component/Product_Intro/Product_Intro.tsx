@@ -13,12 +13,7 @@ import Brand7 from '@/public/img/Product_Main/Brand_Whiskas.png';
 import { useState, useEffect } from 'react';
 import axios from '@/api/axios';
 export default function Product_Main(){
-    const shownProducts = [
-        { name: 'Thức ăn cho chó Pedigree', weight: '1kg', price: '100.000đ' },
-        { name: 'Thức ăn cho chó Shiba', weight: '2kg', price: '200.000đ' },
-        { name: 'Thức ăn cho chó Pug', weight: '3kg', price: '300.000đ' },
-        { name: 'Thức ăn cho chó Cỏ', weight: '4kg', price: '400.000đ' },
-      ];
+   
       const [products, setProducts] = useState<any[]>([]);
       //get products from server
       useEffect(() => {

@@ -6,6 +6,13 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
 import { useRouter } from 'next/navigation';
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
 function PetDetail({ params }: { params: { Detail: string } }) {
   const petId = params.Detail;
   const [data, setData] = useState<any>({});
@@ -190,23 +197,21 @@ const setFileToBase = (file: any) =>{
                   disabled={!isEditable}
                 >
                   <option value="">Select Species</option>
-                  <option value="Rồi">Rồi</option>
-                  <option value="Chưa">Chưa</option>
+                  <option value="Chưa có chủ">Chưa có chủ</option>
+                  <option value="Đã có chủ">Đã có chủ</option>
+                  <option value="Đang được yêu cầu">Đang được yêu cầu</option>
                 </select>
               </div>
-              <div className="w-full px-3">
-                <label className="text-xs font-bold mb-2" htmlFor="RecieveDay">
-                  Ngày nhận nuôi
-                </label>
-                <input
-                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="eecieveDay"
-                  type="date"
-                  value={data.recieveDay}
-                  onChange={handleInputChange}
-                  disabled={!isEditable}
-                />
-              </div>
+              {data.adoptStatus === 'Đã có chủ' && (
+                  <div className="w-full px-3">
+                    <label className="text-xs font-bold mb-2" htmlFor="adoptDay">
+                      Ngày được nhận nuôi
+                    </label>
+                    <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
+                      {formatDate(data.adoptDay)}
+                    </div>
+                  </div>
+                )}
                 
 
               <div className="w-full px-3">

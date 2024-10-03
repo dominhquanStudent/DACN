@@ -4,6 +4,8 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
 import { useRouter } from 'next/navigation';
+import useSWR, { mutate } from 'swr';
+
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, '0');
@@ -35,10 +37,20 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
-    setData((prevData: any) => ({
-      ...prevData,
-      [id]: value,
-    }));
+    setData((prevData: any) => {
+      const updatedData = {
+        ...prevData,
+        [id]: value,
+      };
+  
+      if (id === 'adoptStatus' && value === 'Đã có chủ') {
+        const currentDate = new Date();
+        const formattedDate = `${String(currentDate.getDate()).padStart(2, '0')}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${currentDate.getFullYear()}`;
+        updatedData.adoptDay = formattedDate;
+      }
+  
+      return updatedData;
+    });
   };
   const handleImage = (e: any) =>{
     const file = e.target.files[0];
@@ -57,13 +69,15 @@ const setFileToBase = (file: any) =>{
     const updateAdoptData = async (id: any) => {
       try {
         const response = await axios.put(`/pet/${petId}`,data);
+        mutate(`/pet/${petId}`);
+        router.push('/Admin/Adoption');
+
       } catch (error) {
         console.error('Error fetching pet data:', error);
       }
     };
       updateAdoptData(data);
     
-    router.push('/Admin/Adoption');
   };
 
   const handleChangeClick = async () => {
@@ -81,7 +95,7 @@ const setFileToBase = (file: any) =>{
         <Sidebar />
         <div className='w-3/4 border-l-2 border-gray-200'>
           <div className={'flex font-nunito text-xl font-bold w-full justify-center'}>
-            Thông tin cứu hộ
+            Yêu cầu nhận nuôi thú cưng
           </div>
           <form className="w-full mx-4" key={data._id}>
           {/* <form className="w-full mx-4" > */}
@@ -143,19 +157,7 @@ const setFileToBase = (file: any) =>{
                     disabled={!isEditable}
                   />
                 </div>
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="petId">
-                    Mã số thú cưng
-                  </label>
-                  <input
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="petId"
-                    type="text"
-                    value={data.petId}
-                    // onChange={handleInputChange}
-                    disabled={!isEditable}
-                  />
-                </div>
+
               </div>
 
               <div className="w-full px-3">
@@ -234,12 +236,25 @@ const setFileToBase = (file: any) =>{
                     disabled={!isEditable}
                   >
                     <option value="">Chọn trạng thái</option>
-                    <option value="Chưa xử lý">Chưa xử lý</option>
-                    <option value="Đang xử lý">Đang xử lý</option>
-                    <option value="Đã xử lý">Đã xử lý</option>
+                    <option value="Chưa có chủ">Chưa có chủ</option>
+                    <option value="Đã có chủ">Đã có chủ</option>
+                    <option value="Đang được yêu cầu">Đang được yêu cầu</option>
+
 
                   </select>
                 </div>
+                {data.adoptStatus === 'Đã có chủ' && (
+                  <div className="w-full px-3">
+                    <label className="text-xs font-bold mb-2" htmlFor="adoptDay">
+                      Ngày nhận nuôi
+                    </label>
+                    <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
+                      {formatDate(data.adoptDay)}
+                    </div>
+                  </div>
+                )}
+
+
               
                 
 

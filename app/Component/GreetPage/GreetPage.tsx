@@ -87,7 +87,7 @@ export default function GreetPage() {
                 chăm sóc thoải mái để giúp bạn có thú cưng có một ngày tuyệt
                 vời.
               </div>
-              <Link href="/Component/Product_Intro/Product">
+              <Link href="/Product">
                 <button
                   className="transition ease-in-out  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full  md:w-auto flex justify-center items-center p-3 space-x-4 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100
                     hover:bg-opacity-90 mt-10
@@ -119,7 +119,7 @@ export default function GreetPage() {
                 hưởng niềm yêu thương trọn vẹn nhất.
               </div>
               <div className="flex flex-col md:flex-row mt-4 justify-center">
-                <Link href="/Component/Adopt">
+                <Link href="/Adopt">
                   <button
                     className="transition ease-in-out  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full  md:w-auto flex justify-center items-center p-3 space-x-4 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100
                             hover:bg-opacity-90  
@@ -128,7 +128,7 @@ export default function GreetPage() {
                     <span className="font-montserrat">NHẬN NUÔI NGAY</span>
                   </button>
                 </Link>
-                <Link href="/Component/Rescue">
+                <Link href="/Rescue">
                   <button
                     className="transition ease-in-out  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full  md:w-auto flex justify-center items-center p-3 space-x-4 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100
                             hover:bg-opacity-90 md:ml-20 
