@@ -26,7 +26,6 @@ function PetAdd() {
     try {
       const data = {
         petName,
-        pet_id,
         gender,
         age,
         race,
@@ -34,7 +33,7 @@ function PetAdd() {
         description,
         adoptStatus,
         recieveDay,
-        image
+        image,
       };
       const response = await axios.post('/pet/add', data);
       toast.success('Pet saved successfully!');

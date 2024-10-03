@@ -1,4 +1,5 @@
 'use client';
+import useSWR, { mutate } from 'swr';
 import React, { useEffect, useState } from 'react';
 import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
@@ -14,7 +15,7 @@ function formatDate(dateString: string): string {
 
 function RescueDetail({ params }: { params: { Detail: string } }) {
   const rescueId = params.Detail;
-  const [data, setData] = useState<any>({});
+  const [data, setData] = useState<any>({ "image":{"url":[""]}, });  
   const [isEditable, setIsEditable] = useState(false);
   const router = useRouter();
   useEffect(() => {
@@ -53,18 +54,21 @@ const setFileToBase = (file: any) =>{
         setData( {...data, image: reader.result as string});
     }
 }
-  const handleSaveClick = () => {
-    const updateRescueData = async (id: any) => {
-      try {
-        const response = await axios.put(`/rescueRequest/${rescueId}`,data);
-      } catch (error) {
-        console.error('Error fetching rescue data:', error);
-      }
-    };
-      updateRescueData(data);
-    
-    router.push('/Admin/Rescue');
+const handleSaveClick = () => {
+  const updateRescueData = async (id: any) => {
+    try {
+      const response = await axios.put(`/rescueRequest/${rescueId}`, data);
+      // Revalidate the data
+      mutate(`/rescueRequest/${rescueId}`);
+      // Navigate back to the list page
+      router.push('/Admin/Rescue');
+    } catch (error) {
+      console.error('Error updating rescue data:', error);
+    }
   };
+
+  updateRescueData(data);
+};
 
   const handleChangeClick = async () => {
     setIsEditable(true);
@@ -132,15 +136,24 @@ const setFileToBase = (file: any) =>{
                 <label className="text-xs font-bold mb-2" htmlFor="image">
                   Hình ảnh
                 </label>
-                
-                {data.image && (
-                  <img
+
+                <img  src={data.image.url} alt={data.name} 
+                    style={{ maxWidth: '300px', height: '300px' }}
                     className="mt-4"
-                    src={data.image}
-                    alt="Database Image"
-                    style={{ maxWidth: '100%', height: 'auto' }}
-                  />
-                )}
+                
+                />
+
+                
+                {/* {data.image && ( */}
+                  
+                    {/* className="mt-4"
+                  // <img loading="lazy" src={data.image.url} alt={product.name} className="h-16 rounded-full" />
+
+                  src={typeof data.image === 'string' ? data.image : data.image.url}
+                  alt="Database Image"
+                    style={{ maxWidth: '100%', height: 'auto' }} */}
+                  
+                {/* )} */}
 
               </div>
               <div className='flex w-full'>
