@@ -142,7 +142,7 @@ export default function Product() {
     }
     if (selectedRating !== null) {
       filtered = filtered.filter(
-        (product: any) => product.rating == selectedRating
+        (product: any) => product.rating <= selectedRating
       );
     }
 

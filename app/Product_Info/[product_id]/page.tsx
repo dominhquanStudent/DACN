@@ -11,6 +11,7 @@ import axios from "@/api/axios";
 import { FaStar } from "react-icons/fa";
 import { getCookie } from "cookies-next";
 import getInfo from "@/hooks/getInfo";
+import RenderStars from "@/app/Product_Info/[product_id]/renderStars";
 export default function ProductDetailPage({
   params,
 }: {
@@ -19,22 +20,20 @@ export default function ProductDetailPage({
   //get account data
   const jwt = getCookie("jwt");
   const [accountData, setAccountData] = useState<any>(null);
+
   const fetchData = async () => {
-    
    const getaccountData = await getInfo();
-   console.log(getaccountData);
     setAccountData(getaccountData);
     
   };
   
   
   const productId = params.product_id;
-  const [data, setData] = useState<any>({});
-  const [selectedVolume, setSelectedVolume] = useState(null);
+  const [data, setData] = useState<any>({"name":"", "description":"", "price":0, "image":{"url":[""]}, "rating":0});
   const [reviews, setReviews] = useState<any[]>([]);
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
   const [comment, setComment] = useState('');
-
+  
   //get comments from server
 
   useEffect(() => {
@@ -44,6 +43,7 @@ export default function ProductDetailPage({
         const response = await axios.get(`/product/${productId}`);
         const productData = response.data;
         setData(productData.product);
+        setTotalPrice(productData.product.price);
         const log = await axios.post(`/test`, productData.product);
       } catch (error) {
         console.error("Error fetching product data:", error);
@@ -54,6 +54,7 @@ export default function ProductDetailPage({
         
         const response = await axios.get(`/review/${productId}`);
         setReviews(response.data.review);
+        
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
@@ -64,11 +65,22 @@ export default function ProductDetailPage({
       fetchProductData();
     }
   }, [productId]);
+    //Automatically update current product rating
+    const [ratingTimes, setRatingTimes] = useState<number >(0);
+    const [productRating, setProductRating] = useState<number >(0);
+    useEffect(() => {
+      const calculateAverageRating = () => {
+          if (reviews.length === 0) return 0;
+          const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+          return totalRating / reviews.length;
+      };
   
+      const averageRating = calculateAverageRating();
+      setProductRating(averageRating);
+      setRatingTimes(reviews.length);
+  }, [reviews]);
 
-  const handleButtonClick = (volume: any) => {
-    setSelectedVolume(volume);
-  };
+
   const handleRatingChange = (rating: number) => {
     setSelectedRating(rating);
   };
@@ -99,10 +111,38 @@ export default function ProductDetailPage({
       };
       console.log(reviewInfo);
       const response = await axios.post('/review/add', reviewInfo);
-      console.log("Review submitted:", response.data);
+      setReviews([...reviews, response.data.review]);
     } catch (error) {
       console.error("Error submitting review:", error);
     }
+  };
+  //handle amount and total price of product
+
+  const [amount, setAmount] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const handleAmountChange = (Amount: number) => {
+    if (Amount > 0) {
+      setAmount(Amount);
+      setTotalPrice(Amount * data.price);
+    }
+  };
+  //handle add to cart
+  const handleAddToCart = async(e: any) => {
+    e.preventDefault();
+
+    try {
+      const cartItem = {
+        user_id: accountData._id, // Replace with actual user ID
+        product_id: productId,
+        quantity: amount,
+       
+      };
+      const response = await axios.post('/cart/addProduct', cartItem);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+      
   };
   return (
     <>
@@ -112,22 +152,14 @@ export default function ProductDetailPage({
         <div className="col-span-3">
           {/* Product details */}
           <div className="flex border-b-2 mb-4">
-            <img src={Foto.src} alt="Product" className="ml-32 mr-8 mb-16" />
+            <img src={data.image.url[0]} alt="Product" className="ml-32 mr-8 mb-16 w-40" />
             <div className="ml-4">
               <h2 className="text-2xl font-bold">{data.name}</h2>
               <div className="flex">
                 {/* Replace with your star rating component */}
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <FaStar
-                      key={i}
-                      color={i < data.rating ? "yellow" : "gray"}
-                      size={20}
-                    />
-                  ))}
-                </div>
+                <RenderStars rating={productRating}></RenderStars>
                 <div className="text-yellow-400 mb-8 ml-3">
-                  Lượt đánh giá (340)
+                  Lượt đánh giá {ratingTimes}
                 </div>
               </div>
               <p className="">{data.description}</p>
@@ -180,44 +212,45 @@ export default function ProductDetailPage({
         {/* Right column */}
         <div className="col-span-1">
           {/* Volume */}
-          <div className="font-light mb-3">Dung Tích</div>
-          <div className="flex space-x-2">
-            <button
-              onClick={() => handleButtonClick("100ml")}
-              className={`border-2 border-blue-300 transform transition duration-150 ease-in-out px-4 py-2 rounded shadow ${
-                selectedVolume === "100ml"
-                  ? " scale-110 bg-blue-100"
-                  : "hover:scale-110 hover:bg-blue-100"
-              }`}
-            >
-              100ml
-            </button>
-            <button
-              onClick={() => handleButtonClick("200ml")}
-              className={`border-2 border-blue-300 transform transition duration-150 ease-in-out px-4 py-2 rounded shadow ${
-                selectedVolume === "200ml"
-                  ? "  scale-110 bg-blue-100"
-                  : "hover:scale-110 hover:bg-blue-100"
-              }`}
-            >
-              200ml
-            </button>
-            <button
-              onClick={() => handleButtonClick("300ml")}
-              className={`border-2 border-blue-300 transform transition duration-150 ease-in-out px-4 py-2 rounded shadow ${
-                selectedVolume === "300ml"
-                  ? "  scale-110 bg-blue-100"
-                  : "hover:scale-110 hover:bg-blue-100"
-              }`}
-            >
-              300ml
-            </button>
-          </div>
+          <div className="font-light mb-3">Số lượng</div>
+          <div className="flex items-center max-[500px]:justify-center  max-md:mt-3">
+                <div className="flex items-center h-full">
+                    <button
+                        className="group rounded-l-xl px-5 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:bg-gray-50 hover:border-gray-300 hover:shadow-gray-300 focus-within:outline-gray-300" onClick={() => handleAmountChange(amount - 1)}>
+                        <svg className="stroke-gray-900 transition-all duration-500 group-hover:stroke-black"
+                            xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                            viewBox="0 0 22 22" fill="none">
+                            <path d="M16.5 11H5.5" stroke="" stroke-width="1.6"
+                                stroke-linecap="round" />
+                            <path d="M16.5 11H5.5" stroke="" stroke-opacity="0.2" stroke-width="1.6"
+                                stroke-linecap="round" />
+                            <path d="M16.5 11H5.5" stroke="" stroke-opacity="0.2" stroke-width="1.6"
+                                stroke-linecap="round" />
+                        </svg>
+                    </button>
+                    <input type="number" value={amount} onChange={(e) => setAmount(parseInt(e.target.value))} min="1"
+                        className="border-y border-gray-200 outline-none text-gray-900 font-semibold text-lg w-full max-w-[73px] min-w-[60px] placeholder:text-gray-900 py-[15px]  text-center bg-transparent"
+                        placeholder="1"/>
+                    <button
+                        className="group rounded-r-xl px-5 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:bg-gray-50 hover:border-gray-300 hover:shadow-gray-300 focus-within:outline-gray-300" onClick={() => handleAmountChange(amount + 1)}>
+                        <svg className="stroke-gray-900 transition-all duration-500 group-hover:stroke-black"
+                            xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                            viewBox="0 0 22 22" fill="none">
+                            <path d="M11 5.5V16.5M16.5 11H5.5" stroke="" stroke-width="1.6"
+                                stroke-linecap="round" />
+                            <path d="M11 5.5V16.5M16.5 11H5.5" stroke="" stroke-opacity="0.2"
+                                stroke-width="1.6" stroke-linecap="round" />
+                            <path d="M11 5.5V16.5M16.5 11H5.5" stroke="" stroke-opacity="0.2"
+                                stroke-width="1.6" stroke-linecap="round" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
 
           {/* Price and buy button */}
           <div className="mt-4">
             <div className="flex items-center">
-              <p className="text-2xl ">{data.price}đ</p>
+              <p className="text-2xl ">{totalPrice}đ</p>
               {/* <div className="bg-blue-500 text-white px-2 py-1 ml-2 font-bold">
                 40% off
               </div> */}
@@ -229,6 +262,7 @@ export default function ProductDetailPage({
                         focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none 
                         disabled:opacity-50 disabled:shadow-none"
               data-ripple-light="true"
+              onClick={handleAddToCart}
             >
               Thêm vào giỏ hàng
             </button>
