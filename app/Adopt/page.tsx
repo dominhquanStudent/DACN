@@ -24,6 +24,7 @@ export default function Product_Main() {
     age: string;
     race: string;
     vaccinated: boolean;
+    adoptStatus: string;
   }
 
   const [shownProducts, setShownProducts] = useState<Pet[]>([]);

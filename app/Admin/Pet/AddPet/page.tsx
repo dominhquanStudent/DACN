@@ -17,8 +17,8 @@ function PetAdd() {
   const [race, setRace] = useState('');
   const [species, setSpecies] = useState('');
   const [description, setDescription] = useState('');
-  const [adoptStatus, setAdoptStatus] = useState('');
-  const [recieveDay, setRecieveDay] = useState('');
+  // const [adoptStatus, setAdoptStatus] = useState('');
+  // const [recieveDay, setRecieveDay] = useState('');
   const [image, setImage] = useState({public_id: '', url: ''});
 
 
@@ -31,8 +31,8 @@ function PetAdd() {
         race,
         species,
         description,
-        adoptStatus,
-        recieveDay,
+        // adoptStatus,
+        // recieveDay,
         image,
       };
       const response = await axios.post('/pet/add', data);
@@ -176,33 +176,7 @@ function PetAdd() {
 
               </div>
 
-              <div className="w-full px-3">
-                <label className="text-xs font-bold mb-2" htmlFor="AdoptStatus">
-                  Tình trạng nhận nuôi
-                </label>
-                <select
-                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="AdoptStatus"
-                  value={adoptStatus}
-                  onChange={(e) => setAdoptStatus(e.target.value)}
-                >
-                  <option value="">Select Species</option>
-                  <option value="Rồi">Rồi</option>
-                  <option value="Chưa">Chưa</option>
-                </select>
-              </div>
-              <div className="w-full px-3">
-                <label className="text-xs font-bold mb-2" htmlFor="RecieveDay">
-                  Ngày nhận nuôi
-                </label>
-                <input
-                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="RecieveDay"
-                  type="date"
-                  value={recieveDay}
-                  onChange={(e) => setRecieveDay(e.target.value)}
-                />
-              </div>
+ 
                 
 
               <div className="w-full px-3">
