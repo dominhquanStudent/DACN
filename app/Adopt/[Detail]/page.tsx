@@ -27,19 +27,35 @@
 'use client';
 import React, { useEffect, useState, use } from 'react';
 
+
 import { mutate } from 'swr';
 import Sidebar from '@/app/Admin/sidebar';
-import Header from '@/app/Admin/Header';
+import Header from "../../Component/Header/Header";
+import Footer from "../../Component/Footer/Footer";
 import axios from '@/api/axios';
 import { useRouter } from 'next/navigation';
 import { getCookie } from "cookies-next";
 import getInfo from "@/hooks/getInfo";
+import logo from "../../../public/img/Booking/petcare.png";
+import logoname from "../../../public/img/Booking/pc.jpg";
+import Doggo1 from "../../../public/img/Greet page/Doggo1.png";
+import { current } from '@reduxjs/toolkit';
+import { request } from 'http';
 
 
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
 
 function PetDetail({ params }: { params: { Detail: string } }) {
   const petId = params.Detail;
-  const [data, setData] = useState<any>({});
+  // const [data, setData] = useState<any>({});
+  const [data, setData] = useState<any>({ "image":{"url":[""]}, });  
+
   const [isEditable, setIsEditable] = useState(false);
   const router = useRouter();
     const jtw = getCookie("jwt");
@@ -112,7 +128,15 @@ function PetDetail({ params }: { params: { Detail: string } }) {
 
   const handleAdoptClick = async () => {
     try {
-      const updatedData = { ...data, userName: account.userName, phoneNumber : account.phone, address: account.address };
+      const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+
+      const updatedData = { ...data, 
+        userName: account.userName, 
+        phoneNumber : account.phone, 
+        address: account.address,
+        requestDay: currentDate,
+        adoptStatus: 'Đang được yêu cầu'
+       };
       const response = await axios.put(`/pet/${petId}`, updatedData)
       // Revalidate the data
       mutate(`/pet/${petId}`);
@@ -129,16 +153,23 @@ function PetDetail({ params }: { params: { Detail: string } }) {
 
 
   return (
-    <div className='flex flex-col w-full justify-center items-center'>
-      <Header />
-      <div className='flex w-full'>
-        {/* <Sidebar /> */}
-        
-        <div className='w-3/4 border-l-2 border-gray-200'>
-          <div className={'flex font-nunito text-xl font-bold w-full justify-center'}>
-            Thông tin chi tiết thú cưng (Khách Hàng)
-          </div>
-          <form className="w-full mx-4" key={data._id}>
+    <>
+    <Header />
+    <div className="flex gap-4 p-4 bg-background-blue">
+      <div className="relative left-28">
+        <div className="p-3">
+          <img src={logo.src} alt="Logo" className="w-60" />
+        </div>
+        <div className="p-3">
+          <img src={logoname.src} alt="Logo" className="w-60" />
+        </div>
+        <h2 className="text-4xl text-center text-white font">Nhận nuôi thú cưng</h2>
+        <div className="p-3 mt-7 ">
+          <img src={Doggo1.src} alt="Doggo1" className="w-60" />
+        </div>
+      </div>
+      <div className="bg-white rounded-lg shadow-md p-8 w-1/2 mx-auto">
+      <form className="w-full mx-4" key={data._id}>
             <div className="flex flex-wrap -mx-3 mb-6 space-y-2">
               <div className="w-full px-3 mb-6 md:mb-0">
                 <label className="text-xs font-bold mb-2" htmlFor="petName">
@@ -157,15 +188,11 @@ function PetDetail({ params }: { params: { Detail: string } }) {
                 <label className="text-xs font-bold mb-2" htmlFor="image">
                   Hình ảnh
                 </label>
-                <input
-                  type="file"
-                  id="image"
-                  name="image"
-                  accept="image/*"
-                  onChange={handleImage}
-                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
-                  disabled={!isEditable}
-                />
+                <div className="w-[150px] h-[150px] bg-gray-300 rounded-md">
+                    <img src={data.image.url} alt="" className="w-full h-full object-cover"/>
+                </div>
+
+
               </div>
 
               <div className='flex w-full'>
@@ -173,17 +200,15 @@ function PetDetail({ params }: { params: { Detail: string } }) {
                   <label className="text-xs font-bold mb-2" htmlFor="gender">
                     Giới tính
                   </label>
-                  <select
+                  <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="gender"
-                    value={data.gender || ''}
+                    type="text"
+                    value={data.gender}
                     onChange={handleInputChange}
                     disabled={!isEditable}
-                  >
-                    <option value="">Chọn giới tính</option>
-                    <option value="Đực">Đực</option>
-                    <option value="Cái">Cái</option>
-                  </select>
+                  />
+
                 </div>
                 <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="age">
@@ -217,17 +242,14 @@ function PetDetail({ params }: { params: { Detail: string } }) {
                   <label className="text-xs font-bold mb-2" htmlFor="species">
                     Loài
                   </label>
-                  <select
+                  <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="species"
-                    value={data.species || ''}
+                    id="age"
+                    type="text"
+                    value={data.species}
                     onChange={handleInputChange}
                     disabled={!isEditable}
-                  >
-                    <option value="">Chọn loài</option>
-                    <option value="Chó">Chó</option>
-                    <option value="Mèo">Mèo</option>
-                  </select>
+                  />
                 </div>
               </div>
 
@@ -235,31 +257,29 @@ function PetDetail({ params }: { params: { Detail: string } }) {
                 <label className="text-xs font-bold mb-2" htmlFor="adoptStatus">
                   Tình trạng nhận nuôi
                 </label>
-                <select
-                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="adoptStatus"
-                  value={data.adoptStatus || ''}
-                  onChange={handleInputChange}
-                  disabled={!isEditable}
-                >
-                  <option value="">Select Species</option>
-                  <option value="Rồi">Rồi</option>
-                  <option value="Chưa">Chưa</option>
-                </select>
-              </div>
-              <div className="w-full px-3">
-                <label className="text-xs font-bold mb-2" htmlFor="recieveDay">
-                  Ngày nhận nuôi
-                </label>
                 <input
-                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="recieveDay"
-                  type="date"
-                  value={data.recieveDay || ''}
-                  onChange={handleInputChange}
-                  disabled={!isEditable}
-                />
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    
+                    id="age"
+                    type="text"
+                    value={data.adoptStatus}
+                    onChange={handleInputChange}
+                    disabled={!isEditable}
+                  />
+
               </div>
+              {data.adoptStatus === 'Đã có chủ' && (
+                  <div className="w-full px-3">
+                    <label className="text-xs font-bold mb-2" htmlFor="adoptDay">
+                      Ngày được nhận nuôi
+                    </label>
+                    <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
+                      {formatDate(data.adoptDay)}
+                    </div>
+                  </div>
+                )}
+              
+
 
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="description">
@@ -273,16 +293,27 @@ function PetDetail({ params }: { params: { Detail: string } }) {
                   disabled={!isEditable}
                 ></textarea>
               </div>
+
+
             </div>
           </form>
-          <button onClick={handleAdoptClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Đăng kí nhận nuôi
-            </button>
+          <div className="flex justify-center">
+            {data.adoptStatus === 'Chưa có chủ' && (
+              <button onClick={handleAdoptClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Đăng kí nhận nuôi
+              </button>
+            )}
+          </div>
 
-        </div>
+
       </div>
     </div>
+    <Footer />
+  </>
+
   );
+    
 }
+
 
 export default PetDetail;
