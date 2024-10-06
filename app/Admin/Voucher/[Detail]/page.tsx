@@ -124,7 +124,7 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="beginDate"
-                    type="text"
+                    type="date"
                     value={formatDate(data.beginDate)}
                     onChange={handleInputChange}
                     disabled={!isEditable}

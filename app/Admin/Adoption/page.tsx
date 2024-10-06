@@ -22,7 +22,7 @@ function Adopt() {
       try {
         const response = await axios.get('/pet/list');
         // Filter out pets with userName "anonymous"
-        const filteredPets = response.data.pets.filter((pet: any) => (pet.userName !== 'anonymous' && pet.userName !== ''));
+        const filteredPets = response.data.pets.filter((pet: any) => (pet.userName !== 'anonymous' && pet.userName !== '' && pet.adoptStatus === 'Đang được yêu cầu'));
         setPets(filteredPets);
       } catch (error) {
         console.error('Error fetching pets:', error);
@@ -101,7 +101,6 @@ function Adopt() {
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     <button onClick={() => handleChangeClick(pet._id)} className="text-blue-500 hover:text-blue-700">Xem chi tiết</button>
-                    <button onClick={() => handleDeleteClick(pet._id)} className="text-red-500 hover:text-red-700 ml-4">Xóa</button>
                   </td>
                 </tr>
               ))}

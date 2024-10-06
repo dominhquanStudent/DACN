@@ -16,7 +16,7 @@ function formatDate(dateString: string): string {
 function PetDetail({ params }: { params: { Detail: string } }) {
   const petId = params.Detail;
   const [data, setData] = useState<any>({});
-  const [isEditable, setIsEditable] = useState(false);
+  const [isEditable, setIsEditable] = useState(true);
   const router = useRouter();
   useEffect(() => {
     const fetchPetData = async (id: any) => {
