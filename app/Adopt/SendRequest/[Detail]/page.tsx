@@ -267,7 +267,7 @@ function SendRequest({ params }: { params: { Detail: string } }) {
                 style={{ borderRadius: "30px" }}
               >
                 {/* <button onClick={handleSendRequestClick} className="bg-[hsl(56,86%,56%)] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded " style={{ borderRadius: '30px' }}> */}
-                Nhận nuôi ngay
+                Gửi yêu cầu
               </button>
             )}
           </div>
