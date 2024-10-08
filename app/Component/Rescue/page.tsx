@@ -42,7 +42,9 @@ export default function Booking() {
 
       };
       const response = await axios.post('/rescueRequest/add', data);
-      toast.success('Product saved successfully!');
+      alert("Đã gửi yêu cầu thành công!");
+      router.push('/Main');
+      // toast.success('Product saved successfully!');
       setIsSaved(true);
       setError("");
       // router.push('/Admin/Appointment');

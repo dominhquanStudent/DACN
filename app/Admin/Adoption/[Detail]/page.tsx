@@ -184,8 +184,48 @@ const setFileToBase = (file: any) =>{
                 )}
 
               </div>
+
+               
+ 
+
+              
+
               <div className='flex w-full'>
+
               <div className="w-full px-3">
+                <label className="text-xs font-bold mb-2" htmlFor="resquestDay">
+                  Ngày yêu cầu
+                </label>
+                <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
+                    {formatDate(data.resquestDay)}
+                </div>
+
+              </div>
+              <div className="w-full px-3">
+                <label className="text-xs font-bold mb-2" htmlFor="resquestDay">
+                  Ngày hẹn
+                </label>
+                <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
+                    {formatDate(data.arriveDay)}
+                </div>
+
+              </div>
+              </div>
+
+              <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="method">
+                    Hình thức nhận thú cưng
+                  </label>
+                  <input
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="method"
+                    type="text"
+                    value={data.method}
+                    // onChange={handleInputChange}
+                    disabled={!isEditable}
+                  />
+                </div>
+                <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="message">
                   Lời nhắn
                 </label>
@@ -197,21 +237,8 @@ const setFileToBase = (file: any) =>{
                   disabled={!isEditable}
                 ></textarea>
               </div>
-               
- 
+                
 
-              </div>
-
-
-              <div className="w-full px-3">
-                <label className="text-xs font-bold mb-2" htmlFor="resquestDay">
-                  Ngày yêu cầu
-                </label>
-                <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
-                    {formatDate(data.resquestDay)}
-                </div>
-
-              </div>
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="employeeName">
                   Nhân viên xử lý
