@@ -132,7 +132,7 @@ function VoucherList() {
                     {voucher.discount_type}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {voucher.discount_value.value} {voucher.discount_type === 'percentage' ? '%' : 'đồng'}
+                    {voucher.discount_value.value} {voucher.discount_type === 'Giảm theo phần trăm' ? '%' : 'đồng'}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {formatDate(voucher.beginDate)}

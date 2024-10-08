@@ -186,8 +186,8 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                     onChange={handleInputChange}
                   >
                     <option value="">Chọn trạng thái</option>
-                    <option value="percentage">Phần trăm</option>
-                    <option value="value">Trực tiếp</option>
+                    <option value="Giảm theo phần trăm">Phần trăm</option>
+                    <option value="Giảm theo giá trị">Trực tiếp</option>
                   </select>
                 </div>
               </div>
@@ -222,7 +222,7 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
               <div className='flex w-full'>
                 <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="discount_value">
-                    Giá trị giảm giá {data.discount_type === 'percentage' ? '(%)' : '(VNĐ)'}
+                    Giá trị giảm giá {data.discount_type === 'Giảm theo phần trăm' ? '(%)' : '(VNĐ)'}
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"

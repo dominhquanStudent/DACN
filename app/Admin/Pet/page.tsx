@@ -108,7 +108,7 @@ function Pet() {
               {Array.isArray(pets) && pets.map((pet: any) => (
                 <tr key={pet._id}>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <img src={pet.image.url} alt={pet.name} className="h-16 rounded-full" />
+                    <img loading="lazy" src={pet.image.url} alt={pet.name} className="h-16 rounded-full" />
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {pet.petName}

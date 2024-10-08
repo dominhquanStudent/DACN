@@ -137,7 +137,7 @@ const handleSaveClick = () => {
                   Hình ảnh
                 </label>
 
-                <img  src={data.image.url} alt={data.name} 
+                <img loading="lazy" src={data.image.url} alt={data.name} 
                     style={{ maxWidth: '300px', height: '300px' }}
                     className="mt-4"
                 

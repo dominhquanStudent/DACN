@@ -38,7 +38,7 @@ function Page() {
     <div className="flex flex-col w-full ">
       <button>{Auth.email}</button>
       <div className="flex items-center">
-        <img src={"./img/logo.png"} alt="Logo" className=" w-20 ml-8" />
+        <img loading="lazy" src={"./img/logo.png"} alt="Logo" className=" w-20 ml-8" />
         <button onClick={() => router.push("/Main")}>
           <div className="ml-4 font-nunito text-4xl text-[#1286CE] font-bold">
             BK

@@ -138,8 +138,8 @@ function VoucherAdd() {
                     onChange={(e) => setDiscountType(e.target.value)}
                   >
                     <option value="">Chọn trạng thái</option>
-                    <option value="percentage">Phần trăm</option>
-                    <option value="value">Trực tiếp</option>
+                    <option value="Giảm theo phần trăm">Phần trăm</option>
+                    <option value="Giảm theo giá trị">Trực tiếp</option>
                   </select>
                 </div>
               </div>
@@ -174,7 +174,7 @@ function VoucherAdd() {
               <div className='flex w-full'>
                 <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="DiscountValue">
-                    Giá trị giảm giá {discountType === 'percentage' ? '(%)' : '(VNĐ)'}
+                    Giá trị giảm giá {discountType === 'Giảm theo phần trăm' ? '(%)' : '(VNĐ)'}
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
