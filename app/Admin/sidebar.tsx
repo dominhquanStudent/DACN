@@ -3,31 +3,31 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 const menuItems = [
-    { name: 'Dash Board', path: '/Admin/DashBoard', icon: '/img/icon/dashboard.svg', iconhl:'/img/icon/dashboard_hl.svg' },
-    { name: 'Quản lý đơn hàng', path: '/Admin/Order',icon: '/img/icon/order.svg', iconhl:'/img/icon/order_hl.svg' },
-    { name: 'Quản lý sản phẩm', path: '/Admin/Product', icon: '/img/icon/product.svg', iconhl:'/img/icon/product_hl.svg' },
-    { name: 'Quản lý Voucher', path: '/Admin/Voucher', icon: '/img/icon/voucher.svg', iconhl:'/img/icon/voucher_hl.svg' },
-    { name: 'Quản lý lịch hẹn', path: '/Admin/Appointment', icon: '/img/icon/appointment.svg', iconhl:'/img/icon/appointment_hl.svg' },
-    { name: 'Yêu cầu cứu hộ', path: '/Admin/Rescue', icon: '/img/icon/rescue.svg', iconhl:'/img/icon/rescue_hl.svg' },
-    { name: 'Quản lý nhận nuôi', path: '/Admin/Adoption', icon: '/img/icon/adopt.svg', iconhl:'/img/icon/adopt_hl.svg' },
-    { name: 'Quản lý thú cưng', path: '/Admin/Pet', icon: '/img/icon/pet.svg', iconhl:'/img/icon/pet_hl.svg' },
-    { name: 'Tin nhắn', path: '/Admin/Message', icon: '/img/icon/message.svg', iconhl:'/img/icon/message_hl.svg' },
-    { name: 'Cài đặt', path: '/Admin/Setting', icon: '/img/icon/setting.svg', iconhl:'/img/icon/setting_hl.svg' },
+    { name: 'Dash Board', path: '/Admin/DashBoard', icon: '/img/icon/dashboard.svg', iconhl: '/img/icon/dashboard_hl.svg' },
+    { name: 'Quản lý đơn hàng', path: '/Admin/Order', icon: '/img/icon/order.svg', iconhl: '/img/icon/order_hl.svg' },
+    { name: 'Quản lý sản phẩm', path: '/Admin/Product', icon: '/img/icon/product.svg', iconhl: '/img/icon/product_hl.svg' },
+    { name: 'Quản lý Voucher', path: '/Admin/Voucher', icon: '/img/icon/voucher.svg', iconhl: '/img/icon/voucher_hl.svg' },
+    { name: 'Quản lý lịch hẹn', path: '/Admin/Appointment', icon: '/img/icon/appointment.svg', iconhl: '/img/icon/appointment_hl.svg' },
+    { name: 'Yêu cầu cứu hộ', path: '/Admin/Rescue', icon: '/img/icon/rescue.svg', iconhl: '/img/icon/rescue_hl.svg' },
+    { name: 'Quản lý nhận nuôi', path: '/Admin/Adoption', icon: '/img/icon/adopt.svg', iconhl: '/img/icon/adopt_hl.svg' },
+    { name: 'Quản lý thú cưng', path: '/Admin/Pet', icon: '/img/icon/pet.svg', iconhl: '/img/icon/pet_hl.svg' },
+    { name: 'Tin nhắn', path: '/Admin/Message', icon: '/img/icon/message.svg', iconhl: '/img/icon/message_hl.svg' },
+    { name: 'Cài đặt', path: '/Admin/Setting', icon: '/img/icon/setting.svg', iconhl: '/img/icon/setting_hl.svg' },
 ];
 function Sidebar() {
     return (
         <div className='flex flex-col w-1/5 mt-12 space-y-6'>
             {menuItems.map((item) => (
-                <div className='flex items-center ml-12 font-nunito text-md text-[#B1B1B1]'>
-    <Link href={item.path} className='flex items-center'>
-        <div>
-            <img src={ (usePathname().includes(item.path)) ? item.iconhl : item.icon} className={`h-6 w-6`}></img>
-        </div>
-        <div className={`ml-4 ${usePathname().includes(item.path) ? "text-[#EDB24E] font-bold" : ""}`}>
-            {item.name}
-        </div>
-    </Link>
-</div>
+                <div key={item.path} className='flex items-center ml-12 font-nunito text-md text-[#B1B1B1]'>
+                    <Link href={item.path} className='flex items-center'>
+                        <div>
+                            <img src={(usePathname().includes(item.path)) ? item.iconhl : item.icon} className={`h-6 w-6`}></img>
+                        </div>
+                        <div className={`ml-4 ${usePathname().includes(item.path) ? "text-[#EDB24E] font-bold" : ""}`}>
+                            {item.name}
+                        </div>
+                    </Link>
+                </div>
             ))}
         </div>
     )

@@ -152,7 +152,7 @@ export default function ProductDetailPage({
         <div className="col-span-3">
           {/* Product details */}
           <div className="flex border-b-2 mb-4">
-            <img src={data.image.url[0]} alt="Product" className="ml-32 mr-8 mb-16 w-40" />
+            <img loading="lazy" src={data.image.url[0]} alt="Product" className="ml-32 mr-8 mb-16 w-40" />
             <div className="ml-4">
               <h2 className="text-2xl font-bold">{data.name}</h2>
               <div className="flex">

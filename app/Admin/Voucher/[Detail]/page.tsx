@@ -14,7 +14,23 @@ function formatDate(dateString: string): string {
 
 function VoucherDetail({ params }: { params: { Detail: string } }) {
   const voucherId = params.Detail;
-  const [data, setData] = useState<any>({});
+  const [data, setData] = useState<any>({
+    name: '',
+    quantity: 0,
+    UsedTime: 0,
+    beginDate: '',
+    endDate: '',
+    code: '',
+    discount_type: '',
+    discount_value: {
+      value: 0,
+      min_require: 0,
+      max_discount: 0,
+    },
+    description: '',
+    employee_id: '',
+    status: '',
+  });
   const [isEditable, setIsEditable] = useState(false);
   const router = useRouter();
   useEffect(() => {
@@ -112,7 +128,8 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                     type="text"
                     value={data.UsedTime}
                     onChange={handleInputChange}
-                    disabled={!isEditable}
+                    disabled
+                    // disabled={!isEditable}
                   />
                 </div>
               </div>
@@ -162,11 +179,41 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                   <label className="text-xs font-bold mb-2" htmlFor="discount_type">
                     Loại giảm giá
                   </label>
-                  <input
+                <select
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="discount_type"
-                    type="text"
                     value={data.discount_type}
+                    onChange={handleInputChange}
+                  >
+                    <option value="">Chọn trạng thái</option>
+                    <option value="Giảm theo phần trăm">Phần trăm</option>
+                    <option value="Giảm theo giá trị">Trực tiếp</option>
+                  </select>
+                </div>
+              </div>
+              <div className='flex w-full'>
+                <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="MinRequire">
+                  Yêu cầu tối thiểu
+                  </label>
+                  <input
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="MinRequire"
+                    type="text"
+                    value={data.discount_value.min_require}
+                    onChange={handleInputChange}
+                    disabled={!isEditable}
+                  />
+                </div>
+                <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="MaxDiscount">
+                  Giá trị giảm tối đa
+                  </label>
+                  <input
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="MaxDiscount"
+                    type="text"
+                    value={data.discount_value.max_discount}
                     onChange={handleInputChange}
                     disabled={!isEditable}
                   />
@@ -175,13 +222,13 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
               <div className='flex w-full'>
                 <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="discount_value">
-                    Giá trị giảm giá
+                    Giá trị giảm giá {data.discount_type === 'Giảm theo phần trăm' ? '(%)' : '(VNĐ)'}
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="discount_value"
                     type="text"
-                    value={data.discount_value}
+                    value={data.discount_value.value}
                     onChange={handleInputChange}
                     disabled={!isEditable}
                   />

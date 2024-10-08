@@ -8,7 +8,6 @@ import Link from 'next/link';
 
 interface Voucher {
   _id: string;
-  employee_id: string;
   name: string;
   quantity: number;
   UsedTime: number;
@@ -16,8 +15,13 @@ interface Voucher {
   endDate: string;
   code: string;
   discount_type: string;
-  discount_value: number;
+  discount_value: {
+    value: number;
+    min_require: number;
+    max_discount: number;
+  }
   description: string;
+  employee_id: string;
   status: string;
 }
 
@@ -90,10 +94,7 @@ function VoucherList() {
                   Mã Voucher
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Số lượng
-                </th>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Lần sử dụng
+                  Số lượng còn lại
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Loại giảm
@@ -125,16 +126,13 @@ function VoucherList() {
                     {voucher.code}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {voucher.quantity}
-                  </td>
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {voucher.UsedTime}
+                    {voucher.quantity - voucher.UsedTime}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {voucher.discount_type}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {voucher.discount_value}
+                    {voucher.discount_value.value} {voucher.discount_type === 'Giảm theo phần trăm' ? '%' : 'đồng'}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {formatDate(voucher.beginDate)}
