@@ -1,26 +1,24 @@
-'use client';
-import React, { useState } from 'react';
-import Link from 'next/link';
-import Sidebar from '@/app/Admin/sidebar';
-import Header from '@/app/Admin/Header';
-import axios from '@/api/axios';
-import { ToastContainer, toast } from 'react-toastify';
-import { useRouter } from 'next/navigation';
-
+"use client";
+import React, { useState } from "react";
+import Link from "next/link";
+import Sidebar from "@/app/Admin/sidebar";
+import Header from "@/app/Admin/Header";
+import axios from "@/api/axios";
+import { ToastContainer, toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 function PetAdd() {
   const router = useRouter();
-  const [petName, setPetName] = useState('');
-  const [pet_id, setpet_id] = useState('');
-  const [gender, setGender] = useState('');
-  const [age, setAge] = useState('');
-  const [race, setRace] = useState('');
-  const [species, setSpecies] = useState('');
-  const [description, setDescription] = useState('');
+  const [petName, setPetName] = useState("");
+  const [pet_id, setpet_id] = useState("");
+  const [gender, setGender] = useState("");
+  const [age, setAge] = useState("");
+  const [race, setRace] = useState("");
+  const [species, setSpecies] = useState("");
+  const [description, setDescription] = useState("");
   // const [adoptStatus, setAdoptStatus] = useState('');
   // const [recieveDay, setRecieveDay] = useState('');
-  const [image, setImage] = useState({public_id: '', url: ''});
-
+  const [image, setImage] = useState({ public_id: "", url: "" });
 
   const handleSaveClick = async () => {
     try {
@@ -35,36 +33,40 @@ function PetAdd() {
         // recieveDay,
         image,
       };
-      const response = await axios.post('/pet/add', data);
-      toast.success('Pet saved successfully!');
-      router.push('/Admin/Pet');
+      const response = await axios.post("/pet/add", data);
+      toast.success("Pet saved successfully!");
+      router.push("/Admin/Pet");
     } catch (error) {
-      toast.error('Error saving pet!');
-      console.error('Error saving pet:', error);
+      toast.error("Error saving pet!");
+      console.error("Error saving pet:", error);
     }
   };
   const handleImage = (e: any) => {
     const file = e.target.files[0];
     setFileToBase(file);
-  }
+  };
 
   const setFileToBase = (file: any) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-    setImage({public_id: 'null', url: reader.result as string});
-    }
-  }
+      setImage({ public_id: "null", url: reader.result as string });
+    };
+  };
 
   return (
-    <div className='flex flex-col w-full justify-center items-center'>
+    <div className="flex flex-col w-full justify-center items-center">
       {/* //Header */}
       <Header></Header>
-      <div className='flex w-full'>
+      <div className="flex w-full">
         <Sidebar></Sidebar>
-        <div className='w-3/4 border-l-2 border-gray-200'>
+        <div className="w-3/4 border-l-2 border-gray-200">
           {/* content */}
-          <div className={'flex font-nunito text-xl font-bold w-full justify-center'}>
+          <div
+            className={
+              "flex font-nunito text-xl font-bold w-full justify-center"
+            }
+          >
             Thêm sản phẩm
           </div>
           <form className="w-full mx-4">
@@ -113,7 +115,7 @@ function PetAdd() {
                     hover:file:bg-violet-100"
                 />
               </div>
-              <div className='flex w-full'>
+              <div className="flex w-full">
                 <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="Gender">
                     Giới tính
@@ -143,7 +145,7 @@ function PetAdd() {
                   />
                 </div>
               </div>
-              <div className='flex w-full'>
+              <div className="flex w-full">
                 <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="Race">
                     Giống
@@ -172,12 +174,7 @@ function PetAdd() {
                     <option value="Mèo">Mèo</option>
                   </select>
                 </div>
- 
-
               </div>
-
- 
-                
 
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="Description">
@@ -193,8 +190,11 @@ function PetAdd() {
               </div>
             </div>
           </form>
-          <div className='flex items-center justify-center w-full'>
-            <button onClick={handleSaveClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          <div className="flex items-center justify-center w-full">
+            <button
+              onClick={handleSaveClick}
+              className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
               Lưu
             </button>
           </div>

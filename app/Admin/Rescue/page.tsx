@@ -94,7 +94,12 @@ function Rescue() {
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(rescues) && rescues.map((rescue: any) => (
+              {Array.isArray(rescues) && rescues
+                .sort((a: any, b: any) => {
+                  const statusOrder = ["Chưa xử lý", "Đang xử lý", "Đã xử lý"];
+                  return statusOrder.indexOf(a.requestStatus) - statusOrder.indexOf(b.requestStatus);
+                })
+              .map((rescue: any) => (
                 <tr key={rescue._id}>
  
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">

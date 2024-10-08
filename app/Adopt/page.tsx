@@ -6,23 +6,26 @@ import Footer from "@/app/Component/Footer/Footer";
 import Pet_Frame from "../Component/Adopt/Pet_Frame";
 import axios from "@/api/axios";
 import Paw from "@/public/img/Pet/paw.png";
-import { Slider } from "@mui/material";
+
 const handleChangeClick = (petId: any) => {
   const router = useRouter();
   console.log(`Details for rescue ${petId}`);
   router.push(`/Adopt/${petId}`);
 };
+
 export default function Product_Main() {
-  const [weight, setWeight] = useState("");
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
-  interface Pet { // giống trong model
+  const [species, setSpecies] = useState(""); // State for species filter
+
+  interface Pet {
     _id: string;
     image: { url: string[] };
     petName: string;
     gender: string;
     age: string;
     race: string;
+    species: string; // Added species field
     vaccinated: boolean;
     adoptStatus: string;
   }
@@ -35,6 +38,7 @@ export default function Product_Main() {
         const response = await axios.get("/pet/list");
         console.log(response.data);
         setShownProducts(response.data.pets);
+
       } catch (error) {
         console.error("Error fetching pets:", error);
       }
@@ -42,6 +46,27 @@ export default function Product_Main() {
 
     fetchPets();
   }, []);
+
+  const filteredProducts = shownProducts.filter((pet) => {
+    const status = pet.adoptStatus === "Chưa có chủ";
+    const matchesSpecies = species === "" || pet.species.toLowerCase() === species.toLowerCase();
+    const matchesGender = gender === "" || pet.gender === gender;
+    const matchesAge = age === "" || (age === "light" && Number(pet.age) < 1) || (age === "medium" && Number(pet.age) >= 1 && Number(pet.age) <= 2) || (age === "heavy" && Number(pet.age) > 2);
+    // const matchesWeight = weight === "" || (weight === "light" && pet.weight < 2) || (weight === "medium" && pet.weight >= 2 && pet.weight <= 4) || (weight === "heavy" && pet.weight > 4);
+    return matchesSpecies && matchesGender && matchesAge && status;
+  });
+
+  const AdoptedPet = shownProducts.filter((pet) => {
+    const status = pet.adoptStatus === "Đã có chủ";
+    // const matchesSpecies = species === "" || pet.species.toLowerCase() === species.toLowerCase();
+    return status;
+  });
+
+  const RequestedPet = shownProducts.filter((pet) => {
+    const status = pet.adoptStatus === "Đang được yêu cầu";
+    // const matchesSpecies = species === "" || pet.species.toLowerCase() === species.toLowerCase();
+    return status;
+  });
 
   return (
     <>
@@ -92,20 +117,31 @@ export default function Product_Main() {
             Tìm thú cưng
           </div>
           <div className="flex space-x-4 justify-center">
-            <button className="transition ease-in-out  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full  md:w-auto flex justify-center items-center p-3 space-x-4 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100 hover:bg-opacity-90  ">
+            <button
+              onClick={() => setSpecies("")}
+              className={`transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full md:w-auto flex justify-center items-center p-3 space-x-4 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100 hover:bg-opacity-90 ${
+                species === "" ? "bg-indigo-500" : ""
+              }`}
+            >
               <span className="font-montserrat">Tất cả</span>
             </button>
 
-            <button className="transition ease-in-out  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full  md:w-auto flex justify-center items-center p-3 space-x-4 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100 hover:bg-opacity-90  ">
+            <button
+              onClick={() => setSpecies("Chó")}
+              className={`transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full md:w-auto flex justify-center items-center p-3 space-x-4 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100 hover:bg-opacity-90 ${
+                species === "Chó" ? "bg-indigo-500" : ""
+              }`}
+            >
               <span className="font-montserrat">Chó</span>
             </button>
 
-            <button className="transition ease-in-out  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full  md:w-auto flex justify-center items-center p-3 space-x-4 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100 hover:bg-opacity-90  ">
+            <button
+              onClick={() => setSpecies("Mèo")}
+              className={`transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full md:w-auto flex justify-center items-center p-3 space-x-4 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100 hover:bg-opacity-90 ${
+                species === "Mèo" ? "bg-indigo-500" : ""
+              }`}
+            >
               <span className="font-montserrat">Mèo</span>
-            </button>
-
-            <button className="transition ease-in-out  hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full  md:w-auto flex justify-center items-center p-3 space-x-4 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100 hover:bg-opacity-90  ">
-              <span className="font-montserrat">Khác</span>
             </button>
           </div>
 
@@ -118,9 +154,9 @@ export default function Product_Main() {
                 onChange={(e) => setGender(e.target.value)}
                 className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
               >
-                <option value="">Chọn giới tính</option>
-                <option value="male">Đực</option>
-                <option value="female">Cái</option>
+                <option value="">Tất cả</option>
+                <option value="Đực">Đực</option>
+                <option value="Cái">Cái</option>
               </select>
             </div>
             <div className="flex space-x-4 items-center">
@@ -130,24 +166,10 @@ export default function Product_Main() {
                 onChange={(e) => setAge(e.target.value)}
                 className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
               >
-                <option value="">Độ tuổi</option>
+                <option value="">Tất cả</option>
                 <option value="light">Dưới 1 tuổi</option>
                 <option value="medium">1 tuổi-2 tuổi</option>
                 <option value="heavy">Trên 2 tuổi</option>
-              </select>
-            </div>
-
-            <div className="flex space-x-4 items-center">
-              <label className="">Cân nặng</label>
-              <select
-                value={weight}
-                onChange={(e) => setWeight(e.target.value)}
-                className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
-              >
-                <option value="">Chọn cân nặng</option>
-                <option value="light">Dưới 2kg</option>
-                <option value="medium">2kg-4kg</option>
-                <option value="heavy">Trên 4kg</option>
               </select>
             </div>
           </div>
@@ -158,8 +180,53 @@ export default function Product_Main() {
             Các bé thú cưng của cửa hàng
           </div>
           <div className="flex flex-wrap justify-center mx-auto">
-            {shownProducts.map((pet) => (
-              <div className="w-1/2 p-4 flex items-center justify-center space-x-4" key={pet._id}>
+            {filteredProducts.map((pet) => (
+              <div
+                className="w-1/2 p-4 flex items-center justify-center space-x-4"
+                key={pet._id}
+              >
+                <Pet_Frame
+                  pet={pet}
+                  // onClick={() => handleChangeClick(pet._id)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+
+        <div className="mx-40">
+          <div className="font-montserrat text-2xl font-semibold my-10 ">
+            Các bé thú cưng đang được yêu cầu nhận nuôi của cửa hàng
+          </div>
+          <div className="flex flex-wrap justify-center mx-auto">
+            {RequestedPet.map((pet) => (
+              <div
+                className="w-1/2 p-4 flex items-center justify-center space-x-4"
+                key={pet._id}
+              >
+                <Pet_Frame
+                  pet={pet}
+                  // onClick={() => handleChangeClick(pet._id)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+
+            {/* dã dược nhận nuôi */}
+
+        <div className="mx-40">
+          <div className="font-montserrat text-2xl font-semibold my-10 ">
+            Các bé thú cưng đã được nhận nuôi
+          </div>
+          <div className="flex flex-wrap justify-center mx-auto">
+            {AdoptedPet.map((pet) => (
+              <div
+                className="w-1/2 p-4 flex items-center justify-center space-x-4"
+                key={pet._id}
+              >
                 <Pet_Frame
                   pet={pet}
                   // onClick={() => handleChangeClick(pet._id)}
@@ -215,7 +282,7 @@ export default function Product_Main() {
               </li>
               <li>
                 3. Trường hợp không nuôi được tiếp cần trả lại cho Nhóm, không
-                tự ý đem cho người khác. )
+                tự ý đem cho người khác. 
               </li>
             </ul>
           </div>

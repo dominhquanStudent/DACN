@@ -182,13 +182,13 @@ function PetDetail({ params }: { params: { Detail: string } }) {
           {/* <img src={pet.image.url} alt="" className="mb-4"/> */}
 
           {/* Description */}
-          <div className="ml-10">
+          <div className="ml-12">
             <div className="font-montserrat font-bold text-2xl justify-items-center">
               {data.petName}
             </div>
 
             <div className="font-montserrat flex flex-col space-y-4">
-              <div className="flex space-x-4 justify-between">
+              <div className="flex space-x-8 justify-between">
                 <div className="font-bold">Giới tính:</div>
                 <div>{data.gender}</div>
               </div>

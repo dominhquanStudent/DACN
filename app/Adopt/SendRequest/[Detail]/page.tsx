@@ -219,16 +219,28 @@ function SendRequest({ params }: { params: { Detail: string } }) {
                   <label className="text-xs font-bold mb-2" htmlFor="method">
                     Chọn phương thực nhận thú cưng
                   </label>
-                  <select
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="method"
-                    // value={data.method}
-                    onChange={handleInputChange}
-                  >
-                    <option value="">Chọn phương thức</option>
-                    <option value="Trực tiếp">Trực tiếp</option>
-                    <option value="Đơn vị vận chuyển">Đơn vị vận chuyển</option>
-                  </select>
+                  <div className="flex flex-col space-y-2">
+                    <label className="inline-flex items-center">
+                      <input
+                        type="radio"
+                        className="form-radio"
+                        name="method"
+                        value="Trực tiếp"
+                        onChange={handleInputChange}
+                      />
+                      <span className="ml-2">Trực tiếp</span>
+                    </label>
+                    <label className="inline-flex items-center">
+                      <input
+                        type="radio"
+                        className="form-radio"
+                        name="method"
+                        value="Đơn vị vận chuyển"
+                        onChange={handleInputChange}
+                      />
+                      <span className="ml-2">Đơn vị vận chuyển (Khu vực TP HCM và Bình Dương)</span>
+                    </label>
+                  </div>
                 </div>
               </div>
               <div className="w-full px-3">
