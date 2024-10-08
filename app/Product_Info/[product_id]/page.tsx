@@ -43,7 +43,7 @@ export default function ProductDetailPage({
         const response = await axios.get(`/product/${productId}`);
         const productData = response.data;
         setData(productData.product);
-        setTotalPrice(productData.product.price);
+        setTotalPrice(productData.product.discount_price);
         const log = await axios.post(`/test`, productData.product);
       } catch (error) {
         console.error("Error fetching product data:", error);
@@ -88,9 +88,11 @@ export default function ProductDetailPage({
 
   //Error handling for empty comment and rating
   const [error, setError] = useState<string | null>(null);
+  const [isCommented, setIsCommented] = useState<boolean>(false);
     ///////post review to db
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setIsCommented(false);
     if (!comment.trim()) {
       setError("EMPTY COMMENT");
       
@@ -109,9 +111,11 @@ export default function ProductDetailPage({
         image: [], // Add image URLs if any
         user_avatar: accountData.avatar.url,
       };
-      console.log(reviewInfo);
+      
       const response = await axios.post('/review/add', reviewInfo);
       setReviews([...reviews, response.data.review]);
+      setIsCommented(true);
+      setError(null);
     } catch (error) {
       console.error("Error submitting review:", error);
     }
@@ -121,15 +125,21 @@ export default function ProductDetailPage({
   const [amount, setAmount] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
   const handleAmountChange = (Amount: number) => {
+    const discountString = data.discount; // e.g., "10%"
+    const discount = parseInt(discountString.replace('%', ''), 10);
+    const discountedPrice = data.price * (1 - discount / 100);
     if (Amount > 0) {
       setAmount(Amount);
-      setTotalPrice(Amount * data.price);
+      setTotalPrice(Amount * data.discount_price);
     }
   };
   //handle add to cart
+  const [isAdded, setIsAdded] = useState(false);
   const handleAddToCart = async(e: any) => {
     e.preventDefault();
-
+    if (!accountData) {
+      setError("NOT_LOGGED_IN");
+      return;}
     try {
       const cartItem = {
         user_id: accountData._id, // Replace with actual user ID
@@ -138,6 +148,7 @@ export default function ProductDetailPage({
        
       };
       const response = await axios.post('/cart/addProduct', cartItem);
+      setIsAdded(true);
       console.log(response.data);
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -169,7 +180,7 @@ export default function ProductDetailPage({
           {/* Comment box */}
 
     
-            <div className="mt-4 flex flex-col items-end border-b-2 ">
+          <div className="mt-4 flex flex-col items-end border-b-2 ">
               <div className="w-11/12 flex items-center text-lg font-semibold ">
                 Đánh giá sản phẩm <StarRating handleRatingChange={handleRatingChange} />
               </div>
@@ -184,6 +195,7 @@ export default function ProductDetailPage({
                   {error === "EMPTY COMMENT" ? "Ủa vào review rồi k nhập review là sao vậy má ?" : error === "EMPTY RATING" ? "Ủa review mà không có đánh giá * thì có ý nghĩa gì k má ?" : error}
                 </div>
               )}
+              {isCommented && <div className="text-green-500 w-11/12">Đã gửi đánh giá</div>}
               <button
                 className="w-2/12 rounded-md bg-blue-500 py-2 px-6 font-kd2 text-xs font-bold 
                     uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 
@@ -266,6 +278,8 @@ export default function ProductDetailPage({
             >
               Thêm vào giỏ hàng
             </button>
+            {error=="NOT_LOGGED_IN"&& <div className="text-red-500">Muốn mua thì đăng nhập đi má</div>}
+            {isAdded&& <div className="text-green-500">Thêm vào giỏ hàng thành công</div>}
           </div>
         </div>
       </div>

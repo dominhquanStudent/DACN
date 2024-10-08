@@ -9,13 +9,11 @@ const ProductCard = (props: any) => {
 
     Router.push(`/Product_Info/${productId}`);
   };
-  const discountString = props.product.discount; // e.g., "20%"
-  const discountPercentage = parseFloat(discountString.replace('%', ''));
-  const originalPrice = props.product.price;
-  const discountedPrice = originalPrice - (originalPrice * (discountPercentage / 100));
+
+  console.log(props)
   return (
     <div
-      className="flex flex-col border rounded-lg overflow-hidden w-60 transform transition-transform duration-300 hover:scale-110 hover:shadow-lg active:scale-95"
+      className="flex flex-col border rounded-lg overflow-hidden w-60 transform transition-transform duration-300 hover:scale-110 hover:shadow-lg active:scale-95 bg-teal-50"
       onClick={() => handleChangeClick(props.product._id)}
     >
       {/* Product Image */}
@@ -64,12 +62,14 @@ const ProductCard = (props: any) => {
         </div>
 
         {/* Price */}
-        <div className="mt-2 flex justify-between">
-          <span className="text-lg font-semibold">${discountedPrice}</span>
-          <span className="text-lg font-semibold text-red-500 line-through ml-2">
-            ${props.product.price}
-          </span>
-        </div>
+        <div className={`mt-2 flex ${props.product.discount_price === props.product.price ? 'justify-center' : 'justify-between'}`}>
+  <span className="text-lg font-semibold">${props.product.discount_price}</span>
+  {props.product.discount_price !== props.product.price && (
+    <span className="text-lg font-semibold text-red-500 line-through ml-2">
+      ${props.product.price}
+    </span>
+  )}
+</div>
       </div>
     </div>
   );
