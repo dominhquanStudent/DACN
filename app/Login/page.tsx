@@ -3,8 +3,8 @@ import Footer from "../Component/Footer/Footer";
 import Logo from "../../public/img/logo";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import React, { useState, useEffect} from "react";
-import { getCookie, setCookie,deleteCookie } from "cookies-next";
+import React, { useState, useEffect } from "react";
+import { getCookie, setCookie, deleteCookie } from "cookies-next";
 import { useAuth } from "@/context/authProvider";
 import axios from "@/api/axios";
 function Page() {
@@ -13,26 +13,29 @@ function Page() {
   const [hidepass, sethidepass] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const handleLogin = async (event:any) => {
+  const handleLogin = async (event: any) => {
     event.preventDefault();
     try {
       const data = {
-        email: email, 
-        password: password  
+        email: email,
+        password: password
       };
       const response = await axios.post("http://localhost:8080/auth/login", data);
       const accessToken = response?.data?.jwt;
       const role = response?.data?.role;
+      console.log(role);
       const id = response?.data?.id;
       setAuth({ email, accessToken, role, id });
       deleteCookie("jwt");
       setCookie("jwt", accessToken, { maxAge: 60 * 60 * 24 });
-      router.push("/Main");
+      if (role === "admin") { router.push("/Admin"); }
+      else if (role === "doctor") { router.push("/Main"); }
+      else { router.push("/Main"); }
     } catch (error) {
       console.error(error); // Handle error 
     }
   };
-  
+
 
   return (
     <div className="flex flex-col w-full ">
@@ -79,7 +82,7 @@ function Page() {
             className="p-2 pl-4 mb-6 font-nunito rounded border border-gray-300 w-full text-lg"
             placeholder="Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)} 
+            onChange={(e) => setEmail(e.target.value)}
           />
           <div className="mb-2 font-nunito rounded border border-gray-300 w-full text-lg">
             <div className="relative flex items-center font-nunito w-full text-lg">
@@ -88,7 +91,7 @@ function Page() {
                 className="p-2 pl-4 w-full"
                 placeholder="Mật khẩu"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)} 
+                onChange={(e) => setPassword(e.target.value)}
               />
               <button onClick={() => sethidepass(!hidepass)}>
                 <img
