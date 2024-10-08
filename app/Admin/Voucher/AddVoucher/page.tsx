@@ -11,12 +11,13 @@ function VoucherAdd() {
   const router = useRouter();
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('');
-  const [usedTime, setUsedTime] = useState('');
   const [beginDate, setBeginDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [code, setCode] = useState('');
   const [discountType, setDiscountType] = useState('');
   const [discountValue, setDiscountValue] = useState('');
+  const [minRequire, setMinRequire] = useState('');
+  const [maxDiscount, setMaxDiscount] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('');
 
@@ -25,12 +26,15 @@ function VoucherAdd() {
       const data = {
         name,
         quantity,
-        UsedTime: usedTime,
         beginDate,
         endDate,
         code,
         discount_type: discountType,
-        discount_value: discountValue,
+        discount_value: {
+        value: discountValue,
+        min_require: minRequire,
+        max_discount: maxDiscount
+        },
         description,
         status,
       };
@@ -62,7 +66,7 @@ function VoucherAdd() {
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="VoucherName"
                   type="text"
-                  placeholder="Enter Voucher Name"
+                  placeholder="Nhập tên voucher"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -76,24 +80,12 @@ function VoucherAdd() {
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="Quantity"
                     type="text"
-                    placeholder="Enter Quantity"
+                    placeholder="Nhập số lượng"
                     value={quantity}
                     onChange={(e) => setQuantity(e.target.value)}
                   />
                 </div>
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="UsedTime">
-                    Số lần sử dụng
-                  </label>
-                  <input
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="UsedTime"
-                    type="text"
-                    placeholder="Enter Used Time"
-                    value={usedTime}
-                    onChange={(e) => setUsedTime(e.target.value)}
-                  />
-                </div>
+              
               </div>
               <div className='flex w-full'>
                 <div className="w-full px-3">
@@ -130,7 +122,7 @@ function VoucherAdd() {
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="Code"
                     type="text"
-                    placeholder="Enter Code"
+                    placeholder="Nhập mã voucher"
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
                   />
@@ -139,26 +131,56 @@ function VoucherAdd() {
                   <label className="text-xs font-bold mb-2" htmlFor="DiscountType">
                     Loại giảm giá
                   </label>
-                  <input
+                <select
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="DiscountType"
-                    type="text"
-                    placeholder="Enter Discount Type"
                     value={discountType}
                     onChange={(e) => setDiscountType(e.target.value)}
+                  >
+                    <option value="">Chọn trạng thái</option>
+                    <option value="Giảm theo phần trăm">Phần trăm</option>
+                    <option value="Giảm theo giá trị">Trực tiếp</option>
+                  </select>
+                </div>
+              </div>
+              <div className='flex w-full'>
+                <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="MinRequire">
+                    Yêu cầu tối thiểu
+                  </label>
+                  <input
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="MinRequire"
+                    type="text"
+                    placeholder="Nhập yêu cầu tối thiểu"
+                    value={minRequire}
+                    onChange={(e) => setMinRequire(e.target.value)}
+                  />
+                </div>
+                <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="MaxDiscount">
+                    Giá trị giảm tối đa
+                  </label>
+                  <input
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="MaxDiscount"
+                    type="text"
+                    placeholder="Nhập giá trị giảm tối đa"
+                    value={maxDiscount}
+                    onChange={(e) => setMaxDiscount(e.target.value)}
                   />
                 </div>
               </div>
               <div className='flex w-full'>
                 <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="DiscountValue">
-                    Giá trị giảm giá
+                    Giá trị giảm giá {discountType === 'Giảm theo phần trăm' ? '(%)' : '(VNĐ)'}
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="DiscountValue"
                     type="text"
-                    placeholder="Enter Discount Value"
+                    placeholder="Nhập giá trị giảm giá"
                     value={discountValue}
                     onChange={(e) => setDiscountValue(e.target.value)}
                   />
@@ -173,9 +195,9 @@ function VoucherAdd() {
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
                   >
-                    <option value="">Select Status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
+                    <option value="">Chọn trạng thái</option>
+                    <option value="active">Hoạt động</option>
+                    <option value="inactive">Không hoạt động</option>
                   </select>
                 </div>
               </div>

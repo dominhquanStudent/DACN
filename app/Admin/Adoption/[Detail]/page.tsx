@@ -176,6 +176,7 @@ const setFileToBase = (file: any) =>{
                 {data.image && (
                   <img
                     className="mt-4"
+                    loading='lazy'
                     src={data.image.url}
                     alt="Database Image"
                     style={{ maxWidth: '300px', height: '300px' }}

@@ -46,6 +46,7 @@ export default function GreetPage() {
           <div className="text-5xl font-nunito">Chào mừng đến với </div>
           <div className="text-5xl font-nunito"> BKPetcare</div>
           <img
+            loading="lazy"
             src={Doggo1.src}
             className="w-[300px] h-[500px]"
             alt="Doggo1"
@@ -99,14 +100,15 @@ export default function GreetPage() {
             </div>
             {/* first right container */}
             <div className="w-[50%]">
-              <img src={Service.src} alt="" />
+              
+              <img loading="lazy" src={Service.src} alt="" />
             </div>
           </div>
           {/* Dịch vụ */}
           <div className="flex flex-col md:flex-row items-center ">
             {/* second left container */}
             <div className="w-[50%]">
-              <img src={Healthcare.src} alt="" />
+              <img loading="lazy" src={Healthcare.src} alt="" />
             </div>
             {/* second right container */}
             <div className=" w-[50%] ">
@@ -175,7 +177,7 @@ export default function GreetPage() {
             </div>
             {/* second right container */}
             <div className="w-[50%]">
-              <img src={Consult.src} alt="" />
+              <img loading="lazy" src={Consult.src} alt="" />
             </div>
           </div>
         </div>

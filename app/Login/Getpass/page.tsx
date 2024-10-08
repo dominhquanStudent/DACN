@@ -2,8 +2,8 @@
 import Footer from '../../Component/Footer/Footer';
 import Logo from '../../../public/img/logo';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
+import axios from '@/api/axios';
 function Page() {
     const router = useRouter();
     const [step, setStep] = useState(1);
@@ -24,7 +24,7 @@ function Page() {
     return (
         <div className="flex flex-col w-full ">
             <div className="flex items-center">
-                <img src={"./../img/logo.png"} alt="Logo" className='scale-75 ml-8' />
+                <img src={"./../img/logo.png"} alt="Logo" className='w-20 ml-8' />
                 <button onClick={() => router.push('/Main')}>
                     <div className="ml-4 font-nunito text-4xl text-[#1286CE] font-bold">BK</div>
                 </button>
@@ -55,7 +55,7 @@ function Page() {
 ${emailError ? '' : 'mt-12'}`} onClick={handleSubmit}>Lấy mật khẩu</button>
                 </div>)}
                 {step === 2 && (
-                <div className='bg-white w-2/6 rounded-xl ml-16 px-12 pt-8 flex flex-col ' style={{ height: '60vh' }}>
+                <div className='bg-white w-2/6 rounded-xl ml-16 px-12 pt-8 flex flex-col ' style={{ height: '70vh' }}>
                     <div className='text-2xl font-bold mb-4 w-full text-center'>Lấy mật khẩu </div>
                     <div className='text-xl text-[#F29A2E] mb-4 text-center font-bold '>
                         Gửi yêu cầu lấy mật khẩu <br/> thành công
@@ -64,7 +64,7 @@ ${emailError ? '' : 'mt-12'}`} onClick={handleSubmit}>Lấy mật khẩu</button
                     <img src={"./../img/check.svg"} alt="Check" className='w-16 h-16' />
                     </div>
                     <div className='text-lg text-[#969090] mb-4 text-center '>
-                        Mật khẩu tạm thời đã gửi về Email <br/> {email}
+                        Mật khẩu tạm thời đã gửi về Email <br/> {email} <br/> Hãy đổi lại mật khẩu sau khi đăng nhập
                     </div>
                     <button type="submit" className="bg-[#296EB6] text-white font-nunito p-2 text-xl rounded w-full" 
                         onClick={() => router.push('/Login')}>Đăng nhập ngay</button>

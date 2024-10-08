@@ -40,6 +40,7 @@ export default function DonationPage() {
               />
               <span>Tài khoản ngân hàng</span>
               <img
+                loading="lazy"
                 src={Banking.src}
                 alt="Banking"
                 className="text-base w-14 rounded-md ml-4"
