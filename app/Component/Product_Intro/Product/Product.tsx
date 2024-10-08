@@ -230,9 +230,9 @@ export default function Product() {
           </div>
         </div>
         {/* Product side*/}
-        <div className="w-5/6 grid grid-cols-3 gap-14 ml-16">
-          {(searchPerformed && filteredProducts.length === 0)||(Params!=0 && filteredProducts.length === 0)  ? (
-            <div className="col-span-3 text-center p-6 bg-gray-100 border border-gray-300 rounded-lg shadow-md">
+        <div className="w-5/6 grid grid-cols-3 gap-14 ml-16 snap-y snap-mandatory overflow-y-scroll h-[900px] hide-scrollbar">
+          {(searchPerformed && filteredProducts.length === 0) || (Params != 0 && filteredProducts.length === 0) ? (
+            <div className="col-span-3 text-center p-6 bg-gray-100 border border-gray-300 rounded-lg shadow-md snap-center">
               <h2 className="text-xl font-semibold mb-2">No items found</h2>
               <p className="text-gray-600">
                 Try adjusting your search criteria.
@@ -243,7 +243,9 @@ export default function Product() {
               ? filteredProducts
               : products
             ).map((product, index) => (
-              <ProductCard key={index} product={product} />
+              <div key={index} className="">
+                <ProductCard product={product} />
+              </div>
             ))
           )}
         </div>

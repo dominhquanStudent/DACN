@@ -22,7 +22,7 @@ const config: Config = {
         // Add more custom font families as needed
       },
       colors: {
-        'footer-yellow': '#FFFAED',
+        'footer-yellow': '#ecedd3',
         'search-button-orange':'#EDB24E',
         'table-brown':'#FFE5B9',
         'table-line': '#F29A2E',

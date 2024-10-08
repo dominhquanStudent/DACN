@@ -37,12 +37,26 @@ export default function Cart() {
       const response = await axios.get(`/cart/${accountData._id}`);
  
       setCartData(response.data);
+      
     };
     useEffect(() => {
       if (accountData) {
         fetchCartData();
       }
     }, [accountData]);
+    //caculate total price
+    const [totalPrice, setTotalPrice] = useState(0);
+    useEffect(() => {
+      const calculateTotalPrice = (products) => {
+        return products.reduce((total, product) => {
+          return total + (product.discount_price * product.quantity);
+        }, 0);
+      };
+  
+      const total = calculateTotalPrice(cartData.cart.product_list);
+      setTotalPrice(total);
+    }, [cartData.cart.product_list]);
+    console.log("Cart Data:", cartData.cart.product_list);
   return (
     <>
       <Header></Header>
@@ -146,7 +160,7 @@ export default function Cart() {
                     Tổng Đơn hàng
                   </p>
                   <p class="font-normal text-lg leading-8 text-black">
-                    400.000đ
+                    {totalPrice}
                   </p>
                 </div>
                 <div class="flex justify-between">

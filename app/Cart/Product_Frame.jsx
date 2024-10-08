@@ -14,7 +14,6 @@ export default function Product_Frame(props) {
                 quantity: quantity,
                 };
                 const response = await axios.post('/cart/update', cartItem);
-                console.log("Adjust cart:", response.data);
             } catch (error) {
                 console.log("Error adding to cart:", error);
             }
