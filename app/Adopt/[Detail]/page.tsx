@@ -207,6 +207,10 @@ function PetDetail({ params }: { params: { Detail: string } }) {
                 <div>{data.race}</div>
               </div>
               <div className="flex space-x-4 justify-between">
+                <div className="font-bold">Vaccine:</div>
+                <div>{data.vaccinated}</div>
+              </div>
+              <div className="flex space-x-4 justify-between">
                 <div className="font-bold">Mô tả:</div>
                 <div>{data.description}</div>
               </div>

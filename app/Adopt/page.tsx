@@ -17,6 +17,7 @@ export default function Product_Main() {
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [species, setSpecies] = useState(""); // State for species filter
+  const [adoptStatus, setAdoptStatus] = useState(""); // State for adoptStatus filter
 
   interface Pet {
     _id: string;
@@ -38,7 +39,6 @@ export default function Product_Main() {
         const response = await axios.get("/pet/list");
         console.log(response.data);
         setShownProducts(response.data.pets);
-
       } catch (error) {
         console.error("Error fetching pets:", error);
       }
@@ -48,12 +48,17 @@ export default function Product_Main() {
   }, []);
 
   const filteredProducts = shownProducts.filter((pet) => {
-    const status = pet.adoptStatus === "Chưa có chủ";
-    const matchesSpecies = species === "" || pet.species.toLowerCase() === species.toLowerCase();
+    // const status = pet.adoptStatus === "Chưa có chủ";
+    const matchesSpecies =
+      species === "" || pet.species.toLowerCase() === species.toLowerCase();
     const matchesGender = gender === "" || pet.gender === gender;
-    const matchesAge = age === "" || (age === "light" && Number(pet.age) < 1) || (age === "medium" && Number(pet.age) >= 1 && Number(pet.age) <= 2) || (age === "heavy" && Number(pet.age) > 2);
-    // const matchesWeight = weight === "" || (weight === "light" && pet.weight < 2) || (weight === "medium" && pet.weight >= 2 && pet.weight <= 4) || (weight === "heavy" && pet.weight > 4);
-    return matchesSpecies && matchesGender && matchesAge && status;
+    const matchesAge =
+      age === "" ||
+      (age === "light" && Number(pet.age) < 1) ||
+      (age === "medium" && Number(pet.age) >= 1 && Number(pet.age) <= 2) ||
+      (age === "heavy" && Number(pet.age) > 2);
+    const matchesStatus = adoptStatus === "" || pet.adoptStatus === adoptStatus;
+    return matchesSpecies && matchesGender && matchesAge && matchesStatus;
   });
 
   const AdoptedPet = shownProducts.filter((pet) => {
@@ -172,12 +177,32 @@ export default function Product_Main() {
                 <option value="heavy">Trên 2 tuổi</option>
               </select>
             </div>
+            <div className="flex space-x-4 items-center">
+              <label className="">Trạng thái</label>
+              <select
+                value={adoptStatus}
+                onChange={(e) => setAdoptStatus(e.target.value)}
+                className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
+              >
+                <option value="">Tất cả</option>
+                <option value="Chưa có chủ">Chưa có chủ</option>
+                <option value="Đang được yêu cầu">Đang được yêu cầu</option>
+                <option value="Đã có chủ">Đã có chủ</option>
+              </select>
+            </div>
           </div>
         </div>
         {/* Featured Pet */}
         <div className="mx-40">
           <div className="font-montserrat text-2xl font-semibold my-10 ">
-            Các bé thú cưng của cửa hàng
+            {/* Các bé thú cưng của cửa hàng */}
+            {adoptStatus === "Đã có chủ"
+              ? "Các bé đã có chủ"
+              : adoptStatus === "Đang được yêu cầu"
+              ? "Đang được yêu cầu"
+              : adoptStatus === "Chưa có chủ"
+              ? "Các bé thú cưng chưa có chủ"
+              : "Các bé thú cưng của cửa hàng"}
           </div>
           <div className="flex flex-wrap justify-center mx-auto">
             {filteredProducts.map((pet) => (
@@ -194,47 +219,6 @@ export default function Product_Main() {
           </div>
         </div>
 
-
-        <div className="mx-40">
-          <div className="font-montserrat text-2xl font-semibold my-10 ">
-            Các bé thú cưng đang được yêu cầu nhận nuôi của cửa hàng
-          </div>
-          <div className="flex flex-wrap justify-center mx-auto">
-            {RequestedPet.map((pet) => (
-              <div
-                className="w-1/2 p-4 flex items-center justify-center space-x-4"
-                key={pet._id}
-              >
-                <Pet_Frame
-                  pet={pet}
-                  // onClick={() => handleChangeClick(pet._id)}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-
-            {/* dã dược nhận nuôi */}
-
-        <div className="mx-40">
-          <div className="font-montserrat text-2xl font-semibold my-10 ">
-            Các bé thú cưng đã được nhận nuôi
-          </div>
-          <div className="flex flex-wrap justify-center mx-auto">
-            {AdoptedPet.map((pet) => (
-              <div
-                className="w-1/2 p-4 flex items-center justify-center space-x-4"
-                key={pet._id}
-              >
-                <Pet_Frame
-                  pet={pet}
-                  // onClick={() => handleChangeClick(pet._id)}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
         <div className="flex justify-center items-center mt-7">
           <div className="border-b border-gray-500 w-[80%] my-2 "></div>{" "}
           {/* Horizontal line */}
@@ -282,7 +266,7 @@ export default function Product_Main() {
               </li>
               <li>
                 3. Trường hợp không nuôi được tiếp cần trả lại cho Nhóm, không
-                tự ý đem cho người khác. 
+                tự ý đem cho người khác.
               </li>
             </ul>
           </div>

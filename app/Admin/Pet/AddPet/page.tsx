@@ -15,6 +15,7 @@ function PetAdd() {
   const [age, setAge] = useState("");
   const [race, setRace] = useState("");
   const [species, setSpecies] = useState("");
+  const [vaccinated, setVaccinated] = useState("");
   const [description, setDescription] = useState("");
   // const [adoptStatus, setAdoptStatus] = useState('');
   // const [recieveDay, setRecieveDay] = useState('');
@@ -28,6 +29,7 @@ function PetAdd() {
         age,
         race,
         species,
+        vaccinated,
         description,
         // adoptStatus,
         // recieveDay,
@@ -84,19 +86,7 @@ function PetAdd() {
                   onChange={(e) => setPetName(e.target.value)}
                 />
               </div>
-              {/* <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="PetId">
-                  Mã số thú cưng
-                </label>
-                <input
-                  className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="PetId"
-                  type="text"
-                  placeholder="Enter Pet Name"
-                  value={pet_id}
-                  onChange={(e) => setpet_id(e.target.value)}
-                />
-              </div> */}
+
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="ImageUpload">
                   Tải hình ảnh
@@ -175,6 +165,21 @@ function PetAdd() {
                   </select>
                 </div>
               </div>
+
+              <div className="w-full px-3">
+                  <label className="text-xs font-bold mb-2" htmlFor="Vaccinated">
+                    Loài
+                  </label>
+                  <select
+                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="Vaccinated"
+                    value={vaccinated}
+                    onChange={(e) => setVaccinated(e.target.value)}
+                  >
+                    <option value="Rồi">Rồi</option>
+                    <option value="Chưa">Chưa</option>
+                  </select>
+                </div>
 
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="Description">

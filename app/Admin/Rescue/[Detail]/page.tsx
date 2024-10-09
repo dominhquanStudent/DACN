@@ -5,6 +5,7 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
 import { useRouter } from 'next/navigation';
+
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, '0');
@@ -17,6 +18,7 @@ function RescueDetail({ params }: { params: { Detail: string } }) {
   const rescueId = params.Detail;
   const [data, setData] = useState<any>({ "image":{"url":[""]}, });  
   const [isEditable, setIsEditable] = useState(false);
+  const [showButton, setShowButton] = useState(false);
   const router = useRouter();
   useEffect(() => {
     const fetchRescueData = async (id: any) => {
@@ -72,6 +74,7 @@ const handleSaveClick = () => {
 
   const handleChangeClick = async () => {
     setIsEditable(true);
+    setShowButton(true);
     // const log = await axios.post(`/test`, data);
   };
 
@@ -222,12 +225,14 @@ const handleSaveClick = () => {
             </div>
           </form>
           <div className='flex items-center justify-center w-full space-x-4'>
+            {!showButton && (
             <button onClick={handleChangeClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Cập nhật trạng thái
-            </button>
+              Giải quyết yêu cầu
+            </button>)}
+            {showButton && (
             <button onClick={handleSaveClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Lưu
-            </button>
+            </button>)}
           </div>
         </div>
       </div>
