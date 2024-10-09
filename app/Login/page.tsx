@@ -29,7 +29,7 @@ function Page() {
       deleteCookie("jwt");
       setCookie("jwt", accessToken, { maxAge: 60 * 60 * 24 });
       if (role === "admin") { router.push("/Admin"); }
-      else if (role === "doctor") { router.push("/Main"); }
+      else if (role === "doctor") { router.push("/Doctor"); }
       else { router.push("/Main"); }
     } catch (error) {
       console.error(error); // Handle error 
