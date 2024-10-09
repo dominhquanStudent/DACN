@@ -20,7 +20,7 @@ function VoucherAdd() {
   const [maxDiscount, setMaxDiscount] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('');
-
+  const [employee_id, setEmployeeId] = useState('66e5800a52098d8bd1397010');
   const handleSaveClick = async () => {
     try {
       const data = {
@@ -33,10 +33,11 @@ function VoucherAdd() {
         discount_value: {
         value: discountValue,
         min_require: minRequire,
-        max_discount: maxDiscount
+        max_discount: maxDiscount,
         },
         description,
         status,
+        employee_id,
       };
       const response = await axios.post('/voucher/add', data);
       toast.success('Voucher saved successfully!');
