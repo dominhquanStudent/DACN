@@ -14,6 +14,7 @@ export default function Product_Frame(props) {
                 quantity: quantity,
                 };
                 const response = await axios.post('/cart/update', cartItem);
+                props.fetchCartData();
             } catch (error) {
                 console.log("Error adding to cart:", error);
             }
@@ -46,6 +47,7 @@ export default function Product_Frame(props) {
               data: cartItem,
             });
             console.log("Remove cart:", response.data);
+            props.fetchCartData();
             setIsRemoved(true);
           } catch (error) {
             console.log("Error removing from cart:", error);
