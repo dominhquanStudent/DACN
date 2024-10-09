@@ -17,6 +17,7 @@ function PetDetail({ params }: { params: { Detail: string } }) {
   const petId = params.Detail;
   const [data, setData] = useState<any>({});
   const [isEditable, setIsEditable] = useState(true);
+  const [showButton, setShowButton] = useState(false);
   const router = useRouter();
   useEffect(() => {
     const fetchPetData = async (id: any) => {
@@ -78,6 +79,7 @@ function PetDetail({ params }: { params: { Detail: string } }) {
 
   const handleChangeClick = async () => {
     setIsEditable(true);
+    setShowButton(true);
     // const log = await axios.post(`/test`, data);
   };
 
@@ -192,6 +194,23 @@ function PetDetail({ params }: { params: { Detail: string } }) {
               </div>
 
               <div className="w-full px-3">
+                <label className="text-xs font-bold mb-2" htmlFor="vaccinated">
+                  Vaccine
+                </label>
+                <select
+                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="vaccinated"
+                  value={data.vaccinated}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                >
+                  <option value="">Chọn</option>
+                  <option value="Rồi">Rồi</option>
+                  <option value="Chưa">Chưa</option>
+                </select>
+              </div>
+
+              <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="Description">
                   Mô tả
                 </label>
@@ -289,18 +308,21 @@ function PetDetail({ params }: { params: { Detail: string } }) {
             </div>
           </form>
           <div className="flex items-center justify-center w-full space-x-4">
+            {!showButton &&(
             <button
               onClick={handleChangeClick}
               className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
-              Sửa
+              Cập nhật thông tin
             </button>
+          )}
+          {showButton && (
             <button
               onClick={handleSaveClick}
               className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
               Lưu
-            </button>
+            </button>)}
           </div>
         </div>
       </div>

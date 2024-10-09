@@ -18,6 +18,7 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
   const petId = params.Detail;
   const [data, setData] = useState<any>({});
   const [isEditable, setIsEditable] = useState(false);
+  const [showButton, setShowButton] = useState(false);
   const router = useRouter();
   useEffect(() => {
     const fetchAdoptData = async (id: any) => {
@@ -82,8 +83,28 @@ const setFileToBase = (file: any) =>{
 
   const handleChangeClick = async () => {
     setIsEditable(true);
+    setShowButton(true);
     // const log = await axios.post(`/test`, data);
   };
+  const handleDeleteRequestClick = async () => {
+    try {
+
+      const updatedData = {
+        ...data,
+        adoptStatus: "Chưa có chủ",
+      };
+
+      const response = await axios.put(`/pet/${petId}`, updatedData);
+      // Revalidate the data
+      mutate(`/pet/${petId}`);
+      router.push(`/Admin/Adoption`);
+
+    } catch (error) {
+      console.error("Error updating pet data:", error);
+    }
+  };
+
+    
 
   if (!data) {
     return <div>Loading...</div>;
@@ -290,11 +311,17 @@ const setFileToBase = (file: any) =>{
             </div>
           </form>
           <div className='flex items-center justify-center w-full space-x-4'>
+            {!showButton && (
             <button onClick={handleChangeClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Cập nhật trạng thái
-            </button>
-            <button onClick={handleSaveClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Lưu
+            </button>)}
+            {showButton && (
+              <button onClick={handleSaveClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Lưu
+              </button>
+            )}
+            <button onClick={handleDeleteRequestClick} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+              Xóa yêu cầu
             </button>
           </div>
         </div>

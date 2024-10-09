@@ -4,6 +4,7 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
 import { useRouter } from 'next/navigation';
+import Footer from '@/app/Component/Footer/Footer';
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -81,10 +82,9 @@ const setFileToBase = (file: any) =>{
     <div className='flex flex-col w-full justify-center items-center'>
       <Header />
       <div className='flex w-full'>
-        <Sidebar />
         <div className='w-3/4 border-l-2 border-gray-200'>
           <div className={'flex font-nunito text-xl font-bold w-full justify-center'}>
-            Chi tiết lịch hẹn
+            Chi tiết lịch hẹn bác sĩ
           </div>
           <form className="w-full mx-4" key={data._id}>
           {/* <form className="w-full mx-4" > */}
@@ -247,6 +247,7 @@ const setFileToBase = (file: any) =>{
           </div>
         </div>
       </div>
+      <Footer />
       {/* <ToastContainer /> */}
     </div>
   );
