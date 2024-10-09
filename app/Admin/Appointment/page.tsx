@@ -4,6 +4,10 @@ import Sidebar from "@/app/Admin/sidebar";
 import Header from "@/app/Admin/Header";
 import { useRouter } from "next/navigation";
 import axios from "@/api/axios";
+import Calendar from 'react-calendar';
+type ValuePiece = Date | null;
+
+type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -41,11 +45,23 @@ function isThisMonth(dateString: string): boolean {
     date.getFullYear() === today.getFullYear()
   );
 }
+function isPast(dateString: string): boolean {
+  const today = new Date();
+  const date = new Date(dateString);
+  today.setHours(0, 0, 0, 0);
+  date.setHours(0, 0, 0, 0);
+
+  return date < today;
+}
+
+
 
 function Appointment() {
   const [appointments, setAppointments] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("all");
   const Router = useRouter();
+  const [value, onChange] = useState<Value>(new Date());
+
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -78,10 +94,11 @@ function Appointment() {
   };
 
   const filteredAppointments = appointments.filter((appointment) => {
+    if (filter==="all") return !isPast(appointment.date);
     if (filter === "today") return isToday(appointment.date);
     if (filter === "week") return isThisWeek(appointment.date);
     if (filter === "month") return isThisMonth(appointment.date);
-    return true;
+    if (filter === "past") return isPast(appointment.date);
   });
 
   return (
@@ -122,6 +139,7 @@ function Appointment() {
               <option value="today">Hôm nay</option>
               <option value="week">Trong tuần</option>
               <option value="month">Trong tháng</option>
+              <option value="past">Đã qua</option>
             </select>
           </div>
           <table className="min-w-full leading-normal">
@@ -156,9 +174,10 @@ function Appointment() {
                 </th>
               </tr>
             </thead>
-            <tbody>
+            {/* <tbody>
               {Array.isArray(filteredAppointments) &&
                 filteredAppointments.map((appointment: any) => (
+                  
                   <tr key={appointment._id}>
                     <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                       {appointment.userName}
@@ -199,9 +218,57 @@ function Appointment() {
                     </td>
                   </tr>
                 ))}
+            </tbody> */}
+                        <tbody>
+              {Array.isArray(filteredAppointments) &&
+                filteredAppointments.map((appointment: any) => {
+                  // const isPast = new Date(appointment.date) < new Date();
+                  return  (
+                    <tr key={appointment._id} className={isToday(appointment.date)?"bg-blue-50" : "bg-white text-sm"}>
+                      <td className="px-5 py-2 border-b border-gray-200">
+                        {appointment.userName}
+                      </td>
+                      <td className="px-5 py-2 border-b border-gray-200">
+                        {appointment.phone}
+                      </td>
+                      <td className="px-5 py-2 border-b border-gray-200">
+                        {appointment.address}
+                      </td>
+                      <td className="px-5 py-2 border-b border-gray-200 ">
+                        {formatDate(appointment.date)}
+                      </td>
+                      <td className="px-5 py-2 border-b border-gray-200 ">
+                        {appointment.time}
+                      </td>
+                      <td className="px-5 py-2 border-b border-gray-200 ">
+                        {appointment.service}
+                      </td>
+                      <td className="px-5 py-2 border-b border-gray-200 ">
+                        {appointment.doctorName}
+                      </td>
+                      <td className="px-5 py-2 border-b border-gray-200 ">
+                        <button
+                          onClick={() => handleChangeClick(appointment._id)}
+                          className="text-blue-500 hover:text-blue-700"
+                        >
+                          Chi tiết
+                        </button>
+                      </td>
+                      <td className="px-5 py-2 border-b border-gray-200">
+                        <button
+                          onClick={() => handleDeleteClick(appointment._id)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          Xóa
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </div>
+
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import Sidebar from "@/app/Admin/sidebar";
@@ -13,6 +13,8 @@ const localizer = momentLocalizer(moment);
 
 function Appointment() {
   const [appointments, setAppointments] = useState<any[]>([]);
+  const [view, setView] = useState<any>('month'); // State to manage the current view
+  const [date, setDate] = useState<Date>(new Date()); // State to manage the current date
   const Router = useRouter();
 
   useEffect(() => {
@@ -27,15 +29,50 @@ function Appointment() {
     fetchAppointments();
   }, []);
 
-  const events = appointments.map((appointment) => ({
-    title: appointment.userName,
-    start: new Date(appointment.date),
-    end: new Date(appointment.date),
-    id: appointment._id, // Add the appointment ID to the event
-  }));
+  const events = appointments.map((appointment) => {
+    const start = new Date(appointment.date);
+    const end = new Date(start.getTime() + 30 * 60000); // Add 15 minutes to the start time
+    return {
+      title: appointment.userName,
+      start: start,
+      end: end,
+      id: appointment._id, // Add the appointment ID to the event
+    };
+  });
 
   const handleSelectEvent = (event: any) => {
     Router.push(`./Appointment/${event.id}`);
+  };
+
+  const handleNavigate = (action: 'TODAY' | 'NEXT' | 'PREV') => {
+    const newDate = new Date(date);
+    switch (action) {
+      case 'TODAY':
+        setDate(new Date());
+        break;
+      case 'NEXT':
+        if (view === 'month') {
+          newDate.setMonth(newDate.getMonth() + 1);
+        } else if (view === 'week') {
+          newDate.setDate(newDate.getDate() + 7);
+        } else if (view === 'day') {
+          newDate.setDate(newDate.getDate() + 1);
+        }
+        setDate(newDate);
+        break;
+      case 'PREV':
+        if (view === 'month') {
+          newDate.setMonth(newDate.getMonth() - 1);
+        } else if (view === 'week') {
+          newDate.setDate(newDate.getDate() - 7);
+        } else if (view === 'day') {
+          newDate.setDate(newDate.getDate() - 1);
+        }
+        setDate(newDate);
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -43,15 +80,20 @@ function Appointment() {
       <Header />
       <div className="flex w-full h-full">
         <div className="w-full h-full relative">
+
+ 
           <Calendar
             localizer={localizer}
             events={events}
             startAccessor="start"
             endAccessor="end"
-            style={{ height: "100vh" }}
-            toolbar={true}
+            style={{ height: "calc(100vh - 200px)" }} // Adjust height to account for buttons
+            toolbar={true} // Disable the default toolbar
             views={['month', 'week', 'day']}
-            defaultDate={new Date()}
+            date={date} // Set the current date
+            view={view} // Set the current view
+            onView={(newView) => setView(newView)} // Update view state when view changes
+            onNavigate={(newDate) => setDate(newDate)} // Update date state when navigation occurs
             onSelectEvent={handleSelectEvent} // Handle event selection
           />
         </div>
