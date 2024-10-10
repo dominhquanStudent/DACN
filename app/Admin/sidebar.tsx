@@ -12,6 +12,7 @@ const menuItems = [
     { name: 'Quản lý nhận nuôi', path: '/Admin/Adoption', icon: '/img/icon/adopt.svg', iconhl: '/img/icon/adopt_hl.svg' },
     { name: 'Quản lý thú cưng', path: '/Admin/Pet', icon: '/img/icon/pet.svg', iconhl: '/img/icon/pet_hl.svg' },
     { name: 'Tin nhắn', path: '/Admin/Message', icon: '/img/icon/message.svg', iconhl: '/img/icon/message_hl.svg' },
+    { name: 'Hồ sơ', path: '/Admin/Profile', icon: '/img/icon/admin.svg', iconhl: '/img/icon/admin_hl.svg' },
     { name: 'Cài đặt', path: '/Admin/Setting', icon: '/img/icon/setting.svg', iconhl: '/img/icon/setting_hl.svg' },
 ];
 function Sidebar() {

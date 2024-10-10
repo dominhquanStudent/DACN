@@ -4,6 +4,5 @@ import { useAuth } from '@/context/authProvider';
 const getId = async () => {
   const {Auth, setAuth} = useAuth();
   return Auth.id;
-
 }
 export default getId;

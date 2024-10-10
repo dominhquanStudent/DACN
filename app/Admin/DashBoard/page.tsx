@@ -3,7 +3,10 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
+import { useRouter } from 'next/navigation';
+
 function DashBoard() {
+    const router = useRouter();
     const [dashboard, setdashboard] = useState<any>({
         "pendingOrders": 0,
         "pendingAppointments": 0,
@@ -11,17 +14,21 @@ function DashBoard() {
         "pendingRescueRequests": 0
     });
     const sections = [
-        { icon: '/img/icon/order.svg', title: 'Số đơn hàng', value: dashboard.pendingOrders },
-        { icon: '/img/icon/product.svg', title: 'Cuộc hẹn hiện tại', value: dashboard.pendingAppointments },
-        { icon: '/img/icon/rescue.svg', title: 'Yêu cầu cứu hộ', value: dashboard.pendingRescueRequests },
-        { icon: '/img/icon/product.svg', title: 'Số đơn nhận nuôi', value: dashboard.pendingPets },
+        { icon: '/img/icon/order.svg', title: 'Số đơn hàng', value: dashboard.pendingOrders, route: '/Admin/Order' },
+        { icon: '/img/icon/product.svg', title: 'Cuộc hẹn hiện tại', value: dashboard.pendingAppointments,route: '/Admin/Appointment' },
+        { icon: '/img/icon/rescue.svg', title: 'Yêu cầu cứu hộ', value: dashboard.pendingRescueRequests, route: '/Admin/Rescue' },
+        { icon: '/img/icon/product.svg', title: 'Số đơn nhận nuôi', value: dashboard.pendingPets, route: '/Admin/Adoption' },
     ];
     const [accountData, setAccountData] = useState<any>({
         'avatar': {
             'url': ''
         }
     });
-
+    const handleSectionClick = (route: string | undefined) => {
+        if (route) {
+            router.push(route);
+        }
+    };
 
     useEffect(() => {
         const fetchDashboard = async () => {
@@ -52,8 +59,8 @@ function DashBoard() {
                         </div>
                         <div className='flex space-x-10 mb-4'>
                             {sections.map((section, index) => (
-                                <div key={index} className='flex items-center justify-center space-x-4'>
-                                    <img loading="lazy" src={section.icon} className='h-2/3'></img>
+                                <div key={index} className='flex items-center justify-center space-x-4 cursor-pointer' onClick={() => handleSectionClick(section.route)}>
+                                    <img loading="lazy" src={section.icon} className='h-2/3' alt={section.title} />
                                     <div className='flex flex-col'>
                                         <div>{section.title}</div>
                                         <div>{section.value}</div>
