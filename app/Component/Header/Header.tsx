@@ -8,9 +8,11 @@ import Logout from "@/public/img/Logouthl.svg";
 import User from "@/public/img/Header/User.png";
 import Link from "next/link";
 import { getCookie, deleteCookie } from "cookies-next";
+import { usePathname } from 'next/navigation';
 
 import axios from "axios";
 export default function Header(props: any) {
+  const pathname = usePathname();
   const [showSublist1, setShowSublist1] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const handleLogout = () => {
@@ -91,7 +93,7 @@ export default function Header(props: any) {
           <li
             onMouseEnter={() => setShowSublist1(true)}
             onMouseLeave={() => setShowSublist1(false)}
-            className={` ${showSublist1 ? "text-yellow-400 " : ""}`}
+            className={` ${showSublist1 ? "text-yellow-400 " : ""} ${pathname === '/Product' ? "text-yellow-500" : ""}`}
           >
             <Link href="/Product">Sản phẩm thú cưng</Link>
             {/* sub list 1 */}
@@ -117,22 +119,22 @@ export default function Header(props: any) {
               </li>
             </ul>
           </li>
-          <li className="transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95">
+          <li className={`transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95 ${pathname === '/Price_Table' ? "text-yellow-500" : ""}`}>
             <Link className="hover:text-yellow-500" href="/Price_Table">
               Đặt lịch hẹn
             </Link>
           </li>
-          <li className="transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95">
+          <li className={`transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95 ${pathname === '/Adopt' ? "text-yellow-500" : ""}`}>
             <Link className="hover:text-yellow-500" href="/Adopt">
               Nhận nuôi thú cưng
             </Link>
           </li>
-          <li className="transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95">
+          <li className={`transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95 ${pathname === '/Rescue' ? "text-yellow-500" : ""}`}>
             <Link className="hover:text-yellow-500" href="/Rescue">
               Yêu cầu cứu hộ
             </Link>
           </li>
-          <li className="transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95">
+          <li className={`transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95 ${pathname === '/Main' ? "text-yellow-500" : ""}`}>
             <Link className="hover:text-yellow-500" href="/Main">
               Về chúng tôi
             </Link>

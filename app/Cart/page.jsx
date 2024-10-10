@@ -7,6 +7,7 @@ import axios from "@/api/axios";
 import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
 import getInfo from "@/hooks/getInfo";
+import _ from 'lodash'; // Import lodash for debouncing
 
 export default function Cart() {
   //get account data
@@ -52,12 +53,21 @@ export default function Cart() {
           return total + (product.discount_price * product.quantity);
         }, 0);
       };
-  
-      if (cartData.cart && cartData.cart.product_list) {
-        const total = calculateTotalPrice(cartData.cart.product_list);
+    
+      const debouncedCalculateTotalPrice = _.debounce((products) => {
+        const total = calculateTotalPrice(products);
         setTotalPrice(total);
         setTotalPriceafterDiscount(total);
+      }, 500); // Adjust the debounce delay as needed
+    
+      if (cartData.cart && cartData.cart.product_list) {
+        debouncedCalculateTotalPrice(cartData.cart.product_list);
       }
+    
+      // Cleanup function to cancel the debounce if the component unmounts
+      return () => {
+        debouncedCalculateTotalPrice.cancel();
+      };
     }, [cartData]);
     //console.log("Cart Data:", cartData.cart.product_list);
 
@@ -83,8 +93,9 @@ export default function Cart() {
         const voucherData = response.data.voucher;
         setVoucherInfo(voucherData);
     
-        if (voucherData.discount_type === "percentage") {
+        if (voucherData.discount_type === "Giảm theo phần trăm") {
           if (totalPrice >= voucherData.discount_value.min_require) {
+            console.log("Total price meets the minimum requirement for the voucher.");
             let discountValue = Math.floor(totalPrice * voucherData.discount_value.value / 100);
     
             if (discountValue > voucherData.discount_value.max_discount) {
@@ -121,7 +132,7 @@ export default function Cart() {
     };
         useEffect(() => {
       if (voucherInfo) {
-        if (voucherInfo.discount_type === "percentage") {
+        if (voucherInfo.discount_type === "Giảm theo phần trăm") {
           if (totalPrice >= voucherInfo.discount_value.min_require) {
             let discountValue = Math.floor(totalPrice * voucherInfo.discount_value.value / 100);
     
@@ -133,7 +144,6 @@ export default function Cart() {
             setTotalPriceafterDiscount(totalPrice - discountValue);
             setVoucherError("None");
           } else {
-            console.log("Total price does not meet the minimum requirement for the voucher.");
             setVoucherError("MIN_REQUIRE_NOT_MET");
             setDiscount(0);
           }
@@ -163,27 +173,32 @@ export default function Cart() {
 
     //Order
     const handleOrder = async () => {
-      console.log("User ID:", cartData.cart.user_id);
-      console.log("Product List:", cartData.cart.product_list);
-      console.log("Payment Method:", "Momo");
-      console.log("Voucher ID:", voucherInfo._id);
-      console.log("Total Price After Discount:", totalPriceafterDiscount);
+      
     
-    //   const order={
-    //     user_id: cartData.cart.user_id,
-    //     product_list: cartData.cart.product_list,
-    //     payment_method: "Momo",
-    //     voucher_id: voucherInfo._id,
-    //     total_price: totalPriceafterDiscount
-    //   }
-    //   try {
-    //     const response = await axios.post("order/cartToOrder", order);
-    //     console.log(response.data);
-    //   } catch (error) {
-    //     console.error("Error placing order:", error);
-    //   }
+      const order={
+        user_id: cartData.cart.user_id,
+        product_list: cartData.cart.product_list,
+        payment_method: "Momo",
+        voucher_id: voucherInfo._id,
+        total_price: totalPriceafterDiscount
+      }
+      try {
+        const response = await axios.post("order/cartToOrder", order);
+        deleteAllItemFromCart();
+      } catch (error) {
+        console.error("Error placing order:", error);
+      }
     }
-    
+    const deleteAllItemFromCart = async () => {
+      try {
+        const response = await axios.post(`/cart/delete/${accountData._id}`);
+        console.log("Delete all items response:", response.data);
+        fetchCartData();
+      } catch (error) {
+        console.error("Error deleting cart:", error);
+      }
+    };
+    console.log("Cart Data:", cartData);
   return (
     <>
       <Header></Header>
@@ -223,7 +238,7 @@ export default function Cart() {
                 </div>
               </div>
               {cartData && cartData.cart && cartData.cart.product_list.map((product, index) => (
-                <Product_Frame key={index} product={product} AccountID={AccountID} fetchCartData={fetchCartData}/>
+                <Product_Frame key={product.product_id} product={product} AccountID={AccountID} fetchCartData={fetchCartData}/>
               ))}
             </div>
             {/* Right side */}
@@ -323,9 +338,13 @@ export default function Cart() {
                 </div>
                 {/* Purchase button */}
                 <div class="mt-4 border-t border-gray-300 pt-4">
-                  <button class="w-full bg-blue-500 text-white p-2 rounded-md" onClick={handleOrder}>
-                    Thanh toán
-                  </button>
+                <button
+                      className={`w-full p-2 rounded-md ${cartData.cart.product_list.length === 0 ? 'bg-gray-500' : 'bg-blue-500 text-white'}`}
+                      onClick={handleOrder}
+                      disabled={cartData.cart.product_list.length === 0}
+                    >
+                      Thanh toán
+                </button>
                 </div>
               </div>
             </div>

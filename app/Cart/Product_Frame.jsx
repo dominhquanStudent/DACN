@@ -48,6 +48,7 @@ export default function Product_Frame(props) {
             });
             console.log("Remove cart:", response.data);
             props.fetchCartData();
+            
             setIsRemoved(true);
           } catch (error) {
             console.log("Error removing from cart:", error);
@@ -56,6 +57,7 @@ export default function Product_Frame(props) {
         if (isRemoved) {
             return null; // Don't render the component if the item is removed
           }
+          //console.log(props);
     return (
     <div class="relative flex flex-col min-[500px]:flex-row min-[500px]:items-center gap-5 py-6  border-b border-gray-200 group">
               <button
