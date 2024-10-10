@@ -13,7 +13,7 @@ const ProductCard = (props: any) => {
   console.log(props)
   return (
     <div
-      className="flex flex-col border rounded-lg overflow-hidden w-60 transform transition-transform duration-300 hover:scale-110 hover:shadow-lg active:scale-95 bg-teal-50"
+      className="flex flex-col border rounded-lg overflow-hidden w-60 transform transition-transform duration-300 hover:scale-110 hover:shadow-lg active:scale-95 bg-teal-100"
       onClick={() => handleChangeClick(props.product._id)}
     >
       {/* Product Image */}
@@ -21,7 +21,7 @@ const ProductCard = (props: any) => {
         <img
           src={props.product.image.url || Foto}
           alt={props.product.name}
-          className="object-cover w-full "
+          className=" w-full h-64"
         />
       </div>
 
