@@ -154,23 +154,25 @@ export default function Cart() {
         setVoucherError("NOT_FOUND");
       } else {
         console.log("Error applying voucher:", error);
-        
-    //Order
-    const [paymentMethod, setPaymentMethod] = useState("Trực tiếp");
-    const handleOrder = async () => {
-      const order={
-        user_id: cartData.cart.user_id,
-        product_list: cartData.cart.product_list,
-        payment_method: paymentMethod,
-        voucher_id: voucherInfo._id,
-        total_price: totalPriceafterDiscount
       }
-      try {
-        const response = await axios.post("order/cartToOrder", order);
-        deleteAllItemFromCart();
-      } catch (error) {
-        console.error("Error placing order:", error);
-      }
+    } 
+  };
+
+  //Order
+  const [paymentMethod, setPaymentMethod] = useState("Trực tiếp");
+  const handleOrder = async () => {
+    const order = {
+      user_id: cartData.cart.user_id,
+      product_list: cartData.cart.product_list,
+      payment_method: paymentMethod,
+      voucher_id: voucherInfo._id,
+      total_price: totalPriceafterDiscount
+    }
+    try {
+      const response = await axios.post("order/cartToOrder", order);
+      deleteAllItemFromCart();
+    } catch (error) {
+      console.error("Error placing order:", error);
     }
   };
   useEffect(() => {
@@ -213,7 +215,6 @@ export default function Cart() {
     console.log("Discount updated:", voucherInfo);
     // Perform any additional actions needed after discount is updated
   }, [voucherInfo]);
-
 
   return (
     <>
