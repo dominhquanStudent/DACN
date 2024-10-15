@@ -175,6 +175,15 @@ export default function Cart() {
       console.error("Error placing order:", error);
     }
   };
+  const deleteAllItemFromCart = async () => {
+    try {
+      const response = await axios.post(`/cart/delete/${accountData._id}`);
+      console.log("Delete all items response:", response.data);
+      fetchCartData();
+    } catch (error) {
+      console.error("Error deleting cart:", error);
+    }
+  };
   useEffect(() => {
     if (voucherInfo) {
       if (voucherInfo.discount_type === "Giảm theo phần trăm") {
