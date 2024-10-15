@@ -6,7 +6,9 @@ import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import axios from '@/api/axios';
 import getInfo from '@/hooks/getInfo';
+import { useRouter } from "next/navigation";
 function Page() {
+    const router = useRouter();
     const [data, setData] = useState<any>({}); 
     const [passwords, setPasswords] = useState(["", "", ""]);
     const [hidepass, setHidepass] = useState([false, false, false]);
@@ -41,8 +43,8 @@ function Page() {
             try {
                 console.log(data._id);
                 const response = await axios.post(`/account/changepass/${data._id}`, { oldpassword: passwords[0], newpassword: passwords[1] });
-                console.log(response);
-                window.location.reload();
+                alert("Đổi mật khẩu thành công");
+                router.push('/login');
             } catch (error) {
                 console.error('Error update password:', error);
             }

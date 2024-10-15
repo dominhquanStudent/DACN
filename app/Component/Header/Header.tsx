@@ -22,8 +22,18 @@ export default function Header(props: any) {
   const checkLogin = async () => {
     try {
       const jwt = getCookie("jwt");
-      if (jwt !== undefined && jwt !== "") {
+      if(!jwt) {
+        setIsLoggedIn(false);
+        return;
+      };
+      const response = await axios.get("http://localhost:8080/auth/post", {
+        headers: { Authorization: `Bearer ${jwt}` },
+      });
+      if (response.status === 200) {
         setIsLoggedIn(true);
+      } else {
+        deleteCookie("jwt");
+        setIsLoggedIn(false);
       }
     } catch (error) {
       console.error(error);
