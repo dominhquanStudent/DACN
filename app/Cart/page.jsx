@@ -145,7 +145,6 @@ export default function Cart() {
           setTotalPriceafterDiscount(totalPrice - discountValue);
         }
       }
-
       setAlreadyApplied(true);
       setVoucherError("None");
     } catch (error) {
@@ -155,6 +154,22 @@ export default function Cart() {
         setVoucherError("NOT_FOUND");
       } else {
         console.log("Error applying voucher:", error);
+        
+    //Order
+    const [paymentMethod, setPaymentMethod] = useState("Trực tiếp");
+    const handleOrder = async () => {
+      const order={
+        user_id: cartData.cart.user_id,
+        product_list: cartData.cart.product_list,
+        payment_method: paymentMethod,
+        voucher_id: voucherInfo._id,
+        total_price: totalPriceafterDiscount
+      }
+      try {
+        const response = await axios.post("order/cartToOrder", order);
+        deleteAllItemFromCart();
+      } catch (error) {
+        console.error("Error placing order:", error);
       }
     }
   };
@@ -199,25 +214,6 @@ export default function Cart() {
     // Perform any additional actions needed after discount is updated
   }, [voucherInfo]);
 
-  // Order
-  const handleOrder = async () => {
-    const response = await axios.get(`/cart/${accountData._id}`);
-    const order = {
-      user_id: cartData.cart.user_id,
-      product_list: response.data.cart.product_list.filter(product => product.selected),
-      payment_method: "Momo",
-      voucher_id: voucherInfo._id,
-      total_price: totalPriceafterDiscount
-    }
-    console.log(order.product_list);
-    try {
-      const response = await axios.post("order/cartToOrder", order);
-      fetchCartData();
-      // deleteAllItemFromCart();
-    } catch (error) {
-      console.error("Error placing order:", error);
-    }
-  }
 
   return (
     <>
@@ -257,18 +253,17 @@ export default function Cart() {
                   </div>
                 </div>
               </div>
-              {cartData && cartData.cart && cartData.cart.product_list.map((product, index) => (
-                <Product_Frame
-                  key={product.product_id}
-                  product={product}
-                  AccountID={AccountID}
-                  fetchCartData={fetchCartData}
-                  onSelectChange={(selected) => updateProductStatus(product.product_id, selected)}
-                />
-              ))}
+              <div className="overflow-y-auto h-96 snap-y snap-mandatory hide-scrollbar">
+                {cartData && cartData.cart && cartData.cart.product_list.map((product, index) => (
+                  <div key={product.product_id} className="snap-start">
+                    <Product_Frame product={product} AccountID={AccountID} fetchCartData={fetchCartData}                   
+                      onSelectChange={(selected) => updateProductStatus(product.product_id, selected)}/>
+                  </div>
+                ))}
+              </div>
             </div>
             {/* Right side */}
-            <div className="col-span-12 xl:col-span-4 bg-gray-50 w-full max-xl:px-6 max-w-3xl xl:max-w-lg mx-auto lg:pl-8 py-24">
+            <div className=" col-span-12 xl:col-span-4 bg-gray-50 w-full max-xl:px-6 max-w-3xl xl:max-w-lg mx-auto lg:pl-8 py-24">
               <h2 className="font-manrope font-bold text-3xl leading-10 text-black pb-8 border-b border-gray-300">
                 Thanh toán
               </h2>
@@ -283,17 +278,20 @@ export default function Cart() {
                     <input
                       type="radio"
                       name="payment"
-                      value="on_delivery"
+                      value="Trực tiếp"
                       className="mr-2 leading-tight"
+                      onChange={() => setPaymentMethod("Trực Tiếp")}
+                      defaultChecked
                     />
                     <span className="text-base">Thanh toán khi nhận hàng</span>
                   </label>
-                  <label className="mt-2 flex items-center">
+                  <label className=" mt-2 flex items-center">
                     <input
                       type="radio"
                       name="payment"
                       value="momo"
                       className="mr-2 leading-tight"
+                      onChange={() => setPaymentMethod("Momo")}
                     />
                     <img src={Momo.src} alt="Momo" className="text-base" />
                   </label>
@@ -364,13 +362,13 @@ export default function Cart() {
                 </div>
                 {/* Purchase button */}
                 <div className="mt-4 border-t border-gray-300 pt-4">
-                  <button
-                    className={`w-full p-2 rounded-md ${cartData.cart.product_list.length === 0 ? 'bg-gray-500' : 'bg-blue-500 text-white'}`}
-                    onClick={handleOrder}
-                    disabled={cartData.cart.product_list.length === 0}
-                  >
-                    Thanh toán
-                  </button>
+                <button
+                      className={`w-full p-2 rounded-md ${cartData.cart.product_list.length === 0 ? 'bg-gray-500' : 'bg-blue-500 text-white'}`}
+                      onClick={handleOrder}
+                      disabled={cartData.cart.product_list.length === 0}
+                    >
+                      Thanh toán
+                </button>
                 </div>
               </div>
             </div>
