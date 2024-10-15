@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import Sidebar from "@/app/Admin/sidebar";
+import Sidebar from "../../Doctor/sidebarDoctor";
+
 import Header from "@/app/Admin/Header";
 import { useRouter } from "next/navigation";
 import axios from "@/api/axios";
@@ -79,6 +80,7 @@ function Appointment() {
     <div className="w-full h-screen">
       <Header />
       <div className="flex w-full h-full">
+        <Sidebar />
         <div className="w-full h-full relative">
 
  
