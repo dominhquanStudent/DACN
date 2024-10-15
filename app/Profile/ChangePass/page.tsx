@@ -41,7 +41,7 @@ function Page() {
             try {
                 console.log(data._id);
                 const response = await axios.post(`/account/changepass/${data._id}`, { oldpassword: passwords[0], newpassword: passwords[1] });
-                console.log(response);
+                if(response.status === 200) alert("Đổi mật khẩu thành công");
                 window.location.reload();
             } catch (error) {
                 console.error('Error update password:', error);

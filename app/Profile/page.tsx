@@ -9,7 +9,9 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import withAuth from "@/hooks/withAuth";
 import getInfo from "@/hooks/getInfo";
+import { useRouter } from "next/navigation";
 function Page() {
+    const router = useRouter();
     const [data, setData] = useState<any>({
         avatar: {
           public_id: '',
@@ -26,9 +28,13 @@ function Page() {
         token: [],
         role: 'user',});
     const fetchData = async () => {
-        const Data = await getInfo();
-        setData(Data);
-
+        try{
+            const Data = await getInfo();
+            setData(Data);
+        } catch (error) {
+            console.error('Error get account data:', error);
+            router.push('/login');
+        }
     };
     useEffect(() => {
         fetchData();

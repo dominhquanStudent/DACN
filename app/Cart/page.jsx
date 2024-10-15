@@ -45,7 +45,7 @@ export default function Cart() {
     //caculate total price
     const [totalPrice, setTotalPrice] = useState(0);
     const calculateTotalPrice = (products) => {
-      fetchCartData();
+      // fetchCartData();
       if (!Array.isArray(products)) {
         return 0; // Return 0 if products is not an array
       }
@@ -243,9 +243,7 @@ export default function Cart() {
               </div>
               {cartData && cartData.cart && cartData.cart.product_list.map((product, index) => (
                 <Product_Frame key={product.product_id} product={product} AccountID={AccountID} fetchCartData={fetchCartData} 
-                onSelectChange={()=>{
-                  calculateTotalPrice(cartData.cart.product_list);
-                }}/>
+                onSelectChange={()=>{calculateTotalPrice(cartData.cart.product_list);}}/>
               ))}
             </div>
             {/* Right side */}
