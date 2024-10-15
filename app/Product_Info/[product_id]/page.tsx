@@ -101,6 +101,9 @@ export default function ProductDetailPage({
       setError("EMPTY RATING");
       
     }
+    else if (!accountData) {
+      setError("NOT_LOGGED_IN_COMMENT");
+    }
     else try {
       const reviewInfo = {
         user_id: accountData._id, // Replace with actual user ID
@@ -138,7 +141,7 @@ export default function ProductDetailPage({
   const handleAddToCart = async(e: any) => {
     e.preventDefault();
     if (!accountData) {
-      setError("NOT_LOGGED_IN");
+      setError("NOT_LOGGED_IN_CART");
       return;}
     try {
       const cartItem = {
@@ -192,7 +195,7 @@ export default function ProductDetailPage({
               ></textarea>
               {error && (
                 <div className="text-red-500 w-11/12">
-                  {error === "EMPTY COMMENT" ? "Ủa vào review rồi k nhập review là sao vậy má ?" : error === "EMPTY RATING" ? "Ủa review mà không có đánh giá * thì có ý nghĩa gì k má ?" : error}
+                  {error === "EMPTY COMMENT" ? "Bình luận không được để trống" : error === "EMPTY RATING" ? "Đánh giá không được phép rỗng" : error === "NOT_LOGGED_IN_COMMENT" ? "Bạn phải đăng nhập để bình luận":"" }
                 </div>
               )}
               {isCommented && <div className="text-green-500 w-11/12">Đã gửi đánh giá</div>}
@@ -203,6 +206,7 @@ export default function ProductDetailPage({
                     disabled:opacity-50 disabled:shadow-none mb-4"
                 data-ripple-light="true"
                 onClick={handleSubmit}
+                
               >
                 Gửi
               </button>
@@ -278,7 +282,7 @@ export default function ProductDetailPage({
             >
               Thêm vào giỏ hàng
             </button>
-            {error=="NOT_LOGGED_IN"&& <div className="text-red-500">Muốn mua thì đăng nhập đi má</div>}
+            {error=="NOT_LOGGED_IN_CART"&& <div className="text-red-500">Muốn mua thì đăng nhập đi má</div>}
             {isAdded&& <div className="text-green-500">Thêm vào giỏ hàng thành công</div>}
           </div>
         </div>
