@@ -106,6 +106,8 @@ export default function Cart() {
             }
     
             setDiscount(discountValue);
+            console.log("Discount value:", discountValue);
+            console.log("Total price after discount:", totalPrice - discountValue);
             setTotalPriceafterDiscount(totalPrice - discountValue);
           } else {
             setVoucherError("MIN_REQUIRE_NOT_MET");
