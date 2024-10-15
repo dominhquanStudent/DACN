@@ -30,7 +30,6 @@ export default function Product_Main(){
         fetchProducts();
       }, []);
       const sampleProducts = products.slice(0, 4);
-        console.log(sampleProducts);
     return(
         <>
         <Header></Header>

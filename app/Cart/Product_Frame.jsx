@@ -79,9 +79,9 @@ export default function Product_Frame(props) {
                 />
                 </svg>
             </button>
-            <div class="w-full md:max-w-[126px]">
+            <div class="w-full md:max-w-[126px] rounded-full">
                 <img src={props.product.product_image} alt="perfume bottle image"
-                    class="mx-auto"/>
+                    class="mx-auto h-24 w-24 rounded-full"/>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-4 w-full">
                 <div class="md:col-span-2">
@@ -113,7 +113,7 @@ export default function Product_Frame(props) {
                     </button>
                     <input type="number"
                         class="border-y border-gray-200 outline-none text-gray-900 font-semibold text-lg w-full max-w-[73px] min-w-[60px] placeholder:text-gray-900 py-[15px]  text-center bg-transparent"
-                        value={quantity} onChange={(e) => setAmount(parseInt(e.target.value))} min="1"/>
+                        value={quantity} onChange={(e) => handleAmountChange(parseInt(e.target.value))} min="1"/>
                     <button
                         class="group rounded-r-xl px-5 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:bg-gray-50 hover:border-gray-300 hover:shadow-gray-300 focus-within:outline-gray-300"
                         onClick={() => {handleAmountChange(quantity + 1);}}>

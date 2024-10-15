@@ -172,13 +172,14 @@ export default function Cart() {
     }, [voucherInfo]);
 
     //Order
+    const [paymentMethod, setPaymentMethod] = useState("Trực tiếp");
     const handleOrder = async () => {
       
     
       const order={
         user_id: cartData.cart.user_id,
         product_list: cartData.cart.product_list,
-        payment_method: "Momo",
+        payment_method: paymentMethod,
         voucher_id: voucherInfo._id,
         total_price: totalPriceafterDiscount
       }
@@ -198,97 +199,104 @@ export default function Cart() {
         console.error("Error deleting cart:", error);
       }
     };
-    console.log("Cart Data:", cartData);
+  
   return (
     <>
       <Header></Header>
-      <section class=" relative z-10 after:contents-[''] after:absolute after:z-0 after:h-full xl:after:w-1/3 after:top-0 after:right-0 after:bg-gray-50">
+      <section className=" relative z-10 after:contents-[''] after:absolute after:z-0 after:h-full xl:after:w-1/3 after:top-0 after:right-0 after:bg-gray-50">
         {/* Whole cart */}
-        <div class="w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto relative z-10">
-          <div class="grid grid-cols-12">
+        <div className="w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto relative z-10">
+          <div className="grid grid-cols-12">
             {/* Left side */}
-            <div class="col-span-12 xl:col-span-8 lg:pr-8 pt-14 pb-8 lg:py-24 w-full max-xl:max-w-3xl max-xl:mx-auto">
-              <div class="flex items-center justify-between pb-8 border-b border-gray-300">
-                <h2 class="font-manrope font-bold text-3xl leading-10 text-black">
+            <div className="col-span-12 xl:col-span-8 lg:pr-8 pt-14 pb-8 lg:py-24 w-full max-xl:max-w-3xl max-xl:mx-auto ">
+              <div className="flex items-center justify-between pb-8 border-b border-gray-300">
+                <h2 className="font-manrope font-bold text-3xl leading-10 text-black">
                   Giỏ Hàng
                 </h2>
-                <h2 class="font-manrope font-bold text-xl leading-8 text-gray-600">
+                <h2 className="font-manrope font-bold text-xl leading-8 text-gray-600">
                   {cartData.cart.product_list.length} sản phẩm
                 </h2>
               </div>
-              <div class="grid grid-cols-12 mt-8 max-md:hidden pb-6 border-b border-gray-200">
-                <div class="col-span-12 md:col-span-7">
-                  <p class="font-normal text-lg leading-8 text-gray-400">
+              <div className="grid grid-cols-12 mt-8 max-md:hidden pb-6 border-b border-gray-200">
+                <div className="col-span-12 md:col-span-7">
+                  <p className="font-normal text-lg leading-8 text-gray-400">
                     Thông tin sản phẩm
                   </p>
                 </div>
-                <div class="col-span-12 md:col-span-5">
-                  <div class="grid grid-cols-5">
-                    <div class="col-span-3">
-                      <p class="font-normal text-lg leading-8 text-gray-400 text-center">
+                <div className="col-span-12 md:col-span-5">
+                  <div className="grid grid-cols-5">
+                    <div className="col-span-3">
+                      <p className="font-normal text-lg leading-8 text-gray-400 text-center">
                         Số lượng
                       </p>
                     </div>
-                    <div class="col-span-2">
-                      <p class="font-normal text-lg leading-8 text-gray-400 text-center">
+                    <div className="col-span-2">
+                      <p className="font-normal text-lg leading-8 text-gray-400 text-center">
                         Tổng
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
-              {cartData && cartData.cart && cartData.cart.product_list.map((product, index) => (
-                <Product_Frame key={product.product_id} product={product} AccountID={AccountID} fetchCartData={fetchCartData}/>
-              ))}
+              <div className="overflow-y-auto h-96 snap-y snap-mandatory hide-scrollbar">
+                {cartData && cartData.cart && cartData.cart.product_list.map((product, index) => (
+                  <div key={product.product_id} className="snap-start">
+                    <Product_Frame product={product} AccountID={AccountID} fetchCartData={fetchCartData}/>
+                  </div>
+                ))}
+              </div>
             </div>
             {/* Right side */}
-            <div class=" col-span-12 xl:col-span-4 bg-gray-50 w-full max-xl:px-6 max-w-3xl xl:max-w-lg mx-auto lg:pl-8 py-24">
-              <h2 class="font-manrope font-bold text-3xl leading-10 text-black pb-8 border-b border-gray-300">
+            <div className=" col-span-12 xl:col-span-4 bg-gray-50 w-full max-xl:px-6 max-w-3xl xl:max-w-lg mx-auto lg:pl-8 py-24">
+              <h2 className="font-manrope font-bold text-3xl leading-10 text-black pb-8 border-b border-gray-300">
                 Thanh toán
               </h2>
 
               {/* Payment method */}
-              <div class="mt-4 mb-4">
-                <p class="font-normal text-lg leading-8 text-black">
+              <div className="mt-4 mb-4">
+                <p className="font-normal text-lg leading-8 text-black">
                   Hình thức thanh toán
                 </p>
-                <div class="mt-4">
-                  <label class="block">
+                <div className="mt-4">
+                  <label className="block">
                     <input
                       type="radio"
                       name="payment"
-                      value="on_delivery"
-                      class="mr-2 leading-tight"
+                      value="Trực tiếp"
+                      className="mr-2 leading-tight"
+                      onChange={() => setPaymentMethod("Trực Tiếp")}
+                      defaultChecked
                     />
-                    <span class="text-base">Thanh toán khi nhận hàng</span>
+                    <span className="text-base">Thanh toán khi nhận hàng</span>
                   </label>
-                  <label class=" mt-2 flex items-center">
+                  <label className=" mt-2 flex items-center">
                     <input
                       type="radio"
                       name="payment"
                       value="momo"
-                      class="mr-2 leading-tight"
+                      className="mr-2 leading-tight"
+                      onChange={() => setPaymentMethod("Momo")}
                     />
-                    <img src={Momo.src} alt="Momo" class="text-base" />
+                    <img src={Momo.src} alt="Momo" className="text-base" />
                   </label>
                 </div>
               </div>
               {/* Discount Coupon */}
-              <div class=" border-gray-300 border-t-2">
-                <p class="font-normal text-lg leading-8 text-black ">
+              <div className=" border-gray-300 border-t-2">
+                <p className="font-normal text-lg leading-8 text-black ">
                   Mã giảm giá
                 </p>
-                <div class="mt-2 flex ">
+                <div className="mt-2 flex ">
                   <input
                     type="text"
                     name="redemption_code"
-                    class="mr-2 flex-grow border-gray-300 p-2 rounded-md"
+                    className="mr-2 flex-grow border-gray-300 p-2 rounded-md"
                     placeholder="Enter code"
                     value={voucher}
                     onChange={(e) => setVoucher(e.target.value)}
                   />
                   <button
-                    class="middle none center mr-4 rounded-lg bg-blue-500 py-2 px-4 font-sans text-xs font-bold 
+                    className="middle none center mr-4 rounded-lg bg-blue-500 py-2 px-4 font-sans text-xs font-bold 
                         uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 
                         focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none 
                         disabled:opacity-50 disabled:shadow-none"
@@ -304,40 +312,40 @@ export default function Cart() {
                 {voucherError=="EMPTY" &&<p className="text-center text-red-500">Voucher không thể trống</p>}
               </div>
               {/* Total */}
-              <div class="mt-4">
-                <div class="flex justify-between">
-                  <p class="font-normal text-lg leading-8 text-black">
+              <div className="mt-4">
+                <div className="flex justify-between">
+                  <p className="font-normal text-lg leading-8 text-black">
                     Tổng Đơn hàng
                   </p>
-                  <p class="font-normal text-lg leading-8 text-black">
+                  <p className="font-normal text-lg leading-8 text-black">
                     {totalPrice}đ
                   </p>
                 </div>
-                <div class="flex justify-between">
-                  <p class="font-normal text-lg leading-8 text-black">
+                <div className="flex justify-between">
+                  <p className="font-normal text-lg leading-8 text-black">
                     Giảm giá
                   </p>
-                  <p class="font-normal text-lg leading-8 text-black">
+                  <p className="font-normal text-lg leading-8 text-black">
                     -{discount}đ
                   </p>
                 </div>
-                <div class="flex justify-between">
-                  <p class="font-normal text-lg leading-8 text-black">
+                <div className="flex justify-between">
+                  <p className="font-normal text-lg leading-8 text-black">
                     Phí vận chuyển
                   </p>
-                  <p class="font-normal text-lg leading-8 text-black">0đ</p>
+                  <p className="font-normal text-lg leading-8 text-black">0đ</p>
                 </div>
                 {/* total price */}
-                <div class="flex justify-between mt-4">
-                  <p class="font-normal text-lg leading-8 text-black">
+                <div className="flex justify-between mt-4">
+                  <p className="font-normal text-lg leading-8 text-black">
                     Tổng cộng
                   </p>
-                  <p class="font-normal text-lg leading-8 text-black">
+                  <p className="font-normal text-lg leading-8 text-black">
                     {totalPriceafterDiscount}đ
                   </p>
                 </div>
                 {/* Purchase button */}
-                <div class="mt-4 border-t border-gray-300 pt-4">
+                <div className="mt-4 border-t border-gray-300 pt-4">
                 <button
                       className={`w-full p-2 rounded-md ${cartData.cart.product_list.length === 0 ? 'bg-gray-500' : 'bg-blue-500 text-white'}`}
                       onClick={handleOrder}
