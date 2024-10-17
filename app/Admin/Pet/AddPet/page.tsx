@@ -31,7 +31,7 @@ function PetAdd() {
         species,
         vaccinated,
         description,
-        // adoptStatus,
+        // adoptStatus,loài
         // recieveDay,
         image,
       };
@@ -168,7 +168,7 @@ function PetAdd() {
 
               <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="Vaccinated">
-                    Loài
+                    Tiêm Vaccine
                   </label>
                   <select
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
