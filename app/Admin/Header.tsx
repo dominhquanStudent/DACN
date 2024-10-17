@@ -6,8 +6,7 @@ import Logout from "@/public/img/Logouthl.svg";
 function Header(avatar: any) {
     const handleLogout = () => {
         deleteCookie("jwt");
-        deleteCookie("refreshToken");
-        window.location.href = '/Login';
+        window.location.reload();
     };
     return (
         <div className='flex justify-between items-center w-full'>
