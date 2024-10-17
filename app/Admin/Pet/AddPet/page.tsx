@@ -69,7 +69,7 @@ function PetAdd() {
               "flex font-nunito text-xl font-bold w-full justify-center"
             }
           >
-            Thêm sản phẩm
+            Thêm thú cưng
           </div>
           <form className="w-full mx-4">
             <div className="flex flex-wrap -mx-3 mb-6 space-y-2">
@@ -168,7 +168,7 @@ function PetAdd() {
 
               <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="Vaccinated">
-                    Loài
+                    Tiêm phòng
                   </label>
                   <select
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
@@ -176,8 +176,8 @@ function PetAdd() {
                     value={vaccinated}
                     onChange={(e) => setVaccinated(e.target.value)}
                   >
-                    <option value="Rồi">Rồi</option>
-                    <option value="Chưa">Chưa</option>
+                    <option value="Đã tiêm phòng">Rồi</option>
+                    <option value="Chưa tiêm phòng">Chưa</option>
                   </select>
                 </div>
 

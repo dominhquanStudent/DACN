@@ -33,7 +33,7 @@ function DashBoard() {
     useEffect(() => {
         const fetchDashboard = async () => {
             try {
-                const response = await axios.get('/dashboard/66e5800a52098d8bd1397010');
+                const response = await axios.get('/dashboard');
                 setAccountData(response.data.account);
                 setdashboard(response.data.dashboard);
             } catch (error) {

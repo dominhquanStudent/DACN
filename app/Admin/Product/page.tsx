@@ -4,7 +4,6 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import { useRouter } from 'next/navigation';
 import axios from '@/api/axios';
-import { toast } from 'react-toastify';
 function Product() {
   const [products, setProducts] = useState<any[]>([]);
   const Router = useRouter();

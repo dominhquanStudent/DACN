@@ -63,7 +63,7 @@ export default function Cart() {
       const total = calculateTotalPrice(products);
       setTotalPrice(total);
       setTotalPriceafterDiscount(total);
-    }, 500); // Adjust the debounce delay as needed
+    }, 0); // Adjust the debounce delay as needed
 
     if (cartData.cart && cartData.cart.product_list) {
       debouncedCalculateTotalPrice(cartData.cart.product_list);
