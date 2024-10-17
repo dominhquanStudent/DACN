@@ -12,11 +12,18 @@ import { FaStar } from "react-icons/fa";
 import { getCookie } from "cookies-next";
 import getInfo from "@/hooks/getInfo";
 import RenderStars from "@/app/Product_Info/[product_id]/renderStars";
+import LoadingModal from "@/app/Component/Loading";
+import ErrorModal from "@/app/Component/Error";
 export default function ProductDetailPage({
   params,
 }: {
   params: { product_id: string };
 }) {
+  //Handle loading and complete
+  const [isLoading, setIsLoading] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [loadWhat, setLoadWhat] = useState("");
+  const [error, setError] = useState<string | null>(null);
   //get account data
   const jwt = getCookie("jwt");
   const [accountData, setAccountData] = useState<any>(null);
@@ -69,15 +76,17 @@ export default function ProductDetailPage({
     const [ratingTimes, setRatingTimes] = useState<number >(0);
     const [productRating, setProductRating] = useState<number >(0);
     useEffect(() => {
+      
       const calculateAverageRating = () => {
           if (reviews.length === 0) return 0;
           const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
           return totalRating / reviews.length;
       };
-  
       const averageRating = calculateAverageRating();
       setProductRating(averageRating);
       setRatingTimes(reviews.length);
+      
+      
   }, [reviews]);
 
 
@@ -87,24 +96,26 @@ export default function ProductDetailPage({
 
 
   //Error handling for empty comment and rating
-  const [error, setError] = useState<string | null>(null);
-  const [isCommented, setIsCommented] = useState<boolean>(false);
+  
     ///////post review to db
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    setIsCommented(false);
     if (!comment.trim()) {
       setError("EMPTY COMMENT");
-      
+      return;
     }
     else if (!selectedRating) {
       setError("EMPTY RATING");
+      return;
       
     }
     else if (!accountData) {
       setError("NOT_LOGGED_IN_COMMENT");
+      return;
     }
-    else try {
+    setIsLoading(true);
+    setLoadWhat("ADD_COMMENT");
+     try {
       const reviewInfo = {
         user_id: accountData._id, // Replace with actual user ID
         user_name: accountData.userName, // Replace with actual user name
@@ -116,8 +127,13 @@ export default function ProductDetailPage({
       };
       
       const response = await axios.post('/review/add', reviewInfo);
-      setReviews([...reviews, response.data.review]);
-      setIsCommented(true);
+      const newReview = {
+        ...response.data.review,
+        user_name: accountData.userName, // Ensure user name is included
+      };
+      setReviews([...reviews, newReview]);
+      setIsComplete(true);
+      setIsLoading(false);
       setError(null);
     } catch (error) {
       console.error("Error submitting review:", error);
@@ -128,21 +144,21 @@ export default function ProductDetailPage({
   const [amount, setAmount] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
   const handleAmountChange = (Amount: number) => {
-    const discountString = data.discount; // e.g., "10%"
-    const discount = parseInt(discountString.replace('%', ''), 10);
-    const discountedPrice = data.price * (1 - discount / 100);
+
     if (Amount > 0) {
       setAmount(Amount);
       setTotalPrice(Amount * data.discount_price);
     }
   };
   //handle add to cart
-  const [isAdded, setIsAdded] = useState(false);
+  
   const handleAddToCart = async(e: any) => {
     e.preventDefault();
     if (!accountData) {
       setError("NOT_LOGGED_IN_CART");
       return;}
+    setIsLoading(true);
+    setLoadWhat("ADD_TO_CART");
     try {
       const cartItem = {
         user_id: accountData._id, // Replace with actual user ID
@@ -151,16 +167,21 @@ export default function ProductDetailPage({
        
       };
       const response = await axios.post('/cart/addProduct', cartItem);
-      setIsAdded(true);
+    
+      setIsComplete(true);
       console.log(response.data);
     } catch (error) {
       console.error("Error adding to cart:", error);
+    }finally {
+      setIsLoading(false);
     }
       
   };
   return (
     <>
       <Header />
+      <ErrorModal error={error} setError={setError} />
+      <LoadingModal isLoading={isLoading} isComplete={isComplete} setIsComplete={setIsComplete} loadWhat={loadWhat} />
       <div className="grid grid-cols-4 gap-4 font-montserrat ">
         {/* Left column */}
         <div className="col-span-3">
@@ -193,12 +214,7 @@ export default function ProductDetailPage({
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
               ></textarea>
-              {error && (
-                <div className="text-red-500 w-11/12">
-                  {error === "EMPTY COMMENT" ? "Bình luận không được để trống" : error === "EMPTY RATING" ? "Đánh giá không được phép rỗng" : error === "NOT_LOGGED_IN_COMMENT" ? "Bạn phải đăng nhập để bình luận":"" }
-                </div>
-              )}
-              {isCommented && <div className="text-green-500 w-11/12">Đã gửi đánh giá</div>}
+              
               <button
                 className="w-2/12 rounded-md bg-blue-500 py-2 px-6 font-kd2 text-xs font-bold 
                     uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 
@@ -282,8 +298,6 @@ export default function ProductDetailPage({
             >
               Thêm vào giỏ hàng
             </button>
-            {error=="NOT_LOGGED_IN_CART"&& <div className="text-red-500">Muốn mua thì đăng nhập đi má</div>}
-            {isAdded&& <div className="text-green-500">Thêm vào giỏ hàng thành công</div>}
           </div>
         </div>
       </div>
