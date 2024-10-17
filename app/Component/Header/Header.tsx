@@ -7,34 +7,30 @@ import ShoppingCart from "@/public/img/Header/Shopping Cart.png";
 import Logout from "@/public/img/Logouthl.svg";
 import User from "@/public/img/Header/User.png";
 import Link from "next/link";
-import { getCookie, deleteCookie } from "cookies-next";
+import {deleteCookie } from "cookies-next";
 import { usePathname } from 'next/navigation';
+import useAuth from '@/hooks/useAuth';
 
 import axios from "axios";
 export default function Header(props: any) {
   const pathname = usePathname();
+  const { auth, isAuthenticated } = useAuth();
   const [showSublist1, setShowSublist1] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const handleLogout = () => {
     deleteCookie("jwt");
+    deleteCookie("refreshToken");
     window.location.reload();
   };
   const checkLogin = async () => {
     try {
-      const jwt = getCookie("jwt");
-      if(!jwt) {
-        setIsLoggedIn(false);
-        return;
-      };
-      const response = await axios.get("http://localhost:8080/auth/post", {
-        headers: { Authorization: `Bearer ${jwt}` },
-      });
-      if (response.status === 200) {
+      if (isAuthenticated) {
         setIsLoggedIn(true);
       } else {
         deleteCookie("jwt");
         setIsLoggedIn(false);
       }
+
     } catch (error) {
       console.error(error);
     }

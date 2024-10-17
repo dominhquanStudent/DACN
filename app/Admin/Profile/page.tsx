@@ -34,16 +34,16 @@ function Profile() {
     }, []);
 
     const handleSave = () => {
-        const id = data._id;
-        const updateProfile = async (id: any) => {
+        const updateProfile = async () => {
             try {
-                const response = await axios.put(`/account/${id}`, data);
+                const response = await axios.put(`/account`, data);
+                alert('Cập nhật thông tin thành công');
                 window.location.reload();
             } catch (error) {
                 console.error('Error update account data:', error);
             }
         };
-        updateProfile(id);
+        updateProfile();
     };
 
     const handleImage = (e: any) => {

@@ -25,7 +25,6 @@ function PetDetail({ params }: { params: { Detail: string } }) {
         const response = await axios.get(`/pet/${petId}`);
         const petData = response.data;
         setData(petData.pet);
-        // const log = await axios.post(`/test`, petData.pet);
       } catch (error) {
         console.error("Error fetching pet data:", error);
       }
