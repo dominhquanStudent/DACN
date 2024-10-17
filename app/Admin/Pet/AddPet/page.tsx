@@ -69,7 +69,7 @@ function PetAdd() {
               "flex font-nunito text-xl font-bold w-full justify-center"
             }
           >
-            Thêm sản phẩm
+            Thêm thú cưng
           </div>
           <form className="w-full mx-4">
             <div className="flex flex-wrap -mx-3 mb-6 space-y-2">
@@ -176,8 +176,8 @@ function PetAdd() {
                     value={vaccinated}
                     onChange={(e) => setVaccinated(e.target.value)}
                   >
-                    <option value="Rồi">Rồi</option>
-                    <option value="Chưa">Chưa</option>
+                    <option value="Đã tiêm phòng">Rồi</option>
+                    <option value="Chưa tiêm phòng">Chưa</option>
                   </select>
                 </div>
 

@@ -7,11 +7,21 @@ import axios from "@/api/axios";
 import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
 import getInfo from "@/hooks/getInfo";
+import ErrorModal from "@/app/Component/Error";
 import _ from 'lodash'; // Import lodash for debouncing
 
 export default function Cart() {
+    //Handle loading and complete
+    const [isLoading, setIsLoading] = useState(false);
+    const [isComplete, setIsComplete] = useState(false);
+    const [loadWhat, setLoadWhat] = useState("");
+    const [error, setError] = useState(null);
   // Get account data
   const jwt = getCookie("jwt");
+  if (!jwt) {
+    
+    return <ErrorModal error="NOT_LOGGED_IN" setError={setError}></ErrorModal>;
+  }
   const [accountData, setAccountData] = useState("");
   const fetchData = async () => {
     const getaccountData = await getInfo();
@@ -63,7 +73,7 @@ export default function Cart() {
       const total = calculateTotalPrice(products);
       setTotalPrice(total);
       setTotalPriceafterDiscount(total);
-    }, 500); // Adjust the debounce delay as needed
+    }, 0); // Adjust the debounce delay as needed
 
     if (cartData.cart && cartData.cart.product_list) {
       debouncedCalculateTotalPrice(cartData.cart.product_list);

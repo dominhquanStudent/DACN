@@ -4,42 +4,25 @@ import Logo from "../../public/img/logo";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import { getCookie, setCookie, deleteCookie } from "cookies-next";
-import { useAuth } from "@/context/authProvider";
-import axios from "@/api/axios";
+import useAuth from '@/hooks/useAuth';
 function Page() {
   const router = useRouter();
-  const { Auth, setAuth } = useAuth();
+  const { auth, login, isAuthenticated } = useAuth();
   const [hidepass, sethidepass] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const handleLogin = async (event: any) => {
-    event.preventDefault();
-    try {
-      const data = {
-        email: email,
-        password: password
-      };
-      const response = await axios.post("http://localhost:8080/auth/login", data);
-      const accessToken = response?.data?.jwt;
-      const role = response?.data?.role;
-      console.log(role);
-      const id = response?.data?.id;
-      setAuth({ email, accessToken, role, id });
-      deleteCookie("jwt");
-      setCookie("jwt", accessToken, { maxAge: 60 * 60 * 24 });
-      if (role === "admin") { router.push("/Admin"); }
-      else if (role === "doctor") { router.push("/Doctor"); }
-      else { router.push("/Main"); }
-    } catch (error) {
-      console.error(error); // Handle error 
-    }
-  };
-
+  const handleLogin = async (e: any) => {
+      e.preventDefault();
+      await login(email, password);
+      if (isAuthenticated) {
+        if (auth?.role === "admin") { router.push("/Admin"); }
+        else if (auth?.role === "doctor") { router.push("/Doctor"); }
+        else { router.push("/Main"); }
+      }
+    };
 
   return (
     <div className="flex flex-col w-full ">
-      <button>{Auth.email}</button>
       <div className="flex items-center">
         <img loading="lazy" src={"./img/logo.png"} alt="Logo" className=" w-20 ml-8" />
         <button onClick={() => router.push("/Main")}>
