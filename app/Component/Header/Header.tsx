@@ -11,7 +11,7 @@ import {deleteCookie } from "cookies-next";
 import { usePathname } from 'next/navigation';
 import useAuth from '@/hooks/useAuth';
 
-import axios from "axios";
+import axios from "@/api/axios";
 export default function Header(props: any) {
   const pathname = usePathname();
   const { auth, isAuthenticated } = useAuth();
@@ -20,6 +20,11 @@ export default function Header(props: any) {
   const handleLogout = () => {
     deleteCookie("jwt");
     deleteCookie("refreshToken");
+    try {
+      axios.post("/auth/logout");
+    } catch (error) {
+      console.error(error);
+    }
     window.location.reload();
   };
   const checkLogin = async () => {

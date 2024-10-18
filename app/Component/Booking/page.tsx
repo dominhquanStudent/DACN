@@ -53,15 +53,12 @@ function Booking() {
         weight,
       };
       const response = await axios.post('/appointment/add', data);
-      // toast.success('Product saved successfully!');
       router.push(`/Price_Table`);
 
       alert("Cảm ơn quý khách đã đăng kí dịch vụ!");
       setIsSaved(true);
       setError("");
-      // router.push('/Admin/Appointment');
     } catch (error) {
-      // toast.error('Error saving product!');
       console.error('Error saving product:', error);
       setError("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
     }
