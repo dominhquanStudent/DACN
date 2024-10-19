@@ -7,9 +7,15 @@ import axios from "@/api/axios";
 import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
 import getInfo from "@/hooks/getInfo";
+import ErrorModal from "@/app/Component/Error";
 import _ from 'lodash'; // Import lodash for debouncing
 
 export default function Cart() {
+    const [error, setError] = useState(null);
+    const jwt = getCookie("jwt");
+    if (!jwt) {
+    return <ErrorModal error="NOT_LOGGED_IN" setError={setError}></ErrorModal>;
+    }
 
   // Get cart data
   const [cartData, setCartData] = useState({
