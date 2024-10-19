@@ -10,15 +10,16 @@ const menuItems = [
 
 ];
 function Sidebar() {
+    const pathname = usePathname();
     return (
         <div className='flex flex-col w-1/5 mt-12 space-y-6'>
             {menuItems.map((item) => (
                 <div key={item.path} className='flex items-center ml-12 font-nunito text-md text-[#B1B1B1]'>
                     <Link href={item.path} className='flex items-center'>
                         <div>
-                            <img src={(usePathname().includes(item.path)) ? item.iconhl : item.icon} className={`h-6 w-6`}></img>
+                            <img src={(pathname.includes(item.path)) ? item.iconhl : item.icon} className={`h-6 w-6`}></img>
                         </div>
-                        <div className={`ml-4 ${usePathname().includes(item.path) ? "text-[#EDB24E] font-bold" : ""}`}>
+                        <div className={`ml-4 ${pathname.includes(item.path) ? "text-[#EDB24E] font-bold" : ""}`}>
                             {item.name}
                         </div>
                     </Link>

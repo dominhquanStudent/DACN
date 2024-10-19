@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { deleteCookie } from "cookies-next";
-import Logout from "@/public/img/Logouthl.svg";
+import Logout from "@/public/img/logouthl.svg";
 import axios from "@/api/axios";
 function Header(avatar: any) {
     const handleLogout = async () => {
