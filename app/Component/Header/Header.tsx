@@ -7,7 +7,7 @@ import ShoppingCart from "@/public/img/Header/Shopping Cart.png";
 import Logout from "@/public/img/Logouthl.svg";
 import User from "@/public/img/Header/User.png";
 import Link from "next/link";
-import {deleteCookie } from "cookies-next";
+import { deleteCookie } from "cookies-next";
 import { usePathname } from 'next/navigation';
 import useAuth from '@/hooks/useAuth';
 
@@ -17,14 +17,15 @@ export default function Header(props: any) {
   const { auth, isAuthenticated } = useAuth();
   const [showSublist1, setShowSublist1] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const handleLogout = () => {
-    deleteCookie("jwt");
-    deleteCookie("refreshToken");
+  const handleLogout = async () => {
+
+    // Call the logout endpoint
     try {
-      axios.post("/auth/logout");
+      await axios.post('/auth/logout');
     } catch (error) {
-      console.error(error);
+      console.error('Error logging out:', error);
     }
+    // Redirect to login page
     window.location.reload();
   };
   const checkLogin = async () => {
