@@ -20,7 +20,6 @@ export default function Cart() {
   // Get account data
   const [accountData, setAccountData] = useState("");
   // Get account data upon access
-    const [error, setError] = useState(null);
     const jwt = getCookie("jwt");
     if (!jwt) {
     return <ErrorModal error="NOT_LOGGED_IN" setError={setError}></ErrorModal>;
