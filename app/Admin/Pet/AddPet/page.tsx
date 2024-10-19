@@ -176,6 +176,8 @@ function PetAdd() {
                     value={vaccinated}
                     onChange={(e) => setVaccinated(e.target.value)}
                   >
+                    <option value="">Chọn trạng thái</option>
+
                     <option value="Đã tiêm phòng">Rồi</option>
                     <option value="Chưa tiêm phòng">Chưa</option>
                   </select>

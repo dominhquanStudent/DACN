@@ -5,7 +5,8 @@ import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
 import { useRouter } from 'next/navigation';
 import useSWR, { mutate } from 'swr';
-
+import { getCookie } from "cookies-next";
+import getInfo from "@/hooks/getInfo";
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, '0');
@@ -17,9 +18,19 @@ function formatDate(dateString: string): string {
 function AdoptDetail({ params }: { params: { Detail: string } }) {
   const petId = params.Detail;
   const [data, setData] = useState<any>({});
-  const [isEditable, setIsEditable] = useState(false);
-  const [showButton, setShowButton] = useState(false);
+  const [isEditable, setIsEditable] = useState(true);
   const router = useRouter();
+  const jtw = getCookie("jwt");
+  const [account, setAccount] = useState({
+    userName: "",
+    phone: "",
+    address: "",
+  });
+
+  const fetchData = async () => {
+    const getAccount = await getInfo();
+    setAccount(getAccount);
+  };
   useEffect(() => {
     const fetchAdoptData = async (id: any) => {
       try {
@@ -33,6 +44,9 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
     };
     if (petId) {
       fetchAdoptData(petId);
+    }
+    if (jtw) {
+      fetchData();
     }
   }, [petId]);
 
@@ -66,33 +80,49 @@ const setFileToBase = (file: any) =>{
         setData( {...data, image: reader.result as string});
     }
 }
-  const handleSaveClick = () => {
-    const updateAdoptData = async (id: any) => {
-      try {
-        const response = await axios.put(`/pet/${petId}`,data);
-        mutate(`/pet/${petId}`);
-        router.push('/Admin/Adoption');
+  const handleSaveClick = async () => {
+    try {
 
-      } catch (error) {
-        console.error('Error fetching pet data:', error);
-      }
-    };
-      updateAdoptData(data);
+      const updatedData = {
+        ...data,
+        adoptStatus: "Đã có chủ",
+        employeeName: account.userName,
+        adoptDay: new Date(),
+
+        
+
+      };
+
+
+      const response = await axios.put(`/pet/${petId}`, updatedData);
+      // Revalidate the data
+      mutate(`/pet/${petId}`);
+      router.push(`/Admin/Adoption`);
+
+    } catch (error) {
+      console.error("Error updating pet data:", error);
+    }
     
   };
 
-  const handleChangeClick = async () => {
-    setIsEditable(true);
-    setShowButton(true);
-    // const log = await axios.post(`/test`, data);
-  };
+  // const handleChangeClick = async () => {
+  //   setIsEditable(true);
+  //   setShowButton(true);
+  //   // const log = await axios.post(`/test`, data);
+  // };
   const handleDeleteRequestClick = async () => {
     try {
 
       const updatedData = {
         ...data,
         adoptStatus: "Chưa có chủ",
+        arriveDay: null,
+        // adoptDay: false,
+        message: "Chưa có lời nhắn",
+        method: "Chưa có phương thức",
+
       };
+
 
       const response = await axios.put(`/pet/${petId}`, updatedData);
       // Revalidate the data
@@ -109,6 +139,7 @@ const setFileToBase = (file: any) =>{
   if (!data) {
     return <div>Loading...</div>;
   }
+  console.log(data);
   return (
     <div className='flex flex-col w-full justify-center items-center'>
       <Header />
@@ -311,15 +342,12 @@ const setFileToBase = (file: any) =>{
             </div>
           </form>
           <div className='flex items-center justify-center w-full space-x-4'>
-            {!showButton && (
-            <button onClick={handleChangeClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Cập nhật trạng thái
-            </button>)}
-            {showButton && (
+
+            
               <button onClick={handleSaveClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Lưu
+                Xác nhận yêu cầu
               </button>
-            )}
+            
             <button onClick={handleDeleteRequestClick} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
               Xóa yêu cầu
             </button>
