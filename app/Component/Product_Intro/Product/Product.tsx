@@ -7,10 +7,11 @@ import { useSearchParams  } from "next/navigation";
 
 import "@/app/Component/CheckboxStyles.css";
 import axios from "@/api/axios";
-
+import ErrorModal from "@/app/Component/Error";
 import { useState, useEffect } from "react";
 
 export default function Product() {
+  const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const queryFilterMode = Number(searchParams.get('filterMode') ?? "0");
 
@@ -121,7 +122,10 @@ export default function Product() {
   const handleApplyClick = () => {
     setSearchPerformed(true);
     let filtered = products;
-
+    if (minPrice !== null && maxPrice !== null && minPrice > maxPrice) {
+      setError("INVALID_PRICE_RANGE");
+      return;
+    }
     if (selectedBrands.length > 0) {
       filtered = filtered.filter((product: any) =>
         selectedBrands.includes(product.brand)
@@ -132,7 +136,7 @@ export default function Product() {
         selectedCategories.includes(product.category)
       );
     }
-
+    
     if (minPrice !== null) {
       filtered = filtered.filter((product: any) => product.price >= minPrice);
     }
@@ -141,22 +145,37 @@ export default function Product() {
       filtered = filtered.filter((product: any) => product.price <= maxPrice);
     }
     if (selectedRating !== null) {
-      filtered = filtered.filter(
-        (product: any) => product.rating <= selectedRating
-      );
+      filtered = filtered.filter((product: any) => {
+        if (selectedRating === 1) {
+          return product.rating >= 1 && product.rating < 1.5;
+        }
+        if (selectedRating === 2) {
+          return product.rating >= 1.5 && product.rating < 2.5;
+        }
+        if (selectedRating === 3) {
+          return product.rating >= 2.5 && product.rating < 3.5;
+        }
+        
+        if (selectedRating === 4) {
+          return product.rating >= 3.5 && product.rating < 4.5;
+        }
+        if (selectedRating === 5) {
+          return product.rating >= 4.5 && product.rating <= 5;
+        }
+        
+      });
     }
-
     setFilteredProducts(filtered);
+    
   };
-  useEffect(() => {
-    console.log(filteredProducts);
-  }, [filteredProducts]);
+  
   //LOGIC FOR PAGINATION
   
 
   return (
     <>
       <Header />
+      <ErrorModal error={error} setError={setError} />
       <div className="flex">
         {/* FilterSide */}
         <div className="w-1/6 font-k2d   flex flex-col items-center border-r-[1px] border-black ">
@@ -232,10 +251,10 @@ export default function Product() {
         {/* Product side*/}
         <div className="w-5/6 grid grid-cols-3 gap-14 ml-16 snap-y snap-mandatory overflow-y-scroll h-[900px] hide-scrollbar">
           {(searchPerformed && filteredProducts.length === 0) || (Params != 0 && filteredProducts.length === 0) ? (
-            <div className="col-span-3 text-center p-6 bg-gray-100 border border-gray-300 rounded-lg shadow-md snap-center">
-              <h2 className="text-xl font-semibold mb-2">No items found</h2>
+            <div className="col-span-3 text-center p-6 snap-center">
+              <h2 className="text-xl font-semibold mb-2">Không tìm thấy sản phẩm</h2>
               <p className="text-gray-600">
-                Try adjusting your search criteria.
+                Hãy thử lại với bộ lọc khác hoặc xóa bộ lọc hiện tại
               </p>
             </div>
           ) : (

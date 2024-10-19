@@ -4,6 +4,7 @@ import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import { useRouter } from 'next/navigation';
 import axios from '@/api/axios';
+
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, '0');
@@ -11,8 +12,11 @@ function formatDate(dateString: string): string {
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 }
+
 function Rescue() {
   const [rescues, setRescues] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rescuesPerPage = 6;
   const Router = useRouter();
 
   useEffect(() => {
@@ -30,22 +34,55 @@ function Rescue() {
   const handleChangeClick = (rescueId: any) => {
     console.log(`Details for rescue ${rescueId}`);
     Router.push(`/Admin/Rescue/${rescueId}`);
-    
   };
+
   const handleDeleteClick = async (rescueId: any) => {
     console.log(`Delete for rescue ${rescueId}`);
     try {
       await axios.delete(`/rescueRequest/${rescueId}`);
-      const newProducts = rescues.filter((rescue) => rescue._id !== rescueId);
-      setRescues(newProducts);
+      const newRescues = rescues.filter((rescue) => rescue._id !== rescueId);
+      setRescues(newRescues);
     } catch (error) {
       console.error('Error deleting rescue:', error);
-  }
-};
+    }
+  };
+
   const handleAddClick = () => {
     console.log(`Add for order`);
     Router.push('/Admin/Rescue/AddRescue');
-    // Here you can  navigate to a detail page or open a modal
+    // Here you can navigate to a detail page or open a modal
+  };
+
+  // Calculate the rescues to display on the current page
+  const indexOfLastRescue = currentPage * rescuesPerPage;
+  const indexOfFirstRescue = indexOfLastRescue - rescuesPerPage;
+  const currentRescues = rescues.slice(indexOfFirstRescue, indexOfLastRescue);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(rescues.length / rescuesPerPage);
+
+  // Handle page change
+  const handlePageChange = (pageNumber:any) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Generate pagination buttons
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    if (totalPages <= 4) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        pageNumbers.push(1, 2, 3, '...', totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pageNumbers.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pageNumbers.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+      }
+    }
+    return pageNumbers;
   };
 
   return (
@@ -58,11 +95,6 @@ function Rescue() {
             Yêu cầu cứu hộ
           </div>
           {/* Table */}
-          {/* <div className='flex w-full space-x-2 mt-4'>
-            <button onClick={handleAddClick} className="bg-transparent border border-[#CCCCCC] text-black font-bold py-1 px-4 rounded-xl mb-2">
-              Thêm
-            </button>
-          </div> */}
           <table className="min-w-full leading-normal">
             <thead>
               <tr>
@@ -81,27 +113,22 @@ function Rescue() {
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Trạng thái
                 </th>
-                {/* <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Hình ảnh
-                </th> */}
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Xem 
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Xóa
                 </th>
-
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(rescues) && rescues
+              {Array.isArray(currentRescues) && currentRescues
                 .sort((a: any, b: any) => {
                   const statusOrder = ["Chưa xử lý", "Đang xử lý", "Đã xử lý"];
                   return statusOrder.indexOf(a.requestStatus) - statusOrder.indexOf(b.requestStatus);
                 })
               .map((rescue: any) => (
                 <tr key={rescue._id}>
- 
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {formatDate(rescue.RequestTime)}
                   </td>
@@ -116,12 +143,7 @@ function Rescue() {
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {rescue.requestStatus}
-                  </td> 
-                  {/* <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <img loading="lazy" src={rescue.image.url} alt={rescue.name} className="h-16 rounded-full" />
-                  </td>  */}
-
-
+                  </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     <button onClick={() => handleChangeClick(rescue._id)} className="text-blue-500 hover:text-blue-700">Chi tiết</button>
                   </td>
@@ -132,6 +154,48 @@ function Rescue() {
               ))}
             </tbody>
           </table>
+          <div className="pagination flex justify-center mt-4">
+            <button
+              onClick={() => handlePageChange(1)}
+              className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+              disabled={currentPage === 1}
+            >
+              &laquo;
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+              disabled={currentPage === 1}
+            >
+              &lt;
+            </button>
+            {renderPageNumbers().map((pageNumber, index) => (
+              <button
+                key={index}
+                onClick={() => typeof pageNumber === 'number' && handlePageChange(pageNumber)}
+                className={`px-3 py-1 mx-1 ${
+                  currentPage === pageNumber ? "bg-blue-500 text-white" : "bg-gray-200 hover:bg-gray-300"
+                }`}
+                disabled={typeof pageNumber !== 'number'}
+              >
+                {pageNumber}
+              </button>
+            ))}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+              disabled={currentPage === totalPages}
+            >
+              &gt;
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+              disabled={currentPage === totalPages}
+            >
+              &raquo;
+            </button>
+          </div>
         </div>
       </div>
     </div>
