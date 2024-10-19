@@ -3,11 +3,15 @@ import React from 'react';
 import Link from 'next/link';
 import { deleteCookie } from "cookies-next";
 import Logout from "@/public/img/Logouthl.svg";
+import axios from "@/api/axios";
 function Header(avatar: any) {
-    const handleLogout = () => {
-        deleteCookie("jwt");
-        deleteCookie("refreshToken");
-        window.location.href = '/Login';
+    const handleLogout = async () => {
+        try {
+            await axios.post('/auth/logout');
+          } catch (error) {
+            console.error('Error logging out:', error);
+          }
+        window.location.href = '/login';
     };
     return (
         <div className='flex justify-between items-center w-full'>
