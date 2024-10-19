@@ -6,6 +6,7 @@ import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import axios from '@/api/axios';
 import getInfo from "@/hooks/getInfo";
+
 interface Product {
     product_id: number;
     product_name: string;
@@ -14,6 +15,7 @@ interface Product {
     discount_price: number;
     quantity: number;
 }
+
 interface Order {
     _id: string;
     user_id: number;
@@ -28,13 +30,13 @@ interface Order {
     total_price: number;
     product_list: Product[];
 }
+
 function Page() {
     const [sort, setSort] = useState('Tất cả')
     const handleSort = (e: any) => {
         setSort(e)
     }
     const [data, setData] = useState<Order[]>([]);
-
     useEffect(() => {
         const fetchOrderData = async () => {
             try {
@@ -52,7 +54,41 @@ function Page() {
         } catch (error) {
             console.error("Error rebuy orders:", error);
         }
-    }
+    };
+    const [currentPage, setCurrentPage] = useState(1);
+    const ordersPerPage = 6;
+    // Calculate the orders to display on the current page
+    const indexOfLastOrder = currentPage * ordersPerPage;
+    const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+    const currentOrders = data.filter(order => sort === 'Tất cả' || order.order_status === sort).slice(indexOfFirstOrder, indexOfLastOrder);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(data.filter(order => sort === 'Tất cả' || order.order_status === sort).length / ordersPerPage);
+
+    // Handle page change
+    const handlePageChange = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+    };
+
+    // Generate pagination buttons
+    const renderPageNumbers = () => {
+        const pageNumbers = [];
+        if (totalPages <= 4) {
+            for (let i = 1; i <= totalPages; i++) {
+                pageNumbers.push(i);
+            }
+        } else {
+            if (currentPage <= 3) {
+                pageNumbers.push(1, 2, 3, '...', totalPages);
+            } else if (currentPage >= totalPages - 2) {
+                pageNumbers.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
+            } else {
+                pageNumbers.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+            }
+        }
+        return pageNumbers;
+    };
+
     return (
         <div className="flex flex-col w-full ">
             <Header />
@@ -126,12 +162,51 @@ function Page() {
                                 </div>
                             ))
                     }
-
+                    <div className="pagination flex justify-center mt-4">
+                        <button
+                            onClick={() => handlePageChange(1)}
+                            className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+                            disabled={currentPage === 1}
+                        >
+                            &laquo;
+                        </button>
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+                            disabled={currentPage === 1}
+                        >
+                            &lt;
+                        </button>
+                        {renderPageNumbers().map((pageNumber, index) => (
+                            <button
+                                key={index}
+                                onClick={() => typeof pageNumber === 'number' && handlePageChange(pageNumber)}
+                                className={`px-3 py-1 mx-1 ${currentPage === pageNumber ? "bg-blue-500 text-white" : "bg-gray-200 hover:bg-gray-300"}`}
+                                disabled={typeof pageNumber !== 'number'}
+                            >
+                                {pageNumber}
+                            </button>
+                        ))}
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+                            disabled={currentPage === totalPages}
+                        >
+                            &gt;
+                        </button>
+                        <button
+                            onClick={() => handlePageChange(totalPages)}
+                            className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+                            disabled={currentPage === totalPages}
+                        >
+                            &raquo;
+                        </button>
+                    </div>
                 </div>
             </div>
             <Footer />
         </div>
-    )
+    );
 }
 
-export default Page
+export default Page;

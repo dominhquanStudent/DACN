@@ -51,7 +51,6 @@ export default function ProductDetailPage({
         const productData = response.data;
         setData(productData.product);
         setTotalPrice(productData.product.discount_price);
-        const log = await axios.post(`/test`, productData.product);
       } catch (error) {
         console.error("Error fetching product data:", error);
       }

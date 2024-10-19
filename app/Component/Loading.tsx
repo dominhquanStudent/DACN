@@ -19,6 +19,7 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-32 w-32 mb-4"></div>
             {loadWhat=="ADD_TO_CART"&& <p>Đang thêm vào giỏ hàng</p>}
             {loadWhat=="ADD_COMMENT"&& <p>Đang đăng comment</p>}
+            {loadWhat=="ORDERING"&& <p>Đang đặt hàng</p>}
           </div>
         )}
         {isComplete && (
@@ -26,6 +27,8 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             <FaCheckCircle className="text-green-500 text-6xl mb-4 h-32 w-32" />
             {loadWhat=="ADD_TO_CART"&& <p>Đã thêm vào giỏ hàng thành công</p>}
             {loadWhat=="ADD_COMMENT"&& <p>Đã comment thành công</p>}
+            {/* CART LOADING */}
+            {loadWhat=="ORDERING"&& <p>Đã đặt hàng thành công</p>}
             <button
               className="mt-4 px-4 py-2 bg-green-500 text-white rounded"
               onClick={handleClose}

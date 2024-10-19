@@ -1,7 +1,7 @@
 import { FaStar } from "react-icons/fa";
 import Foto from "@/public/img/Product_Main/foto.png";
 import { useRouter } from "next/navigation";
-
+import RenderStars from "@/app/Product_Info/[product_id]/renderStars";
 const ProductCard = (props: any) => {
   const Router = useRouter();
   const handleChangeClick = (productId: any) => {
@@ -9,8 +9,6 @@ const ProductCard = (props: any) => {
 
     Router.push(`/Product_Info/${productId}`);
   };
-
-  console.log(props)
   return (
     <div
       className="flex flex-col border rounded-lg overflow-hidden w-60 transform transition-transform duration-300 hover:scale-110 hover:shadow-lg active:scale-95 bg-teal-100"
@@ -45,20 +43,7 @@ const ProductCard = (props: any) => {
         {/* Brand and Rating */}
         <div className="flex justify-between items-center mt-2">
           {/* Rating */}
-          <div className="flex">
-            {[...Array(5)].map((star, i) => {
-              const ratingValue = i + 1;
-              return (
-                <FaStar
-                  key={i}
-                  color={
-                    ratingValue <= props.product.rating ? "yellow" : "gray"
-                  }
-                  size={20}
-                />
-              );
-            })}
-          </div>
+          <RenderStars rating={props.product.rating}></RenderStars>
         </div>
 
         {/* Price */}

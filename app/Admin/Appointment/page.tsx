@@ -54,14 +54,12 @@ function isPast(dateString: string): boolean {
   return date < today;
 }
 
-
-
 function Appointment() {
   const [appointments, setAppointments] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("all");
+  
   const Router = useRouter();
   const [value, onChange] = useState<Value>(new Date());
-
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -94,12 +92,45 @@ function Appointment() {
   };
 
   const filteredAppointments = appointments.filter((appointment) => {
-    if (filter==="all") return !isPast(appointment.date);
+    if (filter === "all") return !isPast(appointment.date);
     if (filter === "today") return isToday(appointment.date);
     if (filter === "week") return isThisWeek(appointment.date);
     if (filter === "month") return isThisMonth(appointment.date);
     if (filter === "past") return isPast(appointment.date);
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const appointmentsPerPage = 6;
+  // Calculate the appointments to display on the current page
+  const indexOfLastAppointment = currentPage * appointmentsPerPage;
+  const indexOfFirstAppointment = indexOfLastAppointment - appointmentsPerPage;
+  const currentAppointments = filteredAppointments.slice(indexOfFirstAppointment, indexOfLastAppointment);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredAppointments.length / appointmentsPerPage);
+
+  // Handle page change
+  const handlePageChange = (pageNumber:any) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Generate pagination buttons
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    if (totalPages <= 4) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        pageNumbers.push(1, 2, 3, '...', totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pageNumbers.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pageNumbers.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+      }
+    }
+    return pageNumbers;
+  };
 
   return (
     <div className="flex flex-col w-full justify-center items-center">
@@ -114,21 +145,6 @@ function Appointment() {
           >
             Lịch hẹn khám bệnh
           </div>
-          {/* Filter Buttons */}
-          {/* <div className='flex w-full space-x-2 mt-4'>
-            <button onClick={() => setFilter('all')} className={`bg-transparent border border-[#CCCCCC] text-black font-bold py-1 px-4 rounded-xl mb-2 ${filter === 'all' ? 'bg-gray-200' : ''}`}>
-              Tất cả
-            </button>
-            <button onClick={() => setFilter('today')} className={`bg-transparent border border-[#CCCCCC] text-black font-bold py-1 px-4 rounded-xl mb-2 ${filter === 'today' ? 'bg-gray-200' : ''}`}>
-              Hôm nay
-            </button>
-            <button onClick={() => setFilter('week')} className={`bg-transparent border border-[#CCCCCC] text-black font-bold py-1 px-4 rounded-xl mb-2 ${filter === 'week' ? 'bg-gray-200' : ''}`}>
-              Trong tuần
-            </button>
-            <button onClick={() => setFilter('month')} className={`bg-transparent border border-[#CCCCCC] text-black font-bold py-1 px-4 rounded-xl mb-2 ${filter === 'month' ? 'bg-gray-200' : ''}`}>
-              Trong tháng
-            </button>
-          </div> */}
           <div className="flex w-full space-x-2 mt-4">
             <select
               onChange={(e) => setFilter(e.target.value)}
@@ -174,57 +190,11 @@ function Appointment() {
                 </th>
               </tr>
             </thead>
-            {/* <tbody>
-              {Array.isArray(filteredAppointments) &&
-                filteredAppointments.map((appointment: any) => (
-                  
-                  <tr key={appointment._id}>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                      {appointment.userName}
-                    </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                      {appointment.phone}
-                    </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                      {appointment.address}
-                    </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                      {formatDate(appointment.date)}
-                    </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                      {appointment.time}
-                    </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                      {appointment.service}
-                    </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                      {appointment.doctorName}
-                    </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                      <button
-                        onClick={() => handleChangeClick(appointment._id)}
-                        className="text-blue-500 hover:text-blue-700"
-                      >
-                        Chi tiết
-                      </button>
-                    </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                      <button
-                        onClick={() => handleDeleteClick(appointment._id)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        Xóa
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-            </tbody> */}
-                        <tbody>
-              {Array.isArray(filteredAppointments) &&
-                filteredAppointments.map((appointment: any) => {
-                  // const isPast = new Date(appointment.date) < new Date();
-                  return  (
-                    <tr key={appointment._id} className={isToday(appointment.date)?"bg-blue-50" : "bg-white text-sm"}>
+            <tbody>
+              {Array.isArray(currentAppointments) &&
+                currentAppointments.map((appointment: any) => {
+                  return (
+                    <tr key={appointment._id} className={isToday(appointment.date) ? "bg-blue-50" : "bg-white text-sm"}>
                       <td className="px-5 py-2 border-b border-gray-200">
                         {appointment.userName}
                       </td>
@@ -267,8 +237,49 @@ function Appointment() {
                 })}
             </tbody>
           </table>
+          <div className="pagination flex justify-center mt-4">
+            <button
+              onClick={() => handlePageChange(1)}
+              className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+              disabled={currentPage === 1}
+            >
+              &laquo;
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+              disabled={currentPage === 1}
+            >
+              &lt;
+            </button>
+            {renderPageNumbers().map((pageNumber, index) => (
+              <button
+                key={index}
+                onClick={() => typeof pageNumber === 'number' && handlePageChange(pageNumber)}
+                className={`px-3 py-1 mx-1 ${
+                  currentPage === pageNumber ? "bg-blue-500 text-white" : "bg-gray-200 hover:bg-gray-300"
+                }`}
+                disabled={typeof pageNumber !== 'number'}
+              >
+                {pageNumber}
+              </button>
+            ))}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+              disabled={currentPage === totalPages}
+            >
+              &gt;
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+              disabled={currentPage === totalPages}
+            >
+              &raquo;
+            </button>
+          </div>
         </div>
-
       </div>
     </div>
   );
