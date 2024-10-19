@@ -35,6 +35,7 @@ function formatDate(dateString: string): string {
 
 function VoucherList() {
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
+  
   const router = useRouter();
 
   useEffect(() => {
@@ -68,6 +69,39 @@ function VoucherList() {
   const handleAddClick = () => {
     console.log(`Add new voucher`);
     router.push('/Admin/Voucher/AddVoucher');
+  };
+  const [currentPage, setCurrentPage] = useState(1);
+  const vouchersPerPage = 1;
+  // Calculate the vouchers to display on the current page
+  const indexOfLastVoucher = currentPage * vouchersPerPage;
+  const indexOfFirstVoucher = indexOfLastVoucher - vouchersPerPage;
+  const currentVouchers = vouchers.slice(indexOfFirstVoucher, indexOfLastVoucher);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(vouchers.length / vouchersPerPage);
+
+  // Handle page change
+  const handlePageChange = (pageNumber:any) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Generate pagination buttons
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    if (totalPages <= 4) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        pageNumbers.push(1, 2, 3, '...', totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pageNumbers.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pageNumbers.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+      }
+    }
+    return pageNumbers;
   };
 
   return (
@@ -117,7 +151,7 @@ function VoucherList() {
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(vouchers) && vouchers.map((voucher: Voucher) => (
+              {Array.isArray(currentVouchers) && currentVouchers.map((voucher: Voucher) => (
                 <tr key={voucher._id}>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {voucher.name}
@@ -138,8 +172,7 @@ function VoucherList() {
                     {formatDate(voucher.beginDate)}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                  {formatDate(voucher.endDate)}
-
+                    {formatDate(voucher.endDate)}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     <button onClick={() => handleDetailClick(voucher._id)} className="text-blue-500 hover:text-blue-700">Chi tiết</button>
@@ -151,6 +184,48 @@ function VoucherList() {
               ))}
             </tbody>
           </table>
+          <div className="pagination flex justify-center mt-4">
+            <button
+              onClick={() => handlePageChange(1)}
+              className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+              disabled={currentPage === 1}
+            >
+              &laquo;
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+              disabled={currentPage === 1}
+            >
+              &lt;
+            </button>
+            {renderPageNumbers().map((pageNumber, index) => (
+              <button
+                key={index}
+                onClick={() => typeof pageNumber === 'number' && handlePageChange(pageNumber)}
+                className={`px-3 py-1 mx-1 ${
+                  currentPage === pageNumber ? "bg-blue-500 text-white" : "bg-gray-200 hover:bg-gray-300"
+                }`}
+                disabled={typeof pageNumber !== 'number'}
+              >
+                {pageNumber}
+              </button>
+            ))}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+              disabled={currentPage === totalPages}
+            >
+              &gt;
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+              disabled={currentPage === totalPages}
+            >
+              &raquo;
+            </button>
+          </div>
         </div>
       </div>
     </div>

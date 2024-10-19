@@ -7,33 +7,25 @@ import axios from "@/api/axios";
 import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
 import getInfo from "@/hooks/getInfo";
-import ErrorModal from "@/app/Component/Error";
 import _ from 'lodash'; // Import lodash for debouncing
+import LoadingModal from "@/app/Component/Loading";
+
 
 export default function Cart() {
-    //Handle loading and complete
-    const [isLoading, setIsLoading] = useState(false);
-    const [isComplete, setIsComplete] = useState(false);
-    const [loadWhat, setLoadWhat] = useState("");
-    const [error, setError] = useState(null);
+  //Handle loading and complete
+  const [isLoading, setIsLoading] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [loadWhat, setLoadWhat] = useState("");
+  const [error, setError] = useState(null);
   // Get account data
-  const jwt = getCookie("jwt");
-  if (!jwt) {
-    
-    return <ErrorModal error="NOT_LOGGED_IN" setError={setError}></ErrorModal>;
-  }
   const [accountData, setAccountData] = useState("");
-  const fetchData = async () => {
-    const getaccountData = await getInfo();
-    setAccountData(getaccountData);
-  };
   // Get account data upon access
-  useEffect(() => {
-    if (jwt) {
-      fetchData();
+    const [error, setError] = useState(null);
+    const jwt = getCookie("jwt");
+    if (!jwt) {
+    return <ErrorModal error="NOT_LOGGED_IN" setError={setError}></ErrorModal>;
     }
-  }, []);
-  const AccountID = accountData._id;
+
 
   // Get cart data
   const [cartData, setCartData] = useState({
@@ -47,14 +39,13 @@ export default function Cart() {
     }
   });
   const fetchCartData = async () => {
-    const response = await axios.get(`/cart/${accountData._id}`);
+    const response = await axios.get(`/cart`);
     setCartData(response.data);
   };
   useEffect(() => {
-    if (accountData) {
       fetchCartData();
-    }
-  }, [accountData]);
+  } ,[]);
+
 
   // Calculate total price
   const [totalPrice, setTotalPrice] = useState(0);
@@ -75,15 +66,18 @@ export default function Cart() {
       setTotalPriceafterDiscount(total);
     }, 0); // Adjust the debounce delay as needed
 
+
     if (cartData.cart && cartData.cart.product_list) {
       debouncedCalculateTotalPrice(cartData.cart.product_list);
     }
+
 
     // Cleanup function to cancel the debounce if the component unmounts
     return () => {
       debouncedCalculateTotalPrice.cancel();
     };
   }, [cartData]);
+
 
   // Update product status in cart data
   const updateProductStatus = (productId, selected) => {
@@ -94,6 +88,7 @@ export default function Cart() {
       return product;
     });
 
+
     setCartData(prevState => ({
       ...prevState,
       cart: {
@@ -102,11 +97,18 @@ export default function Cart() {
       }
     }));
 
+
     // Recalculate total price after updating product status
     const total = calculateTotalPrice(updatedProductList);
     setTotalPrice(total);
-    setTotalPriceafterDiscount(total);
+    // Reapply voucher if already applied
+    if (alreadyApplied) {
+      applyVoucher(voucher, total);
+    } else {
+      setTotalPriceafterDiscount(total);
+    }
   };
+
 
   // Apply voucher
   const [voucher, setVoucher] = useState("");
@@ -115,9 +117,48 @@ export default function Cart() {
   const [alreadyApplied, setAlreadyApplied] = useState(false);
   const [voucherError, setVoucherError] = useState("");
   const [totalPriceafterDiscount, setTotalPriceafterDiscount] = useState(0);
+  const applyVoucher = async (voucherCode, total) => {
+    try {
+      const response = await axios.get(`/voucher/code/${voucherCode}`);
+      const voucherData = response.data.voucher;
+      setVoucherInfo(voucherData);
+
+
+      if (voucherData.discount_type === "Giảm theo phần trăm") {
+        if (total >= voucherData.discount_value.min_require) {
+          let discountValue = Math.floor(total * voucherData.discount_value.value / 100);
+          if (discountValue > voucherData.discount_value.max_discount) {
+            discountValue = voucherData.discount_value.max_discount;
+          }
+
+
+          setDiscount(discountValue);
+          setTotalPriceafterDiscount(total - discountValue);
+        } else {
+          setVoucherError("MIN_REQUIRE_NOT_MET");
+          return;
+        }
+      } else if (voucherData.discount_type === "value") {
+        if (total >= voucherData.discount_value.min_require) {
+          let discountValue = voucherData.discount_value.value;
+          setDiscount(discountValue);
+          setTotalPriceafterDiscount(total - discountValue);
+        }
+      }
+      setAlreadyApplied(true);
+      setVoucherError("None");
+    } catch (error) {
+      if (error.response.status === 404) {
+        setVoucherError("NOT_FOUND");
+      } else {
+        console.error("Error applying voucher:", error);
+      }
+    }
+  };
+
+
   const handleApplyVoucher = async () => {
     if (alreadyApplied) {
-      console.log("Voucher already applied");
       setVoucherError("ALREADY_APPLIED");
       return;
     }
@@ -125,50 +166,10 @@ export default function Cart() {
       setVoucherError("EMPTY");
       return;
     }
-    try {
-      const response = await axios.get(`/voucher/code/${voucher}`);
-      const voucherData = response.data.voucher;
-      setVoucherInfo(voucherData);
-
-      if (voucherData.discount_type === "Giảm theo phần trăm") {
-        if (totalPrice >= voucherData.discount_value.min_require) {
-          console.log("Total price meets the minimum requirement for the voucher.");
-          let discountValue = Math.floor(totalPrice * voucherData.discount_value.value / 100);
-
-          if (discountValue > voucherData.discount_value.max_discount) {
-            discountValue = voucherData.discount_value.max_discount;
-          }
-
-          setDiscount(discountValue);
-          console.log("Discount value:", discountValue);
-          console.log("Total price after discount:", totalPrice - discountValue);
-          setTotalPriceafterDiscount(totalPrice - discountValue);
-        } else {
-          setVoucherError("MIN_REQUIRE_NOT_MET");
-          return;
-        }
-      }
-      else if (voucherData.discount_type === "value") {
-        if (totalPrice >= voucherData.discount_value.min_require) {
-          let discountValue = voucherData.discount_value.value;
-          setDiscount(discountValue);
-          setTotalPriceafterDiscount(totalPrice - discountValue);
-        }
-      }
-      setAlreadyApplied(true);
-      setVoucherError("None");
-    } catch (error) {
-      // If error 404 then set error message
-      if (error.response.status === 404) {
-        console.log("Voucher not found");
-        setVoucherError("NOT_FOUND");
-      } else {
-        console.log("Error applying voucher:", error);
-      }
-    } 
+    applyVoucher(voucher, totalPrice);
   };
 
-  //Order
+  // Order
   const [paymentMethod, setPaymentMethod] = useState("Trực tiếp");
   const handleOrder = async () => {
     const order = {
@@ -179,20 +180,14 @@ export default function Cart() {
       total_price: totalPriceafterDiscount
     }
     try {
+      setIsLoading(true);
+      setLoadWhat("ORDERING");
       const response = await axios.post("order/cartToOrder", order);
-      // deleteAllItemFromCart();
+      setIsLoading(false);
+      setIsComplete(true);
       fetchCartData();
     } catch (error) {
       console.error("Error placing order:", error);
-    }
-  };
-  const deleteAllItemFromCart = async () => {
-    try {
-      const response = await axios.post(`/cart/delete/${accountData._id}`);
-      console.log("Delete all items response:", response.data);
-      fetchCartData();
-    } catch (error) {
-      console.error("Error deleting cart:", error);
     }
   };
   useEffect(() => {
@@ -201,9 +196,11 @@ export default function Cart() {
         if (totalPrice >= voucherInfo.discount_value.min_require) {
           let discountValue = Math.floor(totalPrice * voucherInfo.discount_value.value / 100);
 
+
           if (discountValue > voucherInfo.discount_value.max_discount) {
             discountValue = voucherInfo.discount_value.max_discount;
           }
+
 
           setDiscount(discountValue);
           setTotalPriceafterDiscount(totalPrice - discountValue);
@@ -216,29 +213,27 @@ export default function Cart() {
         if (totalPrice >= voucherInfo.discount_value.min_require) {
           let discountValue = voucherInfo.discount_value.value;
 
+
           if (discountValue > voucherInfo.discount_value.max_discount) {
             discountValue = voucherInfo.discount_value.max_discount;
           }
+
 
           setDiscount(discountValue);
           setTotalPriceafterDiscount(totalPrice - discountValue);
           setVoucherError("None");
         } else {
-          console.log("Total price does not meet the minimum requirement for the voucher.");
           setVoucherError("MIN_REQUIRE_NOT_MET");
           setDiscount(0);
         }
       }
     }
   }, [totalPrice, voucherInfo]);
-  useEffect(() => {
-    console.log("Discount updated:", voucherInfo);
-    // Perform any additional actions needed after discount is updated
-  }, [voucherInfo]);
 
   return (
     <>
-      <Header></Header>
+      <Header />
+      <LoadingModal isLoading={isLoading} isComplete={isComplete} setIsComplete={setIsComplete} loadWhat={loadWhat} />
       <section className="relative z-10 after:contents-[''] after:absolute after:z-0 after:h-full xl:after:w-1/3 after:top-0 after:right-0 after:bg-gray-50">
         {/* Whole cart */}
         <div className="w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto relative z-10">
@@ -277,7 +272,7 @@ export default function Cart() {
               <div className="overflow-y-auto h-96 snap-y snap-mandatory hide-scrollbar">
                 {cartData && cartData.cart && cartData.cart.product_list.map((product, index) => (
                   <div key={product.product_id} className="snap-start">
-                    <Product_Frame product={product} AccountID={AccountID} fetchCartData={fetchCartData}                   
+                    <Product_Frame product={product} fetchCartData={fetchCartData}                   
                       onSelectChange={(selected) => updateProductStatus(product.product_id, selected)}/>
                   </div>
                 ))}
@@ -288,6 +283,7 @@ export default function Cart() {
               <h2 className="font-manrope font-bold text-3xl leading-10 text-black pb-8 border-b border-gray-300">
                 Thanh toán
               </h2>
+
 
               {/* Payment method */}
               <div className="mt-4 mb-4">
@@ -333,9 +329,9 @@ export default function Cart() {
                     onChange={(e) => setVoucher(e.target.value)}
                   />
                   <button
-                    className="middle none center mr-4 rounded-lg bg-blue-500 py-2 px-4 font-sans text-xs font-bold 
-                        uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 
-                        focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none 
+                    className="middle none center mr-4 rounded-lg bg-blue-500 py-2 px-4 font-sans text-xs font-bold
+                        uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40
+                        focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none
                         disabled:opacity-50 disabled:shadow-none"
                     onClick={handleApplyVoucher}
                   >
@@ -396,7 +392,7 @@ export default function Cart() {
           </div>
         </div>
       </section>
-      <Footer></Footer>
+      <Footer />
     </>
   );
 }

@@ -3,7 +3,7 @@ import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 
 export default function RenderStars(props: any) {
   const fullStars = Math.floor(props.rating);
-  const hasHalfStar = props.rating % 1 !== 0;
+  const hasHalfStar = (props.rating % 1) >= 0.5;
   const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
   return (

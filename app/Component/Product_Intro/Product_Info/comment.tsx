@@ -1,4 +1,14 @@
 import User from "@/public/img/Header/User.png";
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric', // Add year to the options
+  };
+  return new Intl.DateTimeFormat('vi-VN', options).format(date);
+}
 export default function Comment(props: any) {
   return (
     <div className="mt-4 m-9">
@@ -16,7 +26,7 @@ export default function Comment(props: any) {
               <span key={i}>⭐</span>
             ))}
           </span>
-          <div className="text-sm text-gray-500">{props.createdAt}</div>
+          <div className="text-sm text-gray-500">{formatDate(props.createdAt)}</div>
         </div>
         <div>
           <svg
