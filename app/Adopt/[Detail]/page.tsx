@@ -1,44 +1,13 @@
-// 'use client';
-// import { getCookie } from "cookies-next";
-// import getInfo from "@/hooks/getInfo";
-// import { useState, useEffect, use } from "react";
-// export default function Adopt_Detail()
-// {
-//     const jtw = getCookie("jwt");
-//     const [account, setAccount] = useState<any>();
-//     const fetchData = async () => {
-//         const getAccount = await getInfo();
-//         setAccount(getAccount);
-//     }
-//     useEffect(() => {
-//         if (jtw) {
-//             fetchData();
-//         }
-//     }, []);
-//     console.log(account);
-//     console.log(account.email);
-
-//     return (
-//         <div>Hello Dinh So</div>
-//     )
-
-// }
 "use client";
 import React, { useEffect, useState, use } from "react";
 
 import { mutate } from "swr";
-import Sidebar from "@/app/Admin/sidebar";
 import Header from "../../Component/Header/Header";
 import Footer from "../../Component/Footer/Footer";
 import axios from "@/api/axios";
 import { useRouter } from "next/navigation";
 import { getCookie } from "cookies-next";
 import getInfo from "@/hooks/getInfo";
-import logo from "../../../public/img/Booking/petcare.png";
-import logoname from "../../../public/img/Booking/pc.jpg";
-import Doggo1 from "../../../public/img/Greet page/Doggo1.png";
-import { current } from "@reduxjs/toolkit";
-import { request } from "http";
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);

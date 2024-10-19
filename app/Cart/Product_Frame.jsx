@@ -13,7 +13,6 @@ export default function Product_Frame(props) {
     if (e) e.preventDefault();
     try {
       const cartItem = {
-        user_id: props.AccountID, // Replace with actual user ID
         product_id: props.product.product_id,
         quantity: quantity,
       };
@@ -43,7 +42,6 @@ export default function Product_Frame(props) {
     if (e) e.preventDefault();
     try {
       const cartItem = {
-        user_id: props.AccountID, // Replace with actual user ID
         product_id: props.product.product_id,
       };
       const response = await axios.delete('/cart/deleteProduct', {
@@ -60,7 +58,6 @@ export default function Product_Frame(props) {
   const handleSelect = async (e) => {
     try {
       const cartItem = {
-        user_id: props.AccountID, // Replace with actual user ID
         product_id: props.product.product_id,
         selected: !selected,
       };
