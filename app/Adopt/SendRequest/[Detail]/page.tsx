@@ -1,28 +1,4 @@
-// 'use client';
-// import { getCookie } from "cookies-next";
-// import getInfo from "@/hooks/getInfo";
-// import { useState, useEffect, use } from "react";
-// export default function Adopt_Detail()
-// {
-//     const jtw = getCookie("jwt");
-//     const [account, setAccount] = useState<any>();
-//     const fetchData = async () => {
-//         const getAccount = await getInfo();
-//         setAccount(getAccount);
-//     }
-//     useEffect(() => {
-//         if (jtw) {
-//             fetchData();
-//         }
-//     }, []);
-//     console.log(account);
-//     console.log(account.email);
 
-//     return (
-//         <div>Hello Dinh So</div>
-//     )
-
-// }
 "use client";
 import React, { useEffect, useState, use } from "react";
 
@@ -39,7 +15,8 @@ import logoname from "../../../../public/img/Booking/pc.jpg";
 import Doggo1 from "../../../../public/img/Greet page/Doggo1.png";
 import { current } from "@reduxjs/toolkit";
 import { request } from "http";
-
+import ErrorModal from "@/app/Component/Error";
+import LoadingModal from "@/app/Component/Loading";
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, "0");
@@ -48,9 +25,18 @@ function formatDate(dateString: string): string {
   return `${day}/${month}/${year}`;
 }
 
+
+ ///////////////////////////////
 function SendRequest({ params }: { params: { Detail: string } }) {
+   //Handle loading and complete
+ const [isLoading, setIsLoading] = useState(false);
+ const [isComplete, setIsComplete] = useState(false);
+ const [loadWhat, setLoadWhat] = useState("");
+ const [error, setError] = useState<string | null>(null);
   const petId = params.Detail;
   // const [data, setData] = useState<any>({});
+  const [method, setMethod] = useState<string>('Chưa có phương thức');
+
   const [data, setData] = useState<any>({ image: { url: [""] } });
 
   const [isEditable, setIsEditable] = useState(false);
@@ -61,6 +47,7 @@ function SendRequest({ params }: { params: { Detail: string } }) {
     address: "",
   });
   const jtw = getCookie("jwt");
+  
 
   const fetchData = async () => {
     const getAccount = await getInfo();
@@ -89,7 +76,10 @@ function SendRequest({ params }: { params: { Detail: string } }) {
   useEffect(() => {
     console.log("Pet Data:", data); // Log the state
   }, [data]);
-
+  const handleMethodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value } = e.target;
+    setMethod(value);
+  };
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -99,6 +89,7 @@ function SendRequest({ params }: { params: { Detail: string } }) {
     setData((prevData: any) => ({
       ...prevData,
       [id]: value,
+      
     }));
   };
 
@@ -123,9 +114,11 @@ function SendRequest({ params }: { params: { Detail: string } }) {
   };
 
   const handleAdoptClick = async () => {
+    
     try {
+      
       const currentDate = new Date().toISOString().split("T")[0]; // Get current date in YYYY-MM-DD format
-
+      
       const updatedData = {
         ...data,
         userName: account.userName,
@@ -133,14 +126,31 @@ function SendRequest({ params }: { params: { Detail: string } }) {
         address: account.address,
         requestDay: currentDate,
         adoptStatus: "Đang được yêu cầu",
+        method: method,
       };
-
+      console.log("Updated Data:", updatedData); // Log the updated data
+      if (updatedData.message==="Chưa có lời nhắn" || updatedData.message==="") {
+        setError("NO_ADOPT_MESSAGE");
+        return;}
+      if(!updatedData.arriveDay){
+        setError("NO_ARRIVE_DAY");
+        return;
+      }
+      if(updatedData.method==="Chưa có phương thức"){
+        setError("NO_ADOPT_METHOD");
+        return;
+      }
+      setLoadWhat("SEND_ADOPT_REQUEST");
+      setIsLoading(true);
       const response = await axios.put(`/pet/${petId}`, updatedData);
+      setIsLoading(false);
+      setIsComplete(true);
       // Revalidate the data
       mutate(`/pet/${petId}`);
-      router.push(`/Adopt`);
+      
+      // router.push(`/Adopt`);
 
-      alert("Đăng kí nhận nuôi thành công!");
+      // alert("Đăng kí nhận nuôi thành công!");
     } catch (error) {
       console.error("Error updating pet data:", error);
     }
@@ -154,7 +164,9 @@ function SendRequest({ params }: { params: { Detail: string } }) {
   return (
     <>
       <Header />
-      <div className="flex gap-4 p-4 bg-background-blue">
+      <ErrorModal error={error} setError={setError} />
+      <LoadingModal isLoading={isLoading} isComplete={isComplete} setIsComplete={setIsComplete} loadWhat={loadWhat} />
+      <div className="flex gap-4 p-4 bg-background-blue justify-center">
         <div className="relative left-28">
           <div className="p-3">
             <img src={logo.src} alt="Logo" className="w-60" />
@@ -166,8 +178,11 @@ function SendRequest({ params }: { params: { Detail: string } }) {
             Nhận nuôi thú cưng
           </h2>
           <div className="p-3 mt-7 ">
-            <img src={Doggo1.src} alt="Doggo1" className="w-60" />
+            <img src={data.image.url} alt="Doggo1" className="w-60 h-60 rounded-full" />
           </div>
+          <h2 className="relative right-7 text-4xl text-center text-yellow-500">
+            {data.petName}
+          </h2>
         </div>
         <div className="bg-white rounded-lg shadow-md p-8 w-1/2 mx-auto">
           <form className="w-full mx-4" key={data._id}>
@@ -214,35 +229,27 @@ function SendRequest({ params }: { params: { Detail: string } }) {
                 />
               </div>
 
-              <div className="flex w-full">
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="method">
-                    Chọn phương thực nhận thú cưng
-                  </label>
-                  <div className="flex flex-col space-y-2">
-                    <label className="inline-flex items-center">
-                      <input
-                        type="radio"
-                        className="form-radio"
-                        name="method"
-                        value="Trực tiếp"
-                        onChange={handleInputChange}
-                      />
-                      <span className="ml-2">Trực tiếp</span>
-                    </label>
-                    <label className="inline-flex items-center">
-                      <input
-                        type="radio"
-                        className="form-radio"
-                        name="method"
-                        value="Đơn vị vận chuyển"
-                        onChange={handleInputChange}
-                      />
-                      <span className="ml-2">Đơn vị vận chuyển (Khu vực TP HCM và Bình Dương)</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
+              <div>
+      <div className="flex w-full">
+        <div className="w-full px-3">
+          <label className="text-xs font-bold mb-2" htmlFor="method">
+            Chọn phương thực nhận thú cưng
+          </label>
+          <select
+            id="method"
+            name="method"
+            className="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            onChange={handleMethodChange}
+            value={method}
+          >
+            <option value="Chưa có phương thức">Chọn phương thức</option>
+            <option value="Trực tiếp">Trực tiếp</option>
+            <option value="Đơn vị vận chuyển">Đơn vị vận chuyển (Khu vực TP HCM và Bình Dương)</option>
+          </select>
+        </div>
+      </div>
+      {/* <button onClick={handleSubmit}>Submit</button> */}
+    </div>
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="arriveDay">
                   Chọn ngày nhận thú cưng
@@ -252,6 +259,8 @@ function SendRequest({ params }: { params: { Detail: string } }) {
                   id="arriveDay"
                   type="date"
                   value={data.arriveDay}
+                  min={new Date().toISOString().split("T")[0]}
+                  
                   onChange={handleInputChange}
                 />
               </div>

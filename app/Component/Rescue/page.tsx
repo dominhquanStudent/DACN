@@ -13,6 +13,8 @@ import Sidebar from '@/app/Admin/sidebar';
 import axios from '@/api/axios';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import ErrorModal from "@/app/Component/Error";
+import LoadingModal from "@/app/Component/Loading";
 
 import "react-calendar/dist/Calendar.css"; // Import the calendar CSS
 
@@ -24,7 +26,10 @@ export default function Booking() {
   const [location, setLocation] = useState("");
   const [message, setMessage] = useState(""); // State for boss name
   const [isSaved, setIsSaved] = useState(false);
-  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [loadWhat, setLoadWhat] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const handleSaveClick = async () => {
     // if (!user_name || !contactPhone || !location || !message) {
@@ -41,17 +46,29 @@ export default function Booking() {
         message,
 
       };
+      const phoneRegex = /^[0-9]{10}$/;
+
+      if (
+        !(user_name && contactPhone && image.url && location && message)
+      ) {
+        setError("NO_RESCUE_INFO");
+        return;
+      }
+
+      if (!phoneRegex.test(contactPhone)) {
+        setError("INVALID_PHONENUMBER");
+        return;
+      }
+      setLoadWhat("SEND_RESCUE_REQUEST");
+      setIsLoading(true);
       const response = await axios.post('/rescueRequest/add', data);
-      alert("Đã gửi yêu cầu thành công!");
-      router.push('/Main');
-      // toast.success('Product saved successfully!');
-      setIsSaved(true);
-      setError("");
-      // router.push('/Admin/Appointment');
+      setIsLoading(false);
+      setIsComplete(true);
+
     } catch (error) {
-      toast.error('Error saving product!');
-      console.error('Error saving product:', error);
-      setError("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
+      // toast.error('Error saving product!');
+      // console.error('Error saving product:', error);
+      // setError("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
     }
   };
   const handleImage = (e: any) => {
@@ -80,6 +97,14 @@ export default function Booking() {
     // Global container
     <>
       <Header />
+      <ErrorModal error={error} setError={setError} />
+      <LoadingModal
+        isLoading={isLoading}
+        isComplete={isComplete}
+        setIsComplete={setIsComplete}
+        loadWhat={loadWhat}
+      />
+
       <div className="flex gap-4 p-4 bg-background-blue">
         <div className="relative left-28">
           <div className="p-3">
@@ -169,11 +194,7 @@ export default function Booking() {
             Đăng ký
           </button>
         </div> 
-        {error && (
-                <div className="mt-4 text-center text-red-500 font-bold">
-                  {error}
-                </div>
-              )}
+
         {isSaved && (
                 <div className="mt-4 text-center text-green-500 font-bold">
                   Cảm ơn quý khách đã đăng kí dịch vụ!

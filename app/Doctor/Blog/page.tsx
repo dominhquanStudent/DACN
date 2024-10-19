@@ -16,25 +16,40 @@ import { useRouter } from "next/navigation";
 
 function NewsPage() {
   const router = useRouter();
+  const [news, setNews] = useState<any[]>([]); // State for the list of news
   const [title, setTitle] = useState("");
   const [content, setContent] = useState(""); // State for phone number
   const [image, setImage] = useState({ public_id: "", url: "" });
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await axios.get("/news/list");
+        console.log(response.data); // Log response để kiểm tra cấu trúc dữ liệu
 
-  const handleSaveClick = async () => {
+        setNews(response.data.news);
+      } catch (error) {
+        console.error("Error fetching news:", error);
+      }
+    };
+    fetchNews();
+  }, []);
+
+  const handleSaveClick = async (e:any) => {
     // if (!user_name || !contactPhone || !location || !message) {
     //   setError("Vui lòng nhập đầy đủ thông tin.");
     //   return;
     // }
-
+    e.preventDefault();
     try {
       const data = {
         title,
         content,
-        image,
+        image
+      
       };
-      const response = await axios.post("/news/add", data);
-      alert("Đã gửi yêu cầu thành công!");
-      router.push("/Main");
+      console.log(data);
+      const response = await axios.post(`news/add`, data);
+      
       // toast.success('Product saved successfully!');
       // setIsSaved(true);
       // setError("");
@@ -48,7 +63,6 @@ function NewsPage() {
   const handleImage = (e: any) => {
     const file = e.target.files[0];
     setFileToBase(file);
-    console.log(file);
   };
 
   const setFileToBase = (file: any) => {
@@ -91,7 +105,26 @@ function NewsPage() {
                 required
               />
             </div>
+            <div className="w-full px-3">
+                <label className="text-xs font-bold mb-2" htmlFor="ImageUpload">
+                  Tải hình ảnh
+                </label>
+                <input
+                  type="file"
+                  id="ImageUpload"
+                  name="image"
+                  accept="image/*"
+                  onChange={handleImage}
+                  className="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-violet-50 file:text-violet-700
+                    hover:file:bg-violet-100"
+                />
+              </div>
             <button
+              
               type="submit"
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
@@ -100,9 +133,8 @@ function NewsPage() {
           </form>
         </div>
       </div>
-      <Footer />
       <div>
-        {/* <h2 className="text-xl font-bold mb-2">News Feed</h2>
+        <h2 className="text-xl font-bold mb-2">News Feed</h2>
         {news.length === 0 ? (
           <p>No news posted yet.</p>
         ) : (
@@ -110,13 +142,15 @@ function NewsPage() {
             {news.map((item, index) => (
               <li key={index} className="mb-4 p-4 border rounded-md shadow-sm">
                 <h3 className="text-lg font-bold">{item.title}</h3>
-                <p className="text-sm text-gray-500">{item.date}</p>
+                {/* <p className="text-sm text-gray-500">{item.date}</p> */}
                 <p>{item.content}</p>
               </li>
             ))}
           </ul>
-        )} */}
+        )}
       </div>
+      <Footer />
+
     </div>
   );
 }

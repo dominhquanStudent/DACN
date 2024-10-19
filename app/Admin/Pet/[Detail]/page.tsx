@@ -203,9 +203,9 @@ function PetDetail({ params }: { params: { Detail: string } }) {
                   onChange={handleInputChange}
                   disabled={!isEditable}
                 >
-                  <option value="">Chọn</option>
-                  <option value="Rồi">Rồi</option>
-                  <option value="Chưa">Chưa</option>
+                  <option value="">Chọn trạng thái</option>
+                  <option value="Đã tiêm phòng">Rồi</option>
+                  <option value="Chưa tiêm phòng">Chưa</option>
                 </select>
               </div>
 
@@ -251,6 +251,19 @@ function PetDetail({ params }: { params: { Detail: string } }) {
                     <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
                       {formatDate(data.adoptDay)}
                     </div>
+                  </div>
+                  <div className="w-full px-3">
+                    <label className="text-xs font-bold mb-2" htmlFor="employeeName">
+                      Nhân viên xử lý
+                    </label>
+                    <input
+                      className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                      id="employeeName"
+                      type="text"
+                      value={data.employeeName}
+                      // onChange={handleInputChange}
+                      disabled={!isEditable}
+                    />
                   </div>
                   <div
                     className={
@@ -307,21 +320,22 @@ function PetDetail({ params }: { params: { Detail: string } }) {
             </div>
           </form>
           <div className="flex items-center justify-center w-full space-x-4">
-            {!showButton &&(
-            <button
-              onClick={handleChangeClick}
-              className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Cập nhật thông tin
-            </button>
-          )}
-          {showButton && (
-            <button
-              onClick={handleSaveClick}
-              className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Lưu
-            </button>)}
+            {!showButton && (
+              <button
+                onClick={handleChangeClick}
+                className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Cập nhật thông tin
+              </button>
+            )}
+            {showButton && (
+              <button
+                onClick={handleSaveClick}
+                className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Lưu
+              </button>
+            )}
           </div>
         </div>
       </div>
