@@ -11,15 +11,16 @@ import Brand5 from '@/public/img/Product_Main/Brand_Premier.png';
 import Brand6 from '@/public/img/Product_Main/Brand_RoyalCanin.png';
 import Brand7 from '@/public/img/Product_Main/Brand_Whiskas.png';
 import { useState, useEffect } from 'react';
-import axios from '@/api/axios';
+import axios from 'axios';
 export default function Product_Main(){
-   
+  const API_BASE_URL = 'petcare-be-lilac.vercel.app'; // Replace with your actual backend URL
+
       const [products, setProducts] = useState<any[]>([]);
       //get products from server
       useEffect(() => {
         const fetchProducts = async () => {
           try {
-            const response = await axios.get("/product/list");
+            const response = await axios.get(`${API_BASE_URL}/product/list`);
             setProducts(response.data.products);
             
           } catch (error) {
