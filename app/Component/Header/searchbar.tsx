@@ -13,7 +13,7 @@ export default function SearchBar() {
 
     if (name.length > 0) {
       try {
-        const response = await axios.get(`${baseURL}/${name}`);
+        const response = await axios.get(`${baseURL}/product/searchProductByName/${name}`);
         setSearchResults(response.data.products);
         setIsDropdownVisible(true);
       } catch (error) {
