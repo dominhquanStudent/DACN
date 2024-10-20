@@ -46,8 +46,8 @@ export default function ProductDetailPage({
   useEffect(() => {
     const fetchProductData = async () => {
       try {
-        
-        const response = await axios.get(`/product/${productId}`);
+        const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const response = await axios.get(`${baseURL}/product/${productId}`);
         const productData = response.data;
         setData(productData.product);
         setTotalPrice(productData.product.discount_price);
