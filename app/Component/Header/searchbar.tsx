@@ -2,17 +2,18 @@ import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import RenderStars from '@/app/Product_Info/[product_id]/renderStars';
 export default function SearchBar() {
+  const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-
+  
   const handleSearch = async (event: any) => {
     const name = event.target.value;
     setSearchTerm(name);
 
     if (name.length > 0) {
       try {
-        const response = await axios.get(`https://petcare-be-lilac.vercel.app/product/searchProductByName/${name}`);
+        const response = await axios.get(`${baseURL}/${name}`);
         setSearchResults(response.data.products);
         setIsDropdownVisible(true);
       } catch (error) {
