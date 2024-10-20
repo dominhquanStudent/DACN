@@ -12,7 +12,7 @@ export default function SearchBar() {
 
     if (name.length > 0) {
       try {
-        const response = await axios.get(`http://localhost:8080/product/searchProductByName/${name}`);
+        const response = await axios.get(`https://petcare-be-lilac.vercel.app/product/searchProductByName/${name}`);
         setSearchResults(response.data.products);
         setIsDropdownVisible(true);
       } catch (error) {
