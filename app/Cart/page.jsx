@@ -10,7 +10,7 @@ import getInfo from "@/hooks/getInfo";
 import _ from 'lodash'; // Import lodash for debouncing
 import LoadingModal from "@/app/Component/Loading";
 
-
+import ErrorModal from "@/app/Component/Error";
 export default function Cart() {
   //Handle loading and complete
   const [isLoading, setIsLoading] = useState(false);

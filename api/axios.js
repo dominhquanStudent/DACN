@@ -32,9 +32,10 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     // If the response has an error
-    if (error.response && error.response.status === 401) {
+    if (error.response && error.response.status === 401 ) {
       // Redirect to the login page
       if (typeof window !== 'undefined') {
+        axiosInstance.post('/auth/logout');
         window.location.href = '/Login';
       }
     }

@@ -4,7 +4,10 @@ const ErrorModal = ({ error, setError }: any) => {
   const handleClose = () => {
     if (error === "NOT_LOGGED_IN") {
       window.location.href = "/Login";
-    } else {
+    } if (error === "PAGE_NOT_FOUND") {
+      window.location.href = "/Main";
+    }
+    else {
       setError(null);
     }
   };
@@ -51,7 +54,7 @@ const ErrorModal = ({ error, setError }: any) => {
               <p>Số điện thoại không hợp lệ!</p>
             )}
             {error == "INVALID_DATE" && <p>Ngày hẹn không hợp lệ!</p>}
-
+            {error == "PAGE_NOT_FOUND" && <p>Trang bạn tìm kiếm không có !</p>}
             <button
               className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
               onClick={handleClose}

@@ -1,5 +1,7 @@
-import React from 'react';
-
+'use client';
+import React , {useState} from 'react';
+import ErrorModal from "@/app/Component/Error";
 export default function NotFound() {
-  return <h1>404 - Page Not Found</h1>
+  const [error, setError] = useState(null);
+  return <ErrorModal error="PAGE_NOT_FOUND" setError={setError}></ErrorModal>;
 }
