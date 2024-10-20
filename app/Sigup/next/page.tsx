@@ -4,6 +4,7 @@ import Logo from '../../../public/img/logo';
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from '@/api/axios';
+
 function Page({
     searchParams,
 }: { searchParams: { email: string }; }) {
@@ -15,19 +16,21 @@ function Page({
         setPassword(event.target.value);
     };
     const [step, setStep] = useState(1);
-    const inputRefs = Array.from({ length: 4 }).map(() => useRef<HTMLInputElement | null>(null));
+    const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
+
     const handleChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
         const newOtp = [...otp];
         newOtp[index] = event.target.value;
         setOtp(newOtp);
         if (event.target.value && index < otp.length - 1) {
-            inputRefs[index + 1].current?.focus();
+            inputRefs.current[index + 1]?.focus();
         }
         // Combine the OTP digits into a single string
         const otpString = newOtp.join('');
         setCombinedOtp(otpString);
     };
+
     const handleVerify = async () => {
         try {
             const response = await axios.post('/otp/verify', {
@@ -43,9 +46,11 @@ function Page({
             console.error('Error verifying OTP:', error);
         }
     };
-    const handleResend = async () => {
 
+    const handleResend = async () => {
+        // Implement resend logic here
     };
+
     const handleCreateAccount = async () => {
         try {
             const response = await axios.post('/account/create', {
@@ -108,7 +113,7 @@ function Page({
                                     onChange={handleChange(index)}
                                     maxLength={1}
                                     pattern="[0-9]*"
-                                    ref={inputRefs[index]}
+                                    ref={(el) => { inputRefs.current[index] = el; }}
                                 />
                             ))}
                         </div>
@@ -152,4 +157,4 @@ function Page({
     )
 }
 
-export default Page
+export default Page;
