@@ -1,17 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Header from "@/app/Component/Header/Header";
 import Footer from "@/app/Component/Footer/Footer";
 import Pet_Frame from "../Component/Adopt/Pet_Frame";
 import axios from "@/api/axios";
 import Paw from "@/public/img/Pet/paw.png";
 
-const handleChangeClick = (petId: any) => {
-  const router = useRouter();
-  console.log(`Details for rescue ${petId}`);
-  router.push(`/Adopt/${petId}`);
-};
+
 
 export default function Product_Main() {
   const [gender, setGender] = useState("");

@@ -41,7 +41,7 @@ export default function Product_Main(){
                 <div className='font-montserrat text-2xl font-semibold my-10'>Sản phẩm nổi bật</div>
                 <div className='flex space-x-4'>
                     {sampleProducts.map((item) => (
-                        <Product_Frame name={item.name} price={item.price} discount_price={item.discount_price} image={item.image.url} id={item._id}/>
+                        <Product_Frame name={item.name} price={item.price} discount_price={item.discount_price} image={item.image.url} id={item._id} key={item._id}/>
                             ))}
   
                 </div>
@@ -51,7 +51,7 @@ export default function Product_Main(){
                 <div className='font-montserrat text-2xl font-semibold my-10'>Sản phẩm nổi bật</div>
                 <div className='flex space-x-4'>
                     {sampleProducts.map((item) => (
-                        <Product_Frame name={item.name} price={item.price} discount_price={item.discount_price} image={item.image.url} id={item._id}/>
+                        <Product_Frame name={item.name} price={item.price} discount_price={item.discount_price} image={item.image.url} id={item._id} key={item._id}/>
                             ))}
   
                 </div>

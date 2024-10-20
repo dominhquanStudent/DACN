@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import getInfo from "@/hooks/getInfo";
 import _ from 'lodash'; // Import lodash for debouncing
 import LoadingModal from "@/app/Component/Loading";
-
 import ErrorModal from "@/app/Component/Error";
 export default function Cart() {
   //Handle loading and complete
@@ -21,9 +20,7 @@ export default function Cart() {
   const [accountData, setAccountData] = useState("");
   // Get account data upon access
     const jwt = getCookie("jwt");
-    if (!jwt) {
-    return <ErrorModal error="NOT_LOGGED_IN" setError={setError}></ErrorModal>;
-    }
+    
 
 
   // Get cart data
@@ -45,7 +42,7 @@ export default function Cart() {
       fetchCartData();
   } ,[]);
 
-
+  
   // Calculate total price
   const [totalPrice, setTotalPrice] = useState(0);
   const calculateTotalPrice = (products) => {
@@ -228,7 +225,7 @@ export default function Cart() {
       }
     }
   }, [totalPrice, voucherInfo]);
-
+  
   return (
     <>
       <Header />

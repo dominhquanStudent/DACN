@@ -9,8 +9,7 @@ const menuItems = [
 ];
 
 function Sidebar() {
-    const pathname = usePathname(); // Call usePathname at the top level of the component
-
+    const pathname = usePathname();
     return (
         <div className='flex flex-col w-1/5 mt-12 space-y-6'>
             {menuItems.map((item) => (
