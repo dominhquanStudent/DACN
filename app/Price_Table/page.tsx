@@ -111,7 +111,7 @@ export default function Booking() {
                         <th scope="col" className="px-6 py-3">
                           Dịch vụ
                         </th>
-                        <th scope="col" className="px-6 py-3" colspan="2">
+                        <th scope="col" className="px-6 py-3" colSpan={2}>
                           Giá tiền
                         </th>
                       </tr>
@@ -153,7 +153,7 @@ export default function Booking() {
                         <th scope="col" className="px-6 py-3">
                           Dịch vụ
                         </th>
-                        <th scope="col" className="px-6 py-3" colspan="2">
+                        <th scope="col" className="px-6 py-3" colSpan={2}>
                           Giá tiền
                         </th>
                       </tr>
@@ -203,7 +203,7 @@ export default function Booking() {
         <div className="flex flex-col items-center  min-h-screen">
           <h2 className="mb-4 text-orange-500 font-bold">Đặt lịch ngay</h2>
           <div className="p-4">
-            <Calendar onChange={setDate} value={date} />
+            <Calendar onChange={(value) => setDate(value as Date)} value={date} />
           </div>
           <div className="p-4">
             <img src={logo.src} alt="Logo" className="w-60" />

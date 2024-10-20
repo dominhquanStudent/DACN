@@ -4,7 +4,7 @@ import SearchBar from "./searchbar";
 import { useState, useEffect } from "react";
 import notification from "@/public/img/Header/notification.png";
 import ShoppingCart from "@/public/img/Header/Shopping Cart.png";
-import Logout from "@/public/img/Logouthl.svg";
+import Logout from "@/public/img/logouthl.svg";
 import User from "@/public/img/Header/User.png";
 import Link from "next/link";
 import { deleteCookie } from "cookies-next";
