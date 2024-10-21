@@ -9,6 +9,7 @@ import Paw from "@/public/img/Pet/paw.png";
 
 
 export default function Product_Main() {
+  const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [species, setSpecies] = useState(""); // State for species filter
@@ -31,7 +32,7 @@ export default function Product_Main() {
   useEffect(() => {
     const fetchPets = async () => {
       try {
-        const response = await axios.get("/pet/list");
+        const response = await axios.get(`${baseURL}/pet/list`);
         console.log(response.data);
         setShownProducts(response.data.pets);
       } catch (error) {
