@@ -16,7 +16,7 @@ function formatDate(dateString: string): string {
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 }
-
+const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 function PetDetail({ params }: { params: { Detail: string } }) {
   const petId = params.Detail;
   // const [data, setData] = useState<any>({});
@@ -34,7 +34,8 @@ function PetDetail({ params }: { params: { Detail: string } }) {
   useEffect(() => {
     const fetchPetData = async (id: any) => {
       try {
-        const response = await axios.get(`/pet/${petId}`);
+        
+        const response = await axios.get(`${baseURL}/pet/${petId}`);
         const petData = response.data;
         console.log("API Response:", petData); // Log the API response
         setData(petData.pet);

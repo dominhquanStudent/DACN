@@ -1,19 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Header from "@/app/Component/Header/Header";
 import Footer from "@/app/Component/Footer/Footer";
 import Pet_Frame from "../Component/Adopt/Pet_Frame";
 import axios from "@/api/axios";
 import Paw from "@/public/img/Pet/paw.png";
 
-const handleChangeClick = (petId: any) => {
-  const router = useRouter();
-  console.log(`Details for rescue ${petId}`);
-  router.push(`/Adopt/${petId}`);
-};
+
 
 export default function Product_Main() {
+  const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [species, setSpecies] = useState(""); // State for species filter
@@ -36,7 +32,7 @@ export default function Product_Main() {
   useEffect(() => {
     const fetchPets = async () => {
       try {
-        const response = await axios.get("/pet/list");
+        const response = await axios.get(`${baseURL}/pet/list`);
         console.log(response.data);
         setShownProducts(response.data.pets);
       } catch (error) {

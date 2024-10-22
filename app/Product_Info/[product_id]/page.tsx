@@ -46,8 +46,8 @@ export default function ProductDetailPage({
   useEffect(() => {
     const fetchProductData = async () => {
       try {
-        
-        const response = await axios.get(`/product/${productId}`);
+        const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const response = await axios.get(`${baseURL}/product/${productId}`);
         const productData = response.data;
         setData(productData.product);
         setTotalPrice(productData.product.discount_price);
@@ -57,8 +57,8 @@ export default function ProductDetailPage({
     };
     const fetchReviews = async () => {
       try {
-        
-        const response = await axios.get(`/review/${productId}`);
+        const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const response = await axios.get(`${baseURL}/review/${productId}`);     
         setReviews(response.data.review);
         
       } catch (error) {
@@ -124,8 +124,8 @@ export default function ProductDetailPage({
         image: [], // Add image URLs if any
         user_avatar: accountData.avatar.url,
       };
-      
-      const response = await axios.post('/review/add', reviewInfo);
+      const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const response = await axios.post(`${baseURL}/review/add`, reviewInfo);
       const newReview = {
         ...response.data.review,
         user_name: accountData.userName, // Ensure user name is included
@@ -165,8 +165,8 @@ export default function ProductDetailPage({
         quantity: amount,
        
       };
-      const response = await axios.post('/cart/addProduct', cartItem);
-    
+      const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const response = await axios.post(`${baseURL}/cart/addProduct`, cartItem);  
       setIsComplete(true);
       console.log(response.data);
     } catch (error) {

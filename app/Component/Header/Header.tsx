@@ -4,7 +4,7 @@ import SearchBar from "./searchbar";
 import { useState, useEffect } from "react";
 import notification from "@/public/img/Header/notification.png";
 import ShoppingCart from "@/public/img/Header/Shopping Cart.png";
-import Logout from "@/public/img/Logouthl.svg";
+import Logout from "@/public/img/logouthl.svg";
 import User from "@/public/img/Header/User.png";
 import Link from "next/link";
 import { deleteCookie } from "cookies-next";
@@ -21,7 +21,8 @@ export default function Header(props: any) {
 
     // Call the logout endpoint
     try {
-      await axios.post('/auth/logout');
+      const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+      await axios.post(`${baseURL}/auth/logout`);
     } catch (error) {
       console.error('Error logging out:', error);
     }

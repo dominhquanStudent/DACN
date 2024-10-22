@@ -3,7 +3,8 @@ import { getCookie } from 'cookies-next';
 
 // Create an Axios instance
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  //baseURL:'https://petcare-be-lilac.vercel.app',
   withCredentials: true, // Ensure all requests include credentials
 });
 
