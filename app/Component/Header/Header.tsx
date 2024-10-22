@@ -21,7 +21,8 @@ export default function Header(props: any) {
 
     // Call the logout endpoint
     try {
-      await axios.post('/auth/logout');
+      const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+      await axios.post(`${baseURL}/auth/logout`);
     } catch (error) {
       console.error('Error logging out:', error);
     }
