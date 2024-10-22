@@ -18,7 +18,7 @@ const login = async (email, password) => {
 
 const refreshToken = async () => {
   try {
-    const response = await axios.get(`/auth/refreshtoken`, { withCredentials: true });
+    const response = await axios.get(`${baseURL}/auth/refreshtoken`, { withCredentials: true });
     if (response.data.jwt) {
       deleteCookie("jwt");
       setCookie("jwt", response.data.jwt, { maxAge: 60 * 60 * 24 });
