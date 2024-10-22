@@ -3,7 +3,7 @@ import { getCookie, setCookie, deleteCookie } from "cookies-next";
 
 const login = async (email, password) => {
   try {
-    const response = await axios.post(`/auth/login`, { email, password }, { withCredentials: true });
+    const response = await axios.post(`${baseURL}/auth/login`, { email, password }, { withCredentials: true });
     console.log('Response Headers:', response.headers);
     if (response.data.jwt) {
       deleteCookie("jwt");
