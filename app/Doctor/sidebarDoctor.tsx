@@ -2,13 +2,12 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
 const menuItems = [
- 
     { name: 'Quản lý lịch hẹn', path: '/Doctor/Appointment', icon: '/img/icon/appointment.svg', iconhl: '/img/icon/appointment_hl.svg' },
     { name: 'Bản tin', path: '/Doctor/Blog', icon: '/img/icon/order.svg', iconhl: '/img/icon/order_hl.svg' },
-
-
 ];
+
 function Sidebar() {
     const pathname = usePathname();
     return (
@@ -26,7 +25,7 @@ function Sidebar() {
                 </div>
             ))}
         </div>
-    )
+    );
 }
 
-export default Sidebar
+export default Sidebar;
