@@ -2,6 +2,12 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
 const menuItems = [
+    { name: 'Dash Board', path: '/Admin/DashBoard', icon: '/img/icon/dashboard.svg', iconhl: '/img/icon/dashboard_hl.svg' },
+    { name: 'Quản lý đơn hàng', path: '/Admin/Order', icon: '/img/icon/order.svg', iconhl: '/img/icon/order_hl.svg' },
+    { name: 'Quản lý sản phẩm', path: '/Admin/Product', icon: '/img/icon/product.svg', iconhl: '/img/icon/product_hl.svg' },
+    { name: 'Quản lý Voucher', path: '/Admin/Voucher', icon: '/img/icon/voucher.svg', iconhl: '/img/icon/voucher_hl.svg' },
+    { name: 'Quản lý lịch hẹn', path: '/Admin/Appointment', icon: '/img/icon/appointment.svg', iconhl: '/img/icon/appointment_hl.svg' },
+    { name: 'Yêu cầu cứu hộ', path: '/Admin/Rescue', icon: '/img/icon/rescue.svg', iconhl: '/img/icon/rescue_hl.svg' },
     { name: 'Quản lý nhận nuôi', path: '/Admin/Adoption', icon: '/img/icon/adopt.svg', iconhl: '/img/icon/adopt_hl.svg' },
     { name: 'Quản lý thú cưng', path: '/Admin/Pet', icon: '/img/icon/pet.svg', iconhl: '/img/icon/pet_hl.svg' },
     { name: 'Tin nhắn', path: '/Admin/Message', icon: '/img/icon/message.svg', iconhl: '/img/icon/message_hl.svg' },
