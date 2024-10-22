@@ -40,7 +40,7 @@ function Page() {
     useEffect(() => {
         const fetchOrderData = async () => {
             try {
-                const response = await axios.get(`/order/listUser`);
+                const response = await axios.get(`/order/list/User`);
                 setData(response.data.orders);
             } catch (error) {
                 console.error("Error fetching orders:", error);
