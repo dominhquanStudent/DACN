@@ -147,6 +147,11 @@ export default function Header(props: any) {
               Yêu cầu cứu hộ
             </Link>
           </li>
+          <li className={`transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95 ${pathname === '/Blog' ? "text-yellow-500" : ""}`}>
+            <Link className="hover:text-yellow-500" href="/Blog">
+              Tin tức
+            </Link>
+          </li>
           <li className={`transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95 ${pathname === '/Main' ? "text-yellow-500" : ""}`}>
             <Link className="hover:text-yellow-500" href="/Main">
               Về chúng tôi

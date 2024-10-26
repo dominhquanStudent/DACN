@@ -129,39 +129,39 @@ function Booking() {
             <img src={Doggo1.src} alt="Doggo1" className="w-60" />
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-8 w-1/2 mx-auto">
+        <form className="bg-white rounded-lg shadow-md p-8 w-1/2 mx-auto">
           <h2 className="text-2xl font-bold mb-4 text-center">
             Dịch vụ chăm sóc thú cưng
           </h2>
           <h2 className="text-lg font-semibold mb-4 ">Thông tin khách hàng</h2>
           <div className="flex items-center space-x-8">
-            <label className="flex-1">Tên khách hàng</label>
+            <label className="flex-1">Họ tên <span className="text-red-500">*</span></label>
             <input
               type="text"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
-              placeholder="Nhập tên khách hàng"
+              placeholder="Nguyễn Văn A"
               className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
             />
           </div>
 
           <div className="flex items-center space-x-8">
-            <label className="flex-1">SĐT</label>
+            <label className="flex-1">SĐT <span className="text-red-500">*</span></label>
             <input
               type="text"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="Nhập số điện thoại"
+              placeholder="0123456789"
               className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
             />
           </div>
           <div className="flex items-center space-x-8">
-            <label className="flex-1">Địa chỉ</label>
+            <label className="flex-1">Địa chỉ <span className="text-red-500">*</span></label>
             <input
               type="text"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              placeholder="Nhập địa chỉ"
+              placeholder="247 Lý Thường Kiệt, Quận 10, TP.HCM"
               className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
             />
           </div>
@@ -285,7 +285,7 @@ function Booking() {
               Lưu
             </button>
         </div> */}
-        </div>
+        </form>
       </div>
       <Footer />
     </>

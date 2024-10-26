@@ -11,18 +11,10 @@ import { getCookie } from "cookies-next";
 import getInfo from "@/hooks/getInfo";
 import logo from "../../../../public/img/Booking/petcare.png";
 import logoname from "../../../../public/img/Booking/pc.jpg";
-import Doggo1 from "../../../../public/img/Greet page/Doggo1.png";
-import { current } from "@reduxjs/toolkit";
-import { request } from "http";
+
 import ErrorModal from "@/app/Component/Error";
 import LoadingModal from "@/app/Component/Loading";
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
-}
+
 
 
  ///////////////////////////////
