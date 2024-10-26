@@ -9,10 +9,32 @@ import Link from "next/link";
 import "react-calendar/dist/Calendar.css"; // Import the calendar CSS
 
 export default function Booking() {
-  const [activeContainer, setActiveContainer] = useState(1);
   const [date, setDate] = useState(new Date()); // State for selected date
+  interface Service {
+    service: string;
+    price1: string;
+    price2: string;
+  }
 
-  useEffect(() => {}, []);
+  const [services, setServices] = useState<Service[]>([]);
+  const [spaServices, setSpaServices] = useState<Service[]>([]);
+
+  useEffect(() => {
+    // Generate services content once on the client side
+    const generatedServices = [...Array(7)].map((_, index) => ({
+      service: generateRandomService(index),
+      price1: generateRandomPrice(index),
+      price2: generateRandomPrice2(index),
+    }));
+    setServices(generatedServices);
+
+    const generatedSpaServices = [...Array(5)].map((_, index) => ({
+      service: generateRandomServiceSpa(index),
+      price1: generateRandomPriceSpa(index),
+      price2: generateRandomPriceSpa2(index),
+    }));
+    setSpaServices(generatedSpaServices);
+  }, []);
 
   // Function to generate random service name
   const generateRandomService = (index: number) => {
@@ -117,7 +139,7 @@ export default function Booking() {
                       </tr>
                     </thead>
                     <tbody>
-                      {[...Array(7)].map((_, rowIndex) => (
+                      {services.map((service, rowIndex) => (
                         <tr
                           key={rowIndex}
                           className={`bg-white border-b  dark:bg-gray-800 dark:border-gray-700`}
@@ -126,14 +148,10 @@ export default function Booking() {
                             scope="row"
                             className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                           >
-                            {generateRandomService(rowIndex)}
+                            {service.service}
                           </th>
-                          <td className="px-6 py-4">
-                            {generateRandomPrice(rowIndex)}
-                          </td>
-                          <td className="px-6 py-4">
-                            {generateRandomPrice2(rowIndex)}
-                          </td>
+                          <td className="px-6 py-4">{service.price1}</td>
+                          <td className="px-6 py-4">{service.price2}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -159,7 +177,7 @@ export default function Booking() {
                       </tr>
                     </thead>
                     <tbody>
-                      {[...Array(5)].map((_, rowIndex) => (
+                      {spaServices.map((service, rowIndex) => (
                         <tr
                           key={rowIndex}
                           className={`bg-white ${
@@ -170,14 +188,10 @@ export default function Booking() {
                             scope="row"
                             className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                           >
-                            {generateRandomServiceSpa(rowIndex)}
+                            {service.service}
                           </th>
-                          <td className="px-6 py-4">
-                            {generateRandomPriceSpa(rowIndex)}
-                          </td>
-                          <td className="px-6 py-4">
-                            {generateRandomPriceSpa2(rowIndex)}
-                          </td>
+                          <td className="px-6 py-4">{service.price1}</td>
+                          <td className="px-6 py-4">{service.price2}</td>
                         </tr>
                       ))}
                     </tbody>

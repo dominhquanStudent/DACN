@@ -32,6 +32,7 @@ const useAuth = () => {
     try {
       const data = await authService.login(email, password);
       setAuth(data);
+      return data;
     } catch (error) {
       console.error('Failed to login', error);
     }
@@ -40,7 +41,7 @@ const useAuth = () => {
   const isAuthenticated = authService.isAuthenticated();
   const getID = auth?.id;
   
-  return { auth, login, isAuthenticated, getID };
+  return { auth, setAuth, login, isAuthenticated, getID };
 };
 
 export default useAuth;

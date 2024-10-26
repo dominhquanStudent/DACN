@@ -42,7 +42,7 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             {loadWhat=="SEND_BOOKING_REQUEST"&& <p>Đã đặt lịch thành công!</p>}
             {loadWhat=="SEND_RESCUE_REQUEST"&& <p>Đã gửi yêu cầu cứu hộ!</p>}
             {/* CART LOADING */}
-            {loadWhat=="ORDERING"&& <p>Đã đặt hàng thành công</p>}
+            {loadWhat=="ORDERING"&& <p>Đã đặt hàng thành công, vui lòng thanh toán theo phương thức đã chọn!</p>}
             <button
               className="mt-4 px-4 py-2 bg-green-500 text-white rounded"
               onClick={handleClose}
