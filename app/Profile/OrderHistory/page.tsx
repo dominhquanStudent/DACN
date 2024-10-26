@@ -138,7 +138,7 @@ function Page() {
                             onClick={() => handleSort("Đã hủy")}>Đã hủy</button>
                     </div>
                     {
-                        data
+                        currentOrders
                             .filter(order => sort === 'Tất cả' || order.order_status === sort)
                             .map((order, index) => (
                                 <div key={index} className="flex flex-col mt-4 py-2 border border-[#969090] rounded-md shadow-xl font-nunito w-full">

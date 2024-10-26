@@ -4,7 +4,7 @@ import axios from "@/api/axios";
 import StarRating from "./star_rating";
 import ProductCard from "./ProductFrame_Main";
 import ErrorModal from "@/app/Component/Error";
-
+import "@/app/Component/CheckboxStyles.css";
 const ProductContent = () => {
   const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
