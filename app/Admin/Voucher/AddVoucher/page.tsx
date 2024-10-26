@@ -6,6 +6,8 @@ import Header from "@/app/Admin/Header";
 import axios from "@/api/axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import ErrorModal from "@/app/Component/Error";
+import LoadingModal from "@/app/Component/Loading";
 
 function VoucherAdd() {
   const router = useRouter();
@@ -21,6 +23,12 @@ function VoucherAdd() {
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("");
   const [employee_id, setEmployeeId] = useState("66e5800a52098d8bd1397010");
+  //////
+  const [isLoading, setIsLoading] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [loadWhat, setLoadWhat] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  /////
   const handleSaveClick = async () => {
     try {
       const data = {
@@ -39,8 +47,29 @@ function VoucherAdd() {
         status,
         employee_id,
       };
+      if (
+        !name ||
+        !quantity ||
+        !beginDate ||
+        !endDate ||
+        !code ||
+        !discountType ||
+        !discountValue ||
+        !minRequire ||
+        !maxDiscount ||
+        !description ||
+        !status ||
+        !employee_id
+      ) {
+        setError("LACK_INFO");
+        return;
+      }
+      setLoadWhat("SEND_ADDPET_REQUEST");
+      setIsLoading(true);
       const response = await axios.post("/voucher/add", data);
-      toast.success("Voucher saved successfully!");
+      setIsLoading(false);
+      setIsComplete(true);
+      // const response = await axios.post("/voucher/add", data);
       router.push("/Admin/Voucher");
     } catch (error) {
       toast.error("Error saving voucher!");
@@ -50,6 +79,13 @@ function VoucherAdd() {
 
   return (
     <div className="flex flex-col w-full justify-center items-center">
+      <ErrorModal error={error} setError={setError} />
+      <LoadingModal
+        isLoading={isLoading}
+        isComplete={isComplete}
+        setIsComplete={setIsComplete}
+        loadWhat={loadWhat}
+      />
       <Header />
       <div className="flex w-full">
         <Sidebar />

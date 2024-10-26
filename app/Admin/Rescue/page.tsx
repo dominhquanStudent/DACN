@@ -16,7 +16,7 @@ function formatDate(dateString: string): string {
 function Rescue() {
   const [rescues, setRescues] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const rescuesPerPage = 6;
+  const rescuesPerPage = 12;
   const Router = useRouter();
 
   useEffect(() => {

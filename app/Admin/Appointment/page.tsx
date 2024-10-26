@@ -99,7 +99,7 @@ function Appointment() {
     if (filter === "past") return isPast(appointment.date);
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const appointmentsPerPage = 6;
+  const appointmentsPerPage = 12;
   // Calculate the appointments to display on the current page
   const indexOfLastAppointment = currentPage * appointmentsPerPage;
   const indexOfFirstAppointment = indexOfLastAppointment - appointmentsPerPage;

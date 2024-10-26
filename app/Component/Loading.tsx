@@ -29,6 +29,8 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             {loadWhat=="ADD_TO_CART"&& <p>Đang thêm vào giỏ hàng!</p>}
             {loadWhat=="ADD_COMMENT"&& <p>Đang đăng comment!</p>}
             {loadWhat=="SEND_ADOPT_REQUEST"&& <p>Đang gửi yêu cầu nhận thú cưng!</p>}
+
+
             {loadWhat=="ORDERING"&& <p>Đang đặt hàng</p>}
           </div>
         )}
@@ -41,6 +43,9 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             {loadWhat=="SEND_ADOPT_REQUEST"&& <p>Đã gửi yêu cầu nhận thú cưng!</p>}
             {loadWhat=="SEND_BOOKING_REQUEST"&& <p>Đã đặt lịch thành công!</p>}
             {loadWhat=="SEND_RESCUE_REQUEST"&& <p>Đã gửi yêu cầu cứu hộ!</p>}
+
+            {loadWhat=="SEND_ADDPET_REQUEST"&& <p>Đã thêm thành công!</p>}
+
             {/* CART LOADING */}
             {loadWhat=="ORDERING"&& <p>Đã đặt hàng thành công, vui lòng thanh toán theo phương thức đã chọn!</p>}
             <button

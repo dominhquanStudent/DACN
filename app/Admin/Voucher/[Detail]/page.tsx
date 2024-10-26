@@ -151,7 +151,7 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                     id="beginDate"
                     type="date"
                     value={formatDate(data.beginDate)}
-                    min={new Date().toISOString().split("T")[0]}
+                    // min={new Date().toISOString().split("T")[0]}
                     onChange={handleInputChange}
                     disabled={!isEditable}
                   />

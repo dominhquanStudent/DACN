@@ -71,7 +71,7 @@ function VoucherList() {
     router.push('/Admin/Voucher/AddVoucher');
   };
   const [currentPage, setCurrentPage] = useState(1);
-  const vouchersPerPage = 1;
+  const vouchersPerPage = 10;
   // Calculate the vouchers to display on the current page
   const indexOfLastVoucher = currentPage * vouchersPerPage;
   const indexOfFirstVoucher = indexOfLastVoucher - vouchersPerPage;

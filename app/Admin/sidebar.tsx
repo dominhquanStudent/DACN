@@ -10,7 +10,7 @@ const menuItems = [
     { name: 'Yêu cầu cứu hộ', path: '/Admin/Rescue', icon: '/img/icon/rescue.svg', iconhl: '/img/icon/rescue_hl.svg' },
     { name: 'Quản lý nhận nuôi', path: '/Admin/Adoption', icon: '/img/icon/adopt.svg', iconhl: '/img/icon/adopt_hl.svg' },
     { name: 'Quản lý thú cưng', path: '/Admin/Pet', icon: '/img/icon/pet.svg', iconhl: '/img/icon/pet_hl.svg' },
-    { name: 'Tin nhắn', path: '/Admin/Message', icon: '/img/icon/message.svg', iconhl: '/img/icon/message_hl.svg' },
+    { name: 'Tin nhắn', path: 'https://1240.3cx.cloud/#/chat', icon: '/img/icon/message.svg', iconhl: '/img/icon/message_hl.svg', external: true },
     { name: 'Hồ sơ', path: '/Admin/Profile', icon: '/img/icon/admin.svg', iconhl: '/img/icon/admin_hl.svg' },
     { name: 'Cài đặt', path: '/Admin/Setting', icon: '/img/icon/setting.svg', iconhl: '/img/icon/setting_hl.svg' },
 ];
@@ -22,14 +22,25 @@ function Sidebar() {
         <div className='flex flex-col w-1/5 mt-12 space-y-6'>
             {menuItems.map((item) => (
                 <div key={item.path} className='flex items-center ml-12 font-nunito text-md text-[#B1B1B1]'>
-                    <Link href={item.path} className='flex items-center'>
-                        <div>
-                            <img src={pathname.includes(item.path) ? item.iconhl : item.icon} className='h-6 w-6' alt={item.name} />
-                        </div>
-                        <div className={`ml-4 ${pathname.includes(item.path) ? "text-[#EDB24E] font-bold" : ""}`}>
-                            {item.name}
-                        </div>
-                    </Link>
+                    {item.external ? (
+                        <a href={item.path} target="_blank" rel="noopener noreferrer" className='flex items-center'>
+                            <div>
+                                <img src={pathname.includes(item.path) ? item.iconhl : item.icon} className='h-6 w-6' alt={item.name} />
+                            </div>
+                            <div className={`ml-4 ${pathname.includes(item.path) ? "text-[#EDB24E] font-bold" : ""}`}>
+                                {item.name}
+                            </div>
+                        </a>
+                    ) : (
+                        <Link href={item.path} className='flex items-center'>
+                            <div>
+                                <img src={pathname.includes(item.path) ? item.iconhl : item.icon} className='h-6 w-6' alt={item.name} />
+                            </div>
+                            <div className={`ml-4 ${pathname.includes(item.path) ? "text-[#EDB24E] font-bold" : ""}`}>
+                                {item.name}
+                            </div>
+                        </Link>
+                    )}
                 </div>
             ))}
         </div>

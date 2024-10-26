@@ -6,9 +6,15 @@ import Header from "@/app/Admin/Header";
 import axios from "@/api/axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import ErrorModal from "@/app/Component/Error";
+import LoadingModal from "@/app/Component/Loading";
 
 function PetAdd() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [loadWhat, setLoadWhat] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [petName, setPetName] = useState("");
   const [pet_id, setpet_id] = useState("");
   const [gender, setGender] = useState("");
@@ -22,6 +28,7 @@ function PetAdd() {
   const [image, setImage] = useState({ public_id: "", url: "" });
 
   const handleSaveClick = async () => {
+
     try {
       const data = {
         petName,
@@ -31,12 +38,19 @@ function PetAdd() {
         species,
         vaccinated,
         description,
-        // adoptStatus,loài
-        // recieveDay,
+
         image,
       };
+      console.log("Data:", data);
+      if (!petName || !gender || !age || !race || !species || !vaccinated || !description || !image.url) {
+        setError("LACK_INFO");
+        return;}
+      setLoadWhat("SEND_ADDPET_REQUEST");
+      setIsLoading(true);
       const response = await axios.post("/pet/add", data);
-      toast.success("Pet saved successfully!");
+      setIsLoading(false);
+      setIsComplete(true);
+
       router.push("/Admin/Pet");
     } catch (error) {
       toast.error("Error saving pet!");
@@ -57,8 +71,11 @@ function PetAdd() {
   };
 
   return (
+    
     <div className="flex flex-col w-full justify-center items-center">
       {/* //Header */}
+      <ErrorModal error={error} setError={setError} />
+      <LoadingModal isLoading={isLoading} isComplete={isComplete} setIsComplete={setIsComplete} loadWhat={loadWhat} />
       <Header></Header>
       <div className="flex w-full">
         <Sidebar></Sidebar>
