@@ -12,14 +12,13 @@ function Page() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const handleLogin = async (e: any) => {
-      e.preventDefault();
-      await login(email, password);
-      if (isAuthenticated) {
-        if (auth?.role === "admin") { router.push("/Admin"); }
-        else if (auth?.role === "doctor") { router.push("/Doctor"); }
-        else { router.push("/Main"); }
-      }
-    };
+    e.preventDefault();
+    const response = await login(email, password);
+    console.log(response);
+    if (response.role === "admin") { router.push("/Admin"); }
+    else if (response.role === "doctor") { router.push("/Doctor"); }
+    else { router.push("/Main"); }
+  };
 
   return (
     <div className="flex flex-col w-full ">

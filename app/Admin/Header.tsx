@@ -4,14 +4,21 @@ import Link from 'next/link';
 import { deleteCookie } from "cookies-next";
 import Logout from "@/public/img/logouthl.svg";
 import axios from "@/api/axios";
+import useAuth from '@/hooks/useAuth';
 function Header(avatar: any) {
+    const {setAuth} = useAuth();
     const handleLogout = async () => {
         try {
-            await axios.post('/auth/logout');
+            const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+            await axios.post(`${baseURL}/auth/logout`);
+            deleteCookie("jwt");
+            deleteCookie("refreshToken",{ httpOnly: true, sameSite: 'none', secure: true, path: '/'});
+            // Clear the auth state
+            setAuth(null);
           } catch (error) {
             console.error('Error logging out:', error);
           }
-        window.location.href = '/login';
+        window.location.href = '/Login';
     };
     return (
         <div className='flex justify-between items-center w-full'>

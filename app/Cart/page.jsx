@@ -3,15 +3,18 @@ import Header from "@/app/Component/Header/Header";
 import Footer from "@/app/Component/Footer/Footer";
 import Product_Frame from "./Product_Frame";
 import Momo from "@/public/img/Momo.png";
+import ZaloPay from "@/public/img/ZaloPay.png";
 import axios from "@/api/axios";
 import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
-import getInfo from "@/hooks/getInfo";
 import _ from 'lodash'; // Import lodash for debouncing
 import LoadingModal from "@/app/Component/Loading";
+import moment from "moment";
 import ErrorModal from "@/app/Component/Error";
+import { useRouter } from "next/navigation";
 export default function Cart() {
   //Handle loading and complete
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [loadWhat, setLoadWhat] = useState("");
@@ -19,8 +22,8 @@ export default function Cart() {
   // Get account data
   const [accountData, setAccountData] = useState("");
   // Get account data upon access
-    const jwt = getCookie("jwt");
-    
+  const jwt = getCookie("jwt");
+
 
 
   // Get cart data
@@ -39,10 +42,10 @@ export default function Cart() {
     setCartData(response.data);
   };
   useEffect(() => {
-      fetchCartData();
-  } ,[]);
+    fetchCartData();
+  }, []);
 
-  
+
   // Calculate total price
   const [totalPrice, setTotalPrice] = useState(0);
   const calculateTotalPrice = (products) => {
@@ -179,8 +182,21 @@ export default function Cart() {
       setIsLoading(true);
       setLoadWhat("ORDERING");
       const response = await axios.post("order/cartToOrder", order);
+      console.log(response.data);
       setIsLoading(false);
+      if (paymentMethod != "Trực tiếp") {
+        const payment_data = {
+          order_id: response.data.order._id,
+          total_price: totalPriceafterDiscount,
+          payment_id: response.data.order.payment_id,
+        }
+        const payment = await axios.post("payment/ZALO", payment_data);
+        if (payment.data.order_url) {
+          window.open(payment.data.order_url, '_blank');
+        }
+      }
       setIsComplete(true);
+      router.push("/Cart");
       fetchCartData();
     } catch (error) {
       console.error("Error placing order:", error);
@@ -225,7 +241,7 @@ export default function Cart() {
       }
     }
   }, [totalPrice, voucherInfo]);
-  
+
   return (
     <>
       <Header />
@@ -268,8 +284,8 @@ export default function Cart() {
               <div className="overflow-y-auto h-96 snap-y snap-mandatory hide-scrollbar">
                 {cartData && cartData.cart && cartData.cart.product_list.map((product, index) => (
                   <div key={product.product_id} className="snap-start">
-                    <Product_Frame product={product} fetchCartData={fetchCartData}                   
-                      onSelectChange={(selected) => updateProductStatus(product.product_id, selected)}/>
+                    <Product_Frame product={product} fetchCartData={fetchCartData}
+                      onSelectChange={(selected) => updateProductStatus(product.product_id, selected)} />
                   </div>
                 ))}
               </div>
@@ -293,20 +309,30 @@ export default function Cart() {
                       name="payment"
                       value="Trực tiếp"
                       className="mr-2 leading-tight"
-                      onChange={() => setPaymentMethod("Trực Tiếp")}
+                      onChange={() => setPaymentMethod("Trực tiếp")}
                       defaultChecked
                     />
                     <span className="text-base">Thanh toán khi nhận hàng</span>
                   </label>
+                  {/* <label className=" mt-2 flex items-center">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="Momo"
+                      className="mr-2 leading-tight"
+                      onChange={() => setPaymentMethod("Momo")}
+                    />
+                    <img src={Momo.src} alt="Momo" className="text-base w-12 h-12" />
+                  </label> */}
                   <label className=" mt-2 flex items-center">
                     <input
                       type="radio"
                       name="payment"
-                      value="momo"
+                      value="ZaloPay"
                       className="mr-2 leading-tight"
-                      onChange={() => setPaymentMethod("Momo")}
+                      onChange={() => setPaymentMethod("ZaloPay")}
                     />
-                    <img src={Momo.src} alt="Momo" className="text-base" />
+                    <img src={ZaloPay.src} alt="Momo" className="text-base w-12 h-12" />
                   </label>
                 </div>
               </div>
@@ -375,13 +401,13 @@ export default function Cart() {
                 </div>
                 {/* Purchase button */}
                 <div className="mt-4 border-t border-gray-300 pt-4">
-                <button
-                      className={`w-full p-2 rounded-md ${cartData.cart.product_list.length === 0 ? 'bg-gray-500' : 'bg-blue-500 text-white'}`}
-                      onClick={handleOrder}
-                      disabled={cartData.cart.product_list.length === 0}
-                    >
-                      Thanh toán
-                </button>
+                  <button
+                    className={`w-full p-2 rounded-md ${cartData.cart.product_list.length === 0 ? 'bg-gray-500' : 'bg-blue-500 text-white'}`}
+                    onClick={handleOrder}
+                    disabled={cartData.cart.product_list.length === 0}
+                  >
+                    Thanh toán
+                  </button>
                 </div>
               </div>
             </div>

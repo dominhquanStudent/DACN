@@ -2,11 +2,9 @@
 import Header from "@/app/Component/Header/Header";
 import Footer from '@/app/Component/Footer/Footer';
 import ProfileNav from "@/app/Component/ProfileNav/ProfileNav";
-import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import axios from '@/api/axios';
-import getInfo from "@/hooks/getInfo";
-
+import moment from "moment";
 interface Product {
     product_id: number;
     product_name: string;
@@ -25,6 +23,8 @@ interface Order {
     order_status: string;
     order_address: string;
     payment_method: string;
+    payment_id: string;
+    payment_url: string;
     employee_id: string;
     voucher_id: string[];
     total_price: number;
@@ -53,6 +53,32 @@ function Page() {
             const response = await axios.post(`/order/rebuy/${id}`);
         } catch (error) {
             console.error("Error rebuy orders:", error);
+        }
+    };
+    const handleRefund = async (order: Order) => {
+
+    };
+    const handlePayment = async (order: Order) => {
+        try {
+            const payment_data = {
+                order_id: order._id,
+                total_price: order.total_price,
+                payment_id: order.payment_id,
+            }
+            console.log(order.payment_id);
+            const payment = await axios.post("payment/ZALO", payment_data);
+            if (payment.data.return_code === 1) {
+                if (payment.data.order_url) {
+                    window.open(payment.data.order_url, '_blank');
+                }
+            } else if (payment.data.return_code != 1) {
+                const checkStatus = await axios.post(`payment/check_order_status/${order.payment_id}`);
+                if(checkStatus.data.return_code != 1){
+                    window.open(order.payment_url, '_blank');
+                }
+            }
+        } catch (error) {
+            console.error("Error payment orders:", error);
         }
     };
     const [currentPage, setCurrentPage] = useState(1);
@@ -100,8 +126,10 @@ function Page() {
                     <div className="flex w-full items-center justify-around border border-slate-200 rounded-md shadow-xl font-k2d text-lg">
                         <button className={`px-4 py-2 rounded w-full ${sort == "Tất cả" ? "text-[#EDB24E] font-bold" : ""}`}
                             onClick={() => handleSort("Tất cả")}>Tất cả</button>
-                        <button className={`px-4 py-2 rounded w-full ${sort == "Chưa xử lý" ? "text-[#EDB24E] font-bold" : ""}`}
-                            onClick={() => handleSort("Chưa xử lý")}>Chưa xử lý</button>
+                        <button className={`px-4 py-2 rounded w-full ${sort == "Chờ thanh toán" ? "text-[#EDB24E] font-bold" : ""}`}
+                            onClick={() => handleSort("Chờ thanh toán")}>Chờ thanh toán</button>
+                        <button className={`px-4 py-2 rounded w-full ${sort == "Chờ Xử lý" ? "text-[#EDB24E] font-bold" : ""}`}
+                            onClick={() => handleSort("Chờ Xử lý")}>Chờ Xử lý</button>
                         <button className={`px-4 py-2 rounded w-full ${sort == "Chờ giao hàng" ? "text-[#EDB24E] font-bold" : ""}`}
                             onClick={() => handleSort("Chờ giao hàng")}>Chờ giao hàng</button>
                         <button className={`px-4 py-2 rounded w-full ${sort == "Đã hoàn thành" ? "text-[#EDB24E] font-bold" : ""}`}
@@ -114,7 +142,10 @@ function Page() {
                             .filter(order => sort === 'Tất cả' || order.order_status === sort)
                             .map((order, index) => (
                                 <div key={index} className="flex flex-col mt-4 py-2 border border-[#969090] rounded-md shadow-xl font-nunito w-full">
-                                    <div className="text-lg font-bold py-2 text-right mr-16 text-[#ff0000]">{order.order_status}</div>
+                                    <div className="flex justify-between items-center py-2 mx-16">
+                                        <div className="text-sm font-bold text-left text-[#000000]">Mã đơn hàng: {order._id}</div>
+                                        <div className="text-lg font-bold text-right text-[#ff0000]">{order.order_status}</div>
+                                    </div>
                                     {order.product_list.map((product, productIndex) => (
                                         <div key={productIndex} className="flex flex-col w-full items-center">
                                             <div className='border border-[#C5C5CF] w-11/12 '></div>
@@ -135,13 +166,27 @@ function Page() {
                                     <div className='border border-[#C5C5CF] w-full '></div>
                                     <div className="flex justify-between py-2 w-full">
                                         <div className="flex items-center justify-center w-8/12">
+                                            {order.order_status === 'Đã hoàn thành' &&
+                                                <div className="w-1/2 flex justify-center">
+                                                    <button className="bg-[#FC0E0E] text-white font-nunito p-2 rounded-md w-1/2"
+                                                        onClick={() => handleRefund(order)}>Trả hàng</button>
+                                                </div>
+                                            }
+                                            {order.order_status === 'Chờ thanh toán' &&
+                                                <div className="w-1/2 flex justify-center">
+                                                    <button className="bg-[#FC0E0E] text-white font-nunito p-2 rounded-md w-1/2"
+                                                        onClick={() => handlePayment(order)}>Thanh toán</button>
 
+                                                </div>
+                                            }
+                                            {/* {order.order_status === 'Chờ Xử lý' && order.payment_method != 'Trực tiếp' && 
+                                            <div className="w-1/2 flex justify-center">
+                                                <button className="bg-[#FC0E0E] text-white font-nunito p-2 rounded-md w-1/2">Trả hàng</button>
+                                            </div>
+                                            } */}
                                             <div className="w-1/2 flex justify-center">
                                                 <button className="bg-[#EDB24E] text-white font-nunito p-2 rounded-md w-1/2"
                                                     onClick={() => handleReBuy(order._id)}>Mua lại</button>
-                                            </div>
-                                            <div className="w-1/2 flex justify-center">
-                                                <button className="bg-[#FC0E0E] text-white font-nunito p-2 rounded-md w-1/2">Trả hàng</button>
                                             </div>
                                         </div>
                                         <div className="flex-grow flex-col text-lg ml-4">

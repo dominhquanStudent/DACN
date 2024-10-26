@@ -14,7 +14,7 @@ import useAuth from '@/hooks/useAuth';
 import axios from "@/api/axios";
 export default function Header(props: any) {
   const pathname = usePathname();
-  const { auth, isAuthenticated } = useAuth();
+  const { auth, setAuth, isAuthenticated } = useAuth();
   const [showSublist1, setShowSublist1] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const handleLogout = async () => {
@@ -23,6 +23,10 @@ export default function Header(props: any) {
     try {
       const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
       await axios.post(`${baseURL}/auth/logout`);
+      deleteCookie("jwt");
+      deleteCookie("refreshToken",{ httpOnly: true, sameSite: 'none', secure: true, path: '/'});
+      // Clear the auth state
+      setAuth(null);
     } catch (error) {
       console.error('Error logging out:', error);
     }
