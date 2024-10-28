@@ -61,6 +61,19 @@ const ErrorModal = ({ error, setError }: any) => {
             {error == "LACK_INFO" && (
               <p>Vui lòng nhập đầy đủ thông tin!</p>
             )}
+
+
+            {/* ADD NEW */}
+            {error == "LACK_TITLE" && (
+              <p>Vui lòng nhập tiêu đề!</p>
+            )}
+            {error == "LACK_CONTENT" && (
+              <p>Vui lòng nhập nội dung!</p>
+            )}
+            {error == "LACK_IMAGE" && (
+              <p>Vui lòng chọn ảnh bìa!</p>
+            )}
+
             {error == "INVALID_DATE" && <p>Ngày hẹn không hợp lệ!</p>}
             {error == "PAGE_NOT_FOUND" && <p>Trang bạn tìm kiếm không có !</p>}
             <button

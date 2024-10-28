@@ -31,6 +31,13 @@
   border-top-color: #3498db;
   animation: spin 1s infinite linear;
 }
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 @keyframes spin {
   0% {

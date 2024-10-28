@@ -51,7 +51,7 @@ function PetAdd() {
       setIsLoading(false);
       setIsComplete(true);
 
-      router.push("/Admin/Pet");
+      // router.push("/Admin/Pet");
     } catch (error) {
       toast.error("Error saving pet!");
       console.error("Error saving pet:", error);

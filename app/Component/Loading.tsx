@@ -14,6 +14,15 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
     if(loadWhat=="SEND_RESCUE_REQUEST"){
       window.location.href = "/Main";
     }
+    if(loadWhat=="SEND_ADDNEW_REQUEST"){
+      window.location.href = "/Doctor/Blog";
+    }
+    if(loadWhat=="SEND_ADDPET_REQUEST"){
+      window.location.href = "/Admin/Pet";
+    }
+    if(loadWhat=="SEND_UPDATEPET_REQUEST"){
+      window.location.href = "/Admin/Pet";
+    }
   };
 
   if (!isLoading && !isComplete) {
@@ -32,6 +41,9 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
 
 
             {loadWhat=="ORDERING"&& <p>Đang đặt hàng</p>}
+
+          {loadWhat=="SEND_UPDATENEW_REQUEST"&& <p>Đã cập nhật thông tin bài viết!</p>}
+          {loadWhat=="SEND_ADDNEW_REQUEST"&& <p>Đang thêm bài viết!</p>}
           </div>
         )}
         {isComplete && (
@@ -45,6 +57,15 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             {loadWhat=="SEND_RESCUE_REQUEST"&& <p>Đã gửi yêu cầu cứu hộ!</p>}
 
             {loadWhat=="SEND_ADDPET_REQUEST"&& <p>Đã thêm thành công!</p>}
+            {loadWhat=="SEND_UPDATEPET_REQUEST"&& <p>Đã cập nhật thông tin thành công!</p>}
+
+
+
+          {/* // Doctor */}
+          {loadWhat=="SEND_ADDNEW_REQUEST"&& <p>Đã thêm bài viết thành công!</p>}
+          {loadWhat=="SEND_UPDATENEW_REQUEST"&& <p>Đã cập nhật thông tin bài viết!</p>}
+
+
 
             {/* CART LOADING */}
             {loadWhat=="ORDERING"&& <p>Đã đặt hàng thành công, vui lòng thanh toán theo phương thức đã chọn!</p>}
