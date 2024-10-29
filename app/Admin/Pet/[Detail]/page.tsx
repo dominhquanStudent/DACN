@@ -1,11 +1,13 @@
 "use client";
 import useSWR, { mutate } from "swr";
-
 import React, { useEffect, useState } from "react";
 import Sidebar from "@/app/Admin/sidebar";
 import Header from "@/app/Admin/Header";
 import axios from "@/api/axios";
 import { useRouter } from "next/navigation";
+import ErrorModal from "@/app/Component/Error";
+import LoadingModal from "@/app/Component/Loading";
+
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, "0");
@@ -13,18 +15,25 @@ function formatDate(dateString: string): string {
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 }
+
 function PetDetail({ params }: { params: { Detail: string } }) {
   const petId = params.Detail;
   const [data, setData] = useState<any>({});
-  const [isEditable, setIsEditable] = useState(true);
+  const [isEditable, setIsEditable] = useState(false);
   const [showButton, setShowButton] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [loadWhat, setLoadWhat] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
   useEffect(() => {
     const fetchPetData = async (id: any) => {
       try {
         const response = await axios.get(`/pet/${petId}`);
         const petData = response.data;
         setData(petData.pet);
+
       } catch (error) {
         console.error("Error fetching pet data:", error);
       }
@@ -32,6 +41,7 @@ function PetDetail({ params }: { params: { Detail: string } }) {
     if (petId) {
       fetchPetData(petId);
     }
+
   }, [petId]);
 
   const handleInputChange = (
@@ -45,6 +55,7 @@ function PetDetail({ params }: { params: { Detail: string } }) {
       [id]: value,
     }));
   };
+
   const handleImage = (e: any) => {
     const file = e.target.files[0];
     setFileToBase(file);
@@ -60,34 +71,79 @@ function PetDetail({ params }: { params: { Detail: string } }) {
       });
     };
   };
-  const handleSaveClick = () => {
-    const updatePetData = async (id: any) => {
-      try {
-        const response = await axios.put(`/pet/${petId}`, data);
-        mutate(`/pet/${petId}`);
 
-        router.push("/Admin/Pet");
-      } catch (error) {
-        console.error("Error fetching pet data:", error);
-      }
-    };
-    updatePetData(data);
+  const handleSaveClick = async (e: any) => {
+    e.preventDefault();
 
-    // router.push('/Admin/Pet');
+    if (!data.petName) {
+      setError("LACK_PETNAME");
+      return;
+    }
+    if (!data.gender) {
+      setError("LACK_PETGENDER");
+      return;
+    }
+    if (!data.age) {
+      setError("LACK_PETAGE");
+      return;
+    }
+    if (!data.race) {
+      setError("LACK_PETRACE");
+      return;
+    }
+    if (!data.species) {
+      setError("LACK_PETSPECIES");
+      return;
+    }
+    if (!data.vaccinated) {
+      setError("LACK_PETVACCINATED");
+      return;
+    }
+    if (!data.description) {
+      setError("LACK_PETDESCRIPTION");
+      return;
+    }
+    if (!data.image.url) {
+      setError("LACK_PETIMAGE");
+      return;
+    }
+    
+    setLoadWhat("SEND_UPDATEPET_REQUEST");
+    setIsLoading(true);
+
+
+    try {
+      const response = await axios.put(`/pet/${petId}`, data);
+      mutate(`/pet/${petId}`);
+      setIsLoading(false);
+      setIsComplete(true);
+
+    } catch (error) {
+      setIsLoading(false);
+      setError("Error saving pet data");
+      console.error("Error saving pet data:", error);
+    }
   };
 
   const handleChangeClick = async () => {
     setIsEditable(true);
     setShowButton(true);
-    // const log = await axios.post(`/test`, data);
   };
 
   if (!data) {
     return <div>Loading...</div>;
   }
+
   return (
     <div className="flex flex-col w-full justify-center items-center">
       <Header />
+      <ErrorModal error={error} setError={setError} />
+      <LoadingModal
+        isLoading={isLoading}
+        isComplete={isComplete}
+        setIsComplete={setIsComplete}
+        loadWhat={loadWhat}
+      />
       <div className="flex w-full">
         <Sidebar />
         <div className="w-3/4 border-l-2 border-gray-200">
@@ -99,7 +155,6 @@ function PetDetail({ params }: { params: { Detail: string } }) {
             Thông tin thú cưng chi tiết
           </div>
           <form className="w-full mx-4" key={data._id}>
-            {/* <form className="w-full mx-4" > */}
             <div className="flex flex-wrap -mx-3 mb-6 space-y-2">
               <div className="w-full px-3 mb-6 md:mb-0">
                 <label className="text-xs font-bold mb-2" htmlFor="petName">
@@ -253,7 +308,10 @@ function PetDetail({ params }: { params: { Detail: string } }) {
                     </div>
                   </div>
                   <div className="w-full px-3">
-                    <label className="text-xs font-bold mb-2" htmlFor="employeeName">
+                    <label
+                      className="text-xs font-bold mb-2"
+                      htmlFor="employeeName"
+                    >
                       Nhân viên xử lý
                     </label>
                     <input
@@ -261,7 +319,6 @@ function PetDetail({ params }: { params: { Detail: string } }) {
                       id="employeeName"
                       type="text"
                       value={data.employeeName}
-                      // onChange={handleInputChange}
                       disabled={!isEditable}
                     />
                   </div>
@@ -272,7 +329,6 @@ function PetDetail({ params }: { params: { Detail: string } }) {
                   >
                     Thông tin người nhận nuôi
                   </div>
-                  {/* <span className="text-xl font-bold mb-2 ml-4 justify-center">Thông tin người nhận nuôi</span> */}
                   <div className="w-full px-3">
                     <label className="text-xs font-bold mb-2" htmlFor="address">
                       Tên khách hàng
@@ -282,7 +338,6 @@ function PetDetail({ params }: { params: { Detail: string } }) {
                       id="address"
                       type="text"
                       value={data.userName}
-                      // onChange={handleInputChange}
                       disabled={!isEditable}
                     />
                   </div>
@@ -295,7 +350,6 @@ function PetDetail({ params }: { params: { Detail: string } }) {
                       id="address"
                       type="text"
                       value={data.address}
-                      // onChange={handleInputChange}
                       disabled={!isEditable}
                     />
                   </div>
@@ -311,7 +365,6 @@ function PetDetail({ params }: { params: { Detail: string } }) {
                       id="phoneNumber"
                       type="text"
                       value={data.phoneNumber}
-                      // onChange={handleInputChange}
                       disabled={!isEditable}
                     />
                   </div>
@@ -319,7 +372,7 @@ function PetDetail({ params }: { params: { Detail: string } }) {
               )}
             </div>
           </form>
-          <div className="flex items-center justify-center w-full space-x-4">
+          <div className="flex justify-center space-x-4 mt-4">
             {!showButton && (
               <button
                 onClick={handleChangeClick}
@@ -339,7 +392,6 @@ function PetDetail({ params }: { params: { Detail: string } }) {
           </div>
         </div>
       </div>
-      {/* <ToastContainer /> */}
     </div>
   );
 }

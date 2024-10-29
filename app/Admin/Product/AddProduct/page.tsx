@@ -39,26 +39,45 @@ function ProductAdd() {
         status,
         image,
       };
-      if (
-        !name ||
-        !brand ||
-        !stock ||
-        !category ||
-        !price ||
-        !status ||
-        !description ||
-        !image.url
-      ) {
-        setError("LACK_INFO");
+
+      if (!name){
+        setError("LACK_PRODUCTNAME");
         return;
       }
-      setLoadWhat("SEND_ADDPET_REQUEST");
+      if (!brand){
+        setError("LACK_PRODUCTBRAND");
+        return;
+      }
+      if (!stock){
+        setError("LACK_PRODUCTSTOCK");
+        return;
+      }
+      if (!category){
+        setError("LACK_PRODUCTCATEGORY");
+        return;
+      }
+      if (!price){
+        setError("LACK_PRODUCTPRICE");
+        return;
+      }
+      if (!status){
+        setError("LACK_PRODUCTSTATUS");
+        return;
+      }
+      if (!description){
+        setError("LACK_PRODUCTDESCRIPTION");
+        return;
+      }
+      if (!image.url){
+        setError("LACK_PRODUCTIMAGE");
+        return;
+      }
+      setLoadWhat("SEND_ADDPRODUCT_REQUEST");
       setIsLoading(true);
       const response = await axios.post("/product/add", data);
       setIsLoading(false);
       setIsComplete(true);
       // const response = await axios.post('/product/add', data);
-      router.push("/Admin/Product");
     } catch (error) {
       toast.error("Error saving product!");
       console.error("Error saving product:", error);

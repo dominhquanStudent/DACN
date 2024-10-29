@@ -28,7 +28,6 @@ function PetAdd() {
   const [image, setImage] = useState({ public_id: "", url: "" });
 
   const handleSaveClick = async () => {
-
     try {
       const data = {
         petName,
@@ -42,16 +41,45 @@ function PetAdd() {
         image,
       };
       console.log("Data:", data);
-      if (!petName || !gender || !age || !race || !species || !vaccinated || !description || !image.url) {
-        setError("LACK_INFO");
-        return;}
+      if (!data.petName) {
+        setError("LACK_PETNAME");
+        return;
+      }
+      if (!data.gender) {
+        setError("LACK_PETGENDER");
+        return;
+      }
+      if (!data.age) {
+        setError("LACK_PETAGE");
+        return;
+      }
+      if (!data.race) {
+        setError("LACK_PETRACE");
+        return;
+      }
+      if (!data.species) {
+        setError("LACK_PETSPECIES");
+        return;
+      }
+      if (!data.vaccinated) {
+        setError("LACK_PETVACCINATED");
+        return;
+      }
+      if (!data.description) {
+        setError("LACK_PETDESCRIPTION");
+        return;
+      }
+      if (!data.image.url) {
+        setError("LACK_PETIMAGE");
+        return;
+      }
       setLoadWhat("SEND_ADDPET_REQUEST");
       setIsLoading(true);
       const response = await axios.post("/pet/add", data);
       setIsLoading(false);
       setIsComplete(true);
 
-      router.push("/Admin/Pet");
+      // router.push("/Admin/Pet");
     } catch (error) {
       toast.error("Error saving pet!");
       console.error("Error saving pet:", error);
@@ -71,11 +99,15 @@ function PetAdd() {
   };
 
   return (
-    
     <div className="flex flex-col w-full justify-center items-center">
       {/* //Header */}
       <ErrorModal error={error} setError={setError} />
-      <LoadingModal isLoading={isLoading} isComplete={isComplete} setIsComplete={setIsComplete} loadWhat={loadWhat} />
+      <LoadingModal
+        isLoading={isLoading}
+        isComplete={isComplete}
+        setIsComplete={setIsComplete}
+        loadWhat={loadWhat}
+      />
       <Header></Header>
       <div className="flex w-full">
         <Sidebar></Sidebar>
@@ -184,21 +216,21 @@ function PetAdd() {
               </div>
 
               <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="Vaccinated">
-                    Tiêm Vaccine
-                  </label>
-                  <select
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="Vaccinated"
-                    value={vaccinated}
-                    onChange={(e) => setVaccinated(e.target.value)}
-                  >
-                    <option value="">Chọn trạng thái</option>
+                <label className="text-xs font-bold mb-2" htmlFor="Vaccinated">
+                  Tiêm Vaccine
+                </label>
+                <select
+                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="Vaccinated"
+                  value={vaccinated}
+                  onChange={(e) => setVaccinated(e.target.value)}
+                >
+                  <option value="">Chọn trạng thái</option>
 
-                    <option value="Đã tiêm phòng">Rồi</option>
-                    <option value="Chưa tiêm phòng">Chưa</option>
-                  </select>
-                </div>
+                  <option value="Đã tiêm phòng">Rồi</option>
+                  <option value="Chưa tiêm phòng">Chưa</option>
+                </select>
+              </div>
 
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="Description">
