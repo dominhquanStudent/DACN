@@ -8,23 +8,36 @@ import Logout from "@/public/img/logouthl.svg";
 import User from "@/public/img/Header/User.png";
 import Link from "next/link";
 import { deleteCookie } from "cookies-next";
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import useAuth from '@/hooks/useAuth';
-
 import axios from "@/api/axios";
+
+
 export default function Header(props: any) {
   const pathname = usePathname();
+  const router = useRouter();
   const { auth, setAuth, isAuthenticated } = useAuth();
   const [showSublist1, setShowSublist1] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const handleLogout = async () => {
+  const [showDropdown, setShowDropdown] = useState(false);
+  interface Notification {
+    _id: string;
+    user_id: string;
+    Title: string;
+    category: string;
+    content: string;
+    status: string;
+  }
 
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  const handleLogout = async () => {
     // Call the logout endpoint
     try {
       const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
       await axios.post(`${baseURL}/auth/logout`);
       deleteCookie("jwt");
-      deleteCookie("refreshToken",{ httpOnly: true, sameSite: 'none', secure: true, path: '/'});
+      deleteCookie("refreshToken", { httpOnly: true, sameSite: 'none', secure: true, path: '/' });
       // Clear the auth state
       setAuth(null);
     } catch (error) {
@@ -33,6 +46,7 @@ export default function Header(props: any) {
     // Redirect to login page
     window.location.reload();
   };
+
   const checkLogin = async () => {
     try {
       if (isAuthenticated) {
@@ -41,14 +55,32 @@ export default function Header(props: any) {
         deleteCookie("jwt");
         setIsLoggedIn(false);
       }
-
     } catch (error) {
       console.error(error);
     }
   };
+
   useEffect(() => {
     checkLogin();
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once
+
+  const toggleDropdown = async () => {
+    setShowDropdown(!showDropdown);
+    if (!showDropdown) {
+      // Fetch notifications from API
+      try {
+        const response = await axios.get('/notification/user');
+        setNotifications(response.data);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    }
+  };
+
+  const handleNotificationClick = (id: string) => {
+    router.push(`/Notification/${id}`);
+  };
+
   return (
     // global container
     <div className="flex flex-col mx-8 mb-10">
@@ -85,16 +117,33 @@ export default function Header(props: any) {
             </Link>
           </div>
         ) : (
-          <div className="flex space-x-4 items-center">
-            <img className="w-7 h-7" src={notification.src} alt="" />
+          <div className="flex space-x-4 items-center relative">
+            <div onClick={toggleDropdown} className="cursor-pointer relative">
+              <img className="h-7" src={notification.src} alt="Notification" />
+              {showDropdown && (
+                <div className="absolute right-[-10px] mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                  <ul>
+                    {notifications.map((notification) => (
+                      <li
+                        key={notification._id}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => handleNotificationClick(notification._id)}
+                      >
+                        {notification.Title}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
             <Link href="/Cart">
-              <img className="w-7 h-7" src={ShoppingCart.src} alt="" />
+              <img className="w-7 h-7" src={ShoppingCart.src} alt="Cart" />
             </Link>
             <Link href="/Profile">
-              <img className="w-7 h-7" src={User.src} alt="" />
+              <img className="w-7 h-7" src={User.src} alt="User" />
             </Link>
             <button onClick={handleLogout}>
-              <img className="w-7 h-7" src={Logout.src} alt="" />
+              <img className="w-7 h-7" src={Logout.src} alt="Logout" />
             </button>
             <div className="self-center text-3xl font-semibold text-yellow-500">
               {">"}
@@ -115,15 +164,14 @@ export default function Header(props: any) {
             <Link href="/Product">Sản phẩm thú cưng</Link>
             {/* sub list 1 */}
             <ul
-              className={`absolute left-48 p-2 text-black text-base flex justify-center w-[75%] font-normal transition-all duration-300 ease-in-out ${
-                showSublist1 ? "opacity-100 max-h-96" : "opacity-0 max-h-0"
-              }`}
+              className={`absolute left-48 p-2 text-black text-base flex justify-center w-[75%] font-normal transition-all duration-300 ease-in-out ${showSublist1 ? "opacity-100 max-h-96" : "opacity-0 max-h-0"
+                }`}
             >
               <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
                 <Link href={{ pathname: '/Product', query: { filterMode: 1 } }}>Thức ăn thú cưng</Link>
               </li>
               <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
-              <Link href={{ pathname: '/Product', query: { filterMode: 2 } }}>Phụ kiện & Đồ chơi</Link>
+                <Link href={{ pathname: '/Product', query: { filterMode: 2 } }}>Phụ kiện & Đồ chơi</Link>
               </li>
               <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
                 <Link href={{ pathname: '/Product', query: { filterMode: 3 } }}>Đồ dùng vệ sinh</Link>

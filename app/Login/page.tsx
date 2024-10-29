@@ -17,7 +17,7 @@ function Page() {
     console.log(response);
     if (response.role === "admin") { router.push("/Admin"); }
     else if (response.role === "doctor") { router.push("/Doctor"); }
-    else { router.push("/Main"); }
+    else { router.back(); }
   };
 
   return (
