@@ -74,19 +74,40 @@ function PetDetail({ params }: { params: { Detail: string } }) {
 
   const handleSaveClick = async (e: any) => {
     e.preventDefault();
-    if (
-      !data.petName ||
-      !data.gender ||
-      !data.age ||
-      !data.race ||
-      !data.species ||
-      !data.vaccinated ||
-      !data.description ||
-      !data.image.url
-    ) {
-      setError("LACK_INFO");
+
+    if (!data.petName) {
+      setError("LACK_PETNAME");
       return;
     }
+    if (!data.gender) {
+      setError("LACK_PETGENDER");
+      return;
+    }
+    if (!data.age) {
+      setError("LACK_PETAGE");
+      return;
+    }
+    if (!data.race) {
+      setError("LACK_PETRACE");
+      return;
+    }
+    if (!data.species) {
+      setError("LACK_PETSPECIES");
+      return;
+    }
+    if (!data.vaccinated) {
+      setError("LACK_PETVACCINATED");
+      return;
+    }
+    if (!data.description) {
+      setError("LACK_PETDESCRIPTION");
+      return;
+    }
+    if (!data.image.url) {
+      setError("LACK_PETIMAGE");
+      return;
+    }
+    
     setLoadWhat("SEND_UPDATEPET_REQUEST");
     setIsLoading(true);
 

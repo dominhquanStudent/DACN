@@ -1,13 +1,21 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import useSWR, { mutate } from "swr";
+
 import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
 import { useRouter } from 'next/navigation';
+import ErrorModal from "@/app/Component/Error";
+import LoadingModal from "@/app/Component/Loading";
 function ProductDetail({ params }: { params: { Detail: string } }) {
   const productId = params.Detail;
   const [data, setData] = useState<any>({});
   const [isEditable, setIsEditable] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [loadWhat, setLoadWhat] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   useEffect(() => {
     const fetchProductData = async (id: any) => {
@@ -45,18 +53,54 @@ const setFileToBase = (file: any) =>{
     setData( {...data, image: {public_id: "null", url: reader.result as string}});
     }
 }
-  const handleSaveClick = () => {
-    const updateProductData = async (id: any) => {
-      try {
-        const response = await axios.put(`/product/${productId}`,data);
-      } catch (error) {
-        console.error('Error fetching product data:', error);
-      }
-    };
-      updateProductData(data);
-    
-    router.push('/Admin/Product');
-  };
+const handleSaveClick = async (e: any) => {
+  e.preventDefault();
+  if (!data.name){
+    setError("LACK_PRODUCTNAME");
+    return;
+  }
+  if (!data.brand){
+    setError("LACK_PRODUCTBRAND");
+    return;
+  }
+  if (!data.stock){
+    setError("LACK_PRODUCTSTOCK");
+    return;
+  }
+  if (!data.category){
+    setError("LACK_PRODUCTCATEGORY");
+    return;
+  }
+  if (!data.price){
+    setError("LACK_PRODUCTPRICE");
+    return;
+  }
+  if (!data.status){
+    setError("LACK_PRODUCTSTATUS");
+    return;
+  }
+  if (!data.description){
+    setError("LACK_PRODUCTDESCRIPTION");
+    return;
+  }
+  if (!data.image.url){
+    setError("LACK_PRODUCTIMAGE");
+    return;
+  }
+  setLoadWhat("SEND_UPDATEPRODUCT_REQUEST");
+  setIsLoading(true);
+
+  try {
+    const response = await axios.put(`/product/${productId}`, data);
+    mutate(`/product/${productId}`);
+    setIsLoading(false);
+    setIsComplete(true);
+    // router.push("/Admin/Product");
+
+  } catch (error) {
+
+  }
+};
 
   const handleChangeClick = async () => {
     setIsEditable(true);
@@ -69,6 +113,13 @@ const setFileToBase = (file: any) =>{
 
   return (
     <div className='flex flex-col w-full justify-center items-center'>
+            <ErrorModal error={error} setError={setError} />
+      <LoadingModal
+        isLoading={isLoading}
+        isComplete={isComplete}
+        setIsComplete={setIsComplete}
+        loadWhat={loadWhat}
+      />
       <Header />
       <div className='flex w-full'>
         <Sidebar />

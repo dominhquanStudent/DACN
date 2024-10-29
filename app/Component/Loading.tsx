@@ -23,6 +23,12 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
     if(loadWhat=="SEND_UPDATEPET_REQUEST"){
       window.location.href = "/Admin/Pet";
     }
+    if(loadWhat=="SEND_ADDPRODUCT_REQUEST"){
+      window.location.href = "/Admin/Product";
+    }
+    if(loadWhat=="SEND_UPDATEPRODUCT_REQUEST"){
+      window.location.href = "/Admin/Product";
+    }
   };
 
   if (!isLoading && !isComplete) {
@@ -43,7 +49,6 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             {loadWhat=="ORDERING"&& <p>Đang đặt hàng</p>}
 
           {loadWhat=="SEND_UPDATENEW_REQUEST"&& <p>Đã cập nhật thông tin bài viết!</p>}
-          {loadWhat=="SEND_ADDNEW_REQUEST"&& <p>Đang thêm bài viết!</p>}
           </div>
         )}
         {isComplete && (
@@ -56,8 +61,10 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             {loadWhat=="SEND_BOOKING_REQUEST"&& <p>Đã đặt lịch thành công!</p>}
             {loadWhat=="SEND_RESCUE_REQUEST"&& <p>Đã gửi yêu cầu cứu hộ!</p>}
 
-            {loadWhat=="SEND_ADDPET_REQUEST"&& <p>Đã thêm thành công!</p>}
+            {loadWhat=="SEND_ADDPET_REQUEST"&& <p>Đã thêm 1 bé thú cưng thành công!</p>}
             {loadWhat=="SEND_UPDATEPET_REQUEST"&& <p>Đã cập nhật thông tin thành công!</p>}
+            {loadWhat=="SEND_ADDPRODUCT_REQUEST"&& <p>Đã thêm sản phẩm thành công!</p>}
+            {loadWhat=="SEND_UPDATEPRODUCT_REQUEST"&& <p>Đã cập nhật thông tin sản phẩm!</p>}
 
 
 

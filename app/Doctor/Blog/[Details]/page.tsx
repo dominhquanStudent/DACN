@@ -10,7 +10,6 @@ import "react-quill/dist/quill.snow.css"; // Import the styles
 import dynamic from "next/dynamic";
 import ErrorModal from "@/app/Component/Error";
 import LoadingModal from "@/app/Component/Loading";
-import ConfimModal from "@/app/Component/ConfirmModal";
 import ConfirmModal from "@/app/Component/ConfirmModal";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
