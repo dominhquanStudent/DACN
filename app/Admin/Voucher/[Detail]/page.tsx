@@ -77,7 +77,6 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
 
   const handleChangeClick = async () => {
     setIsEditable(true);
-    const log = await axios.post(`/test`, data);
   };
 
   if (!data) {

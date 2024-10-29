@@ -4,22 +4,17 @@ import Header from "../Header/Header";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-import p1 from "@/public/img/Blog/p1.jpg";
-import p2 from "@/public/img/Blog/p2.jpg";
+
 import p3 from "@/public/img/Blog/p3.jpg";
 import p4 from "@/public/img/Blog/p4.jpg";
-import p5 from "@/public/img/Blog/p5.jpg";
-import p11 from "@/public/img/Blog/p11.jpg";
+
 import p12 from "@/public/img/Blog/p12.png";
-import p13 from "@/public/img/Blog/p13.png";
 import p111 from "@/public/img/Blog/p111.png";
 
 import Footer from "../../Component/Footer/Footer";
 
 // import React, { useState } from 'react';
 import Link from "next/link";
-import Sidebar from "../../Doctor/sidebarDoctor";
-// import Header from '@/app/Admin/Header';
 import axios from "@/api/axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -76,8 +71,14 @@ function NewsPage() {
       try {
         const response = await axios.get("/news/list");
         console.log(response.data); // Log response để kiểm tra cấu trúc dữ liệu
+        const sortedNews = response.data.news.sort(
+          (a: any, b: any) =>
+            new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
 
-        setNews(response.data.news);
+        setNews(sortedNews);
+
+        // setNews(response.data.news);
       } catch (error) {
         console.error("Error fetching news:", error);
       }
@@ -173,7 +174,8 @@ function NewsPage() {
               {filteredNews.map((item, index) => (
                 <li
                   key={index}
-                  className="mb-4 p-4 border rounded-md shadow-sm hover:shadow-lg transition-shadow duration-300"
+                  className="mb-4 p-4 border rounded-md shadow-sm hover:shadow-lg transition-shadow duration-300 "
+                  onClick={()=>window.location.href = `/Component/Blog/${item._id}`}
                 >
                   <div className="p-4 border rounded-md shadow-sm bg-white flex flex-col items-start space-y-4 hover:bg-blue-100 transition-colors duration-300">
                     <img
@@ -185,7 +187,10 @@ function NewsPage() {
                     <p className="text-sm text-gray-500">
                       {formatDate(item.date)}
                     </p>
-                    <p className="text-sm text-gray-800">{item.content}</p>
+                    <div
+                          className="text-sm text-gray-800 line-clamp-1"
+                          dangerouslySetInnerHTML={{ __html: item.content }}
+                        />
                   </div>
                 </li>
               ))}

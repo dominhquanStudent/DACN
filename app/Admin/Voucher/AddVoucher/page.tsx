@@ -47,23 +47,53 @@ function VoucherAdd() {
         status,
         employee_id,
       };
-      if (
-        !name ||
-        !quantity ||
-        !beginDate ||
-        !endDate ||
-        !code ||
-        !discountType ||
-        !discountValue ||
-        !minRequire ||
-        !maxDiscount ||
-        !description ||
-        !status ||
-        !employee_id
-      ) {
-        setError("LACK_INFO");
+
+      if (!name) {
+        setError("LACK_VOUCHERNAME");
         return;
       }
+      if (!quantity) {
+        setError("LACK_VOUCHERQUANTITY");
+        return;
+      }
+      if (!beginDate) {
+        setError("LACK_VOUCHERBEGINDATE");
+        return;
+      }
+      if (!endDate) {
+        setError("LACK_VOUCHERENDDATE");
+        return;
+      }
+      if (!code) {
+        setError("LACK_VOUCHERCODE");
+        return;
+      }
+      if (!discountType) {
+        setError("LACK_VOUCHERDISCOUNTTYPE");
+        return;
+      }
+      if (!discountValue) {
+        setError("LACK_VOUCHERDISCOUNTVALUE");
+        return;
+      }
+      if (!minRequire) {
+        setError("LACK_VOUCHERMINREQUIRE");
+        return;
+      }
+      if (!maxDiscount) {
+        setError("LACK_VOUCHERMAXDISCOUNT");
+        return;
+      }
+      if (!description) {
+        setError("LACK_VOUCHERDESCRIPTION");
+        return;
+      }
+      if (!status) {
+        setError("LACK_VOUCHERSTATUS");
+        return;
+      }
+
+
       setLoadWhat("SEND_ADDPET_REQUEST");
       setIsLoading(true);
       const response = await axios.post("/voucher/add", data);
