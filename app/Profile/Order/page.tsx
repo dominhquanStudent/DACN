@@ -4,7 +4,7 @@ import Footer from '@/app/Component/Footer/Footer';
 import ProfileNav from "@/app/Component/ProfileNav/ProfileNav";
 import React, { useState, useEffect } from 'react';
 import axios from '@/api/axios';
-import moment from "moment";
+import { sendNotifications } from "@/ultis/notificationUtils";
 interface Product {
     product_id: number;
     product_name: string;
@@ -16,7 +16,7 @@ interface Product {
 
 interface Order {
     _id: string;
-    user_id: number;
+    user_id: string;
     phone_number: string;
     order_date: Date;
     delivery_date: Date;
@@ -75,6 +75,14 @@ function Page() {
                 const checkStatus = await axios.post(`payment/check_order_status/${order.payment_id}`);
                 if(checkStatus.data.return_code != 1){
                     window.open(order.payment_url, '_blank');
+                } else {
+                    sendNotifications({
+                        user_id: order.user_id,
+                        category: 'Đơn hàng',
+                        Title: 'Thanh toán đơn hàng thành công',
+                        content: `Đơn hàng ${order._id} đã được thanh toán thành công`,
+                        status: 'Chưa đọc'
+                    });
                 }
             }
         } catch (error) {
@@ -128,10 +136,10 @@ function Page() {
                             onClick={() => handleSort("Tất cả")}>Tất cả</button>
                         <button className={`px-4 py-2 rounded w-full ${sort == "Chờ thanh toán" ? "text-[#EDB24E] font-bold" : ""}`}
                             onClick={() => handleSort("Chờ thanh toán")}>Chờ thanh toán</button>
-                        <button className={`px-4 py-2 rounded w-full ${sort == "Chờ Xử lý" ? "text-[#EDB24E] font-bold" : ""}`}
-                            onClick={() => handleSort("Chờ Xử lý")}>Chờ Xử lý</button>
-                        <button className={`px-4 py-2 rounded w-full ${sort == "Chờ giao hàng" ? "text-[#EDB24E] font-bold" : ""}`}
-                            onClick={() => handleSort("Chờ giao hàng")}>Chờ giao hàng</button>
+                        <button className={`px-4 py-2 rounded w-full ${sort == "Chờ xử lý" ? "text-[#EDB24E] font-bold" : ""}`}
+                            onClick={() => handleSort("Chờ xử lý")}>Chờ xử lý</button>
+                        <button className={`px-4 py-2 rounded w-full ${sort == "Đã xử lý" ? "text-[#EDB24E] font-bold" : ""}`}
+                            onClick={() => handleSort("Đã xử lý")}>Đã xử lý</button>
                         <button className={`px-4 py-2 rounded w-full ${sort == "Đã hoàn thành" ? "text-[#EDB24E] font-bold" : ""}`}
                             onClick={() => handleSort("Đã hoàn thành")}>Đã hoàn thành</button>
                         <button className={`px-4 py-2 rounded w-full ${sort == "Đã hủy" ? "text-[#EDB24E] font-bold" : ""}`}

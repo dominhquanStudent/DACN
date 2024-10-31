@@ -49,7 +49,7 @@ function ProductAdd() {
         return;
       }
       if (!stock){
-        setError("LACK_PRODUCTSTOCK");
+        setError("LACK_PRODUCTQUANTITY");
         return;
       }
       if (!category){

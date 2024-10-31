@@ -55,7 +55,7 @@ function DashBoard() {
                             Dash Board
                         </div>
                         <div className='font-nunito text-lg font-bold mb-4'>
-                            Việc cần làm
+                            Việc cần xử lý
                         </div>
                         <div className='flex space-x-10 mb-4'>
                             {sections.map((section, index) => (

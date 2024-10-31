@@ -108,21 +108,19 @@ export default function Booking() {
   // JSX code with random content in each cell
   return (
     //global container
-    <>
+        <>
       <Header />
-
-      <div className="flex gap-4 p-4">
-        <div className="border-r border-gray-300 mx-4"></div>{" "}
-        {/* Divider line */}
+    
+      <div className="flex flex-col lg:flex-row gap-4 p-4">
+        <div className="border-b lg:border-r border-gray-300 mx-4"></div> {/* Divider line */}
         <div className="flex-[8] p-4">
           <div className="flex flex-col items-center">
-            <h2 className="mb-4 text-center text-orange-500 font-bold text-4xl">
+            <h2 className="mb-4 text-center text-orange-500 font-bold text-2xl lg:text-4xl">
               Bảng giá dịch vụ
             </h2>
-            <div className="border-b border-gray-500 w-full my-2"></div>{" "}
-            {/* Horizontal line */}
-            <div className="flex gap-4 p-4">
-              <div>
+            <div className="border-b border-gray-500 w-full my-2"></div> {/* Horizontal line */}
+            <div className="flex flex-col lg:flex-row gap-4 p-4">
+              <div className="w-full lg:w-1/2">
                 <h2 className="mb-4 text-orange-500 font-bold">
                   Kiểm tra sức khỏe
                 </h2>
@@ -142,7 +140,7 @@ export default function Booking() {
                       {services.map((service, rowIndex) => (
                         <tr
                           key={rowIndex}
-                          className={`bg-white border-b  dark:bg-gray-800 dark:border-gray-700`}
+                          className={`bg-white border-b dark:bg-gray-800 dark:border-gray-700`}
                         >
                           <th
                             scope="row"
@@ -158,9 +156,8 @@ export default function Booking() {
                   </table>
                 </div>
               </div>
-              <div className="border-r border-gray-300 mx-4"></div>{" "}
-              {/* Divider line */}
-              <div>
+              <div className="border-b lg:border-r border-gray-300 mx-4"></div> {/* Divider line */}
+              <div className="w-full lg:w-1/2">
                 <h2 className="mb-4 text-orange-500 font-bold">
                   Spa and Grooming
                 </h2>
@@ -199,9 +196,8 @@ export default function Booking() {
                 </div>
               </div>
             </div>
-            <h2 className="mb-4">
-              Lưu ý: Giá tham khảo, có thể thay đổi với mức độ thứ cưng nhưng
-              không quá 20%
+            <h2 className="mb-4 text-center text-sm lg:text-base">
+              Lưu ý: Giá tham khảo, có thể thay đổi với mức độ thứ cưng nhưng không quá 20%
             </h2>
             <div className="mt-6 mb-4 mx-2">
               <Link href="/Booking">
@@ -212,19 +208,18 @@ export default function Booking() {
             </div>
           </div>
         </div>
-        <div className="border-r border-gray-300 mx-4"></div>{" "}
-        {/* Divider line */}
-        <div className="flex flex-col items-center  min-h-screen">
-          <h2 className="mb-4 text-orange-500 font-bold">Đặt lịch ngay</h2>
+        <div className="border-b lg:border-r border-gray-300 mx-4"></div> {/* Divider line */}
+        <div className="flex flex-col items-center min-h-screen p-4">
+          <h2 className="mb-4 text-orange-500 font-bold text-center text-2xl lg:text-4xl">Đặt lịch ngay</h2>
           <div className="p-4">
             <Calendar onChange={(value) => setDate(value as Date)} value={date} />
           </div>
           <div className="p-4">
-            <img src={logo.src} alt="Logo" className="w-60" />
+            <img src={logo.src} alt="Logo" className="w-40 lg:w-60" />
           </div>
         </div>
       </div>
-
+    
       <Footer />
     </>
   );

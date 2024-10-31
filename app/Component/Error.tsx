@@ -95,7 +95,7 @@ const ErrorModal = ({ error, setError }: any) => {
               <p>Vui lòng chọn trạng thái tiêm chủng thú cưng!</p>
             )}
             {error == "LACK_PETDESCRIPTION" && (
-              <p>Vui lòng chọn giới tính thú cưng!</p>
+              <p>Vui lòng nhập mô tả thú cưng!</p>
             )}
             {error == "LACK_PETIMAGE" && <p>Vui lòng chọn ảnh thú cưng!</p>}
 
@@ -104,9 +104,7 @@ const ErrorModal = ({ error, setError }: any) => {
             {error == "LACK_VOUCHERQUANTITY" && (
               <p>Vui lòng nhập số lượng voucher!</p>
             )}
-            {error == "LACK_VOUCHERQUANTITY" && (
-              <p>Vui lòng nhập số lượng voucher!</p>
-            )}
+
             {error == "LACK_VOUCHERBEGINDATE" && (
               <p>Vui lòng nhập ngày bắt đầu!</p>
             )}
@@ -135,9 +133,13 @@ const ErrorModal = ({ error, setError }: any) => {
             {error == "LACK_VOUCHERSTATUS" && (
               <p>Vui lòng nhập trạng thái của voucher!</p>
             )}
+            {error == "LACK_VOUCHERUSETIME" && (
+              <p>Vui lòng nhập số lần sử dụng của voucher!</p>
+            )}
 
 
-            
+            {/* RESCUE */}
+            {error == "LACK_EMPLOYEE" && <p>Vui lòng nhập tên nhân viên xử lý!</p>}
 
             {error == "INVALID_DATE" && <p>Ngày hẹn không hợp lệ!</p>}
             {error == "PAGE_NOT_FOUND" && <p>Trang bạn tìm kiếm không có !</p>}
