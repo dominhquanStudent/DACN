@@ -1,23 +1,35 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { deleteCookie } from "cookies-next";
 import Logout from "@/public/img/logouthl.svg";
 import axios from "@/api/axios";
 import useAuth from '@/hooks/useAuth';
-function Header(avatar: any) {
-    const {setAuth} = useAuth();
+function Header() {
+    const { setAuth } = useAuth();
+    const [avatar, setAvatar] = useState("");
+    useEffect(() => {
+        const fetchAvatar = async () => {
+            try {
+                const response = await axios.get('/account/info');
+                setAvatar(response.data.account.avatar.url);
+            } catch (error) {
+                console.error('Error fetching avatar:', error);
+            }
+        };
+        fetchAvatar();
+    }, []);
     const handleLogout = async () => {
         try {
             const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
             await axios.post(`${baseURL}/auth/logout`);
             deleteCookie("jwt");
-            deleteCookie("refreshToken",{ httpOnly: true, sameSite: 'none', secure: true, path: '/'});
+            deleteCookie("refreshToken", { httpOnly: true, sameSite: 'none', secure: true, path: '/' });
             // Clear the auth state
             setAuth(null);
-          } catch (error) {
+        } catch (error) {
             console.error('Error logging out:', error);
-          }
+        }
         window.location.href = '/Login';
     };
     return (
@@ -27,7 +39,7 @@ function Header(avatar: any) {
             </Link>
             <div className='flex w-1/4 justify-center'>
                 {/* Chưa làm avatar dynamic được */}
-                <img loading="lazy" src={avatar != "" ? "https://res.cloudinary.com/dzm879qpm/image/upload/v1728563694/accounts/anbnf64hq86flwly20od.webp" : 'https://res.cloudinary.com/dzm879qpm/image/upload/v1724509562/defautProduct_mlmwsw.png'}
+                <img loading="lazy" src={avatar}
                     alt="Avatar" className="w-12 h-12" />
                 <button onClick={handleLogout}>
                     <img className="ml-4 w-7 h-7" src={Logout.src} alt="" />
