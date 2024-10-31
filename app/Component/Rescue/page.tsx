@@ -37,7 +37,7 @@ export default function Booking() {
         location,
         message,
       };
-      const phoneRegex = /^[0-9]{10}$/;
+      const phoneRegex = /^(0?)(3[2-9]|5[689]|7[06-9]|8[0-689]|9[0-46-9])[0-9]{7}$/;
 
       if (!(user_name && contactPhone && image.url && location && message)) {
         setError("NO_RESCUE_INFO");
@@ -96,12 +96,12 @@ export default function Booking() {
           </h2>
         </div>
         <div className="bg-white rounded-lg shadow-md p-8 w-full lg:w-1/2 mx-auto">
-          <h2 className="text-lg font-semibold mb-4">
+          <h2 className="text-lg font-semibold mb-4 text-center">
             Dịch vụ cứu hộ thú cưng
           </h2>
           <div className="space-y-4">
             <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-8">
-              <label className="flex-1">Tên người gửi</label>
+              <label className="flex-1">Tên người gửi <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 value={user_name}
@@ -111,7 +111,7 @@ export default function Booking() {
               />
             </div>
             <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-8">
-              <label className="flex-1">SĐT liên hệ</label>
+              <label className="flex-1">SĐT liên hệ <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 value={contactPhone}
@@ -120,26 +120,26 @@ export default function Booking() {
                 className="block w-full mt-2 p-2 border rounded lg:ml-2 flex-[4]"
               />
             </div>
-            <div className="w-full px-3">
-              <label className="text-xs font-bold mb-2" htmlFor="ImageUpload">
-                Tải hình ảnh
+            <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-8">
+              <label className="flex-1 text-xs font-bold mb-2" htmlFor="ImageUpload">
+              Tải hình ảnh <span className="text-red-500">*</span>
               </label>
               <input
-                type="file"
-                id="ImageUpload"
-                name="image"
-                accept="image/*"
-                onChange={handleImage}
-                className="block w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-full file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-violet-50 file:text-violet-700
-                  hover:file:bg-violet-100"
+              type="file"
+              id="ImageUpload"
+              name="image"
+              accept="image/*"
+              onChange={handleImage}
+              className="block w-full text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-full file:border-0
+                file:text-sm file:font-semibold
+                file:bg-violet-50 file:text-violet-700
+                hover:file:bg-violet-100 lg:ml-2 flex-[4]"
               />
             </div>
             <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-8">
-              <label className="flex-1">Địa điểm cần cứu hộ</label>
+              <label className="flex-1">Địa điểm cần cứu hộ <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 value={location}
@@ -149,7 +149,7 @@ export default function Booking() {
               />
             </div>
             <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-8">
-              <label className="flex-1">Lời nhắn</label>
+              <label className="flex-1">Lời nhắn <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 value={message}
@@ -167,7 +167,7 @@ export default function Booking() {
               disabled:opacity-50 disabled:shadow-none"
               data-ripple-light="true"
             >
-              Đăng ký
+              Gửi cứu hộ
             </button>
           </div> 
 

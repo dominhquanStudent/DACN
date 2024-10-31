@@ -48,10 +48,10 @@ const ProductCard = (props: any) => {
 
         {/* Price */}
         <div className={`mt-2 flex ${props.product.discount_price === props.product.price ? 'justify-center' : 'justify-between'}`}>
-  <span className="text-lg font-semibold">${props.product.discount_price}</span>
+  <span className="text-lg font-semibold"><span className="text-base underline" >đ</span> {props.product.discount_price}</span>
   {props.product.discount_price !== props.product.price && (
     <span className="text-lg font-semibold text-red-500 line-through ml-2">
-      ${props.product.price}
+      <span className="text-base underline" >đ</span> {props.product.price}
     </span>
   )}
 </div>

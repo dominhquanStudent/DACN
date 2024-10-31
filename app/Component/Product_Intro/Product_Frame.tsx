@@ -15,9 +15,9 @@ export default function Product_Frame(props: any){
             <img src={props.image} alt="" className="w-24 h-24 rounded-xl"/>
             {/* Description */}
             <div>
-                <div className="font-montserrat font-bold text-2xl">{props.discount_price}</div>
+                <div className="font-montserrat font-bold text-2xl"><span className="text-base underline" >đ</span> {props.discount_price}</div>
 
-                <div className={`font-montserrat font-bold ${props.discount_price !== props.price ? "line-through text-red-600" : "hidden" }`}> {props.price}</div>
+                <div className={`font-montserrat font-bold ${props.discount_price !== props.price ? "line-through text-red-600" : "hidden" }`}><span className="text-base underline" >đ</span> {props.price}</div>
         
                 <div className="font-montserrat ">{props.name}</div>
 
