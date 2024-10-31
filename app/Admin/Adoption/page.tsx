@@ -1,5 +1,14 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { mutate } from 'swr';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faTrashCan, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+
+import ConfirmModal from '@/app/Component/ConfirmModal';
+
+library.add(faTrashCan, faPen, faPlus, faPenToSquare);
 import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import { useRouter } from 'next/navigation';
@@ -15,6 +24,8 @@ function formatDate(dateString: string): string {
 
 function Adopt() {
   const [pets, setPets] = useState<any[]>([]);
+  const [selectedAdoption, setSelectedAdoption] = useState<any | null>(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -36,14 +47,31 @@ function Adopt() {
     router.push(`/Admin/Adoption/${petId}`);
   };
 
-  const handleDeleteClick = async (petId: any) => {
-    console.log(`Delete for pet ${petId}`);
-    try {
-      await axios.delete(`/pet/${petId}`);
-      const newPets = pets.filter((pet) => pet._id !== petId);
-      setPets(newPets);
-    } catch (error) {
-      console.error('Error deleting pet:', error);
+  const handleDeleteClick = (adoption: any) => {
+    setSelectedAdoption(adoption);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (selectedAdoption) {
+      try {
+        const updatedData = {
+          ...selectedAdoption,
+          adoptStatus: "Chưa có chủ",
+          arriveDay: null,
+          message: "Chưa có lời nhắn",
+          method: "Chưa có phương thức",
+        };
+
+        await axios.put(`/pet/${selectedAdoption._id}`, updatedData);
+        const newPets = pets.filter(
+          (pet) => pet._id !== selectedAdoption._id
+        );
+        setPets(newPets);
+        setIsConfirmModalOpen(false);
+      } catch (error) {
+        console.error("Error updating pet data:", error);
+      }
     }
   };
 
@@ -76,8 +104,12 @@ function Adopt() {
                   Trạng thái
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Hành động
+                  Chi tiết
                 </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Xóa
+                </th>
+
               </tr>
             </thead>
             <tbody>
@@ -100,12 +132,25 @@ function Adopt() {
                     {pet.adoptStatus}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <button onClick={() => handleChangeClick(pet._id)} className="text-blue-500 hover:text-blue-700">Xem chi tiết</button>
+                    <button onClick={() => handleChangeClick(pet._id)} className="text-blue-500 hover:text-blue-700">
+                      <FontAwesomeIcon icon={faPenToSquare} />
+                    </button>
+                  </td>
+                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    <button onClick={() => handleDeleteClick(pet)} className="text-red-500 hover:text-red-700">
+                      <FontAwesomeIcon icon={faTrashCan} />
+                    </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          <ConfirmModal
+            isOpen={isConfirmModalOpen}
+            onClose={() => setIsConfirmModalOpen(false)}
+            onConfirm={handleConfirmDelete}
+            message={`Bạn có muốn xóa yêu cầu của ${selectedAdoption?.userName} không?`}
+          />
         </div>
       </div>
     </div>

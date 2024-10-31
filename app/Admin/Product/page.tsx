@@ -1,12 +1,23 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faTrashCan, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
+
+import ConfirmModal from "@/app/Component/ConfirmModal";
+
+library.add(faTrashCan, faPenToSquare, faPlus);
 import Sidebar from "@/app/Admin/sidebar";
 import Header from "@/app/Admin/Header";
 import { useRouter } from "next/navigation";
 import axios from "@/api/axios";
+
 function Product() {
   const [products, setProducts] = useState<any[]>([]);
   const Router = useRouter();
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -24,23 +35,32 @@ function Product() {
     console.log(`Details for product ${productId}`);
     Router.push(`/Admin/Product/${productId}`);
   };
-  const handleDeleteClick = async (productId: any) => {
-    console.log(`Delete for product ${productId}`);
-    try {
-      await axios.delete(`/product/${productId}`);
-      const newProducts = products.filter(
-        (product) => product._id !== productId
-      );
-      setProducts(newProducts);
-    } catch (error) {
-      console.error("Error deleting product:", error);
+
+  const handleDeleteClick = (product: any) => {
+    setSelectedProduct(product);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (selectedProduct) {
+      try {
+        await axios.delete(`/product/${selectedProduct._id}`);
+        const newProducts = products.filter(
+          (product) => product._id !== selectedProduct._id
+        );
+        setProducts(newProducts);
+        setIsConfirmModalOpen(false);
+      } catch (error) {
+        console.error("Error deleting product:", error);
+      }
     }
   };
+
   const handleAddClick = () => {
     console.log(`Add for order`);
     Router.push("/Admin/Product/AddProduct");
-    // Here you can navigate to a detail page or open a modal
   };
+
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 6;
 
@@ -59,6 +79,7 @@ function Product() {
   const handlePageChange = (pageNumber: any) => {
     setCurrentPage(pageNumber);
   };
+
   // Generate pagination buttons
   const renderPageNumbers = () => {
     const pageNumbers = [];
@@ -85,6 +106,7 @@ function Product() {
     }
     return pageNumbers;
   };
+
   return (
     <div className="flex flex-col w-full justify-center items-center">
       <Header></Header>
@@ -102,37 +124,37 @@ function Product() {
           <div className="flex w-full space-x-2 mt-4">
             <button
               onClick={handleAddClick}
-              className="bg-transparent border border-[#CCCCCC] text-black font-bold py-1 px-4 rounded-xl mb-2"
+              className="bg-transparent border border-[#CCCCCC] text-black font-bold py-1 px-4 rounded-xl mb-2 hover:bg-blue-500 hover:border-blue-600 hover:text-white"
             >
-              Thêm
+              <FontAwesomeIcon icon={faPlus} />
             </button>
           </div>
           <table className="min-w-full leading-normal">
             <thead>
               <tr>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Image
+                  Hình ảnh
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Name
+                  Tên
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Brand
+                  Nhãn hàng
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Quantity
+                  Số lượng
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Price
+                  Giá tiền
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Discount
+                  Giảm giá
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Status
+                  Trạng thái
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Xem
+                  Chi tiết
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Xóa
@@ -174,21 +196,27 @@ function Product() {
                         onClick={() => handleChangeClick(product._id)}
                         className="text-blue-500 hover:text-blue-700"
                       >
-                        Chi tiết
+                        <FontAwesomeIcon icon={faPenToSquare} />
                       </button>
                     </td>
                     <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                       <button
-                        onClick={() => handleDeleteClick(product._id)}
+                        onClick={() => handleDeleteClick(product)}
                         className="text-red-500 hover:text-red-700"
                       >
-                        Xóa
+                        <FontAwesomeIcon icon={faTrashCan} />
                       </button>
                     </td>
                   </tr>
                 ))}
             </tbody>
           </table>
+          <ConfirmModal
+            isOpen={isConfirmModalOpen}
+            onClose={() => setIsConfirmModalOpen(false)}
+            onConfirm={handleConfirmDelete}
+            message={`Bạn có muốn xóa sản phẩm ${selectedProduct?.name} không?`}
+          />
           <div className="pagination flex justify-center">
             <button
               onClick={() => handlePageChange(1)}

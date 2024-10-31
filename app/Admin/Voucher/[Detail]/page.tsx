@@ -1,9 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import useSWR, { mutate } from "swr";
+
 import Sidebar from "@/app/Admin/sidebar";
 import Header from "@/app/Admin/Header";
 import axios from "@/api/axios";
 import { useRouter } from "next/navigation";
+import ErrorModal from "@/app/Component/Error";
+import LoadingModal from "@/app/Component/Loading";
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, "0");
@@ -32,6 +36,10 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
     status: "",
   });
   const [isEditable, setIsEditable] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [loadWhat, setLoadWhat] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   useEffect(() => {
     const fetchVoucherData = async (id: any) => {
@@ -58,21 +66,79 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
     setData((prevData: any) => ({
       ...prevData,
       [id]: value,
+      //
+      discount_value: {
+        ...prevData.discount_value,
+        [id]: value,
+      },
     }));
   };
 
-  const handleSaveClick = () => {
-    const updateVoucherData = async (id: any) => {
-      try {
-        const response = await axios.put(`/voucher/${voucherId}`, data);
-        console.log("Voucher updated:", response.data);
-      } catch (error) {
-        console.error("Error fetching voucher data:", error);
-      }
-    };
-    updateVoucherData(data);
+  const handleSaveClick = async (e: any) => {
+    e.preventDefault();
 
-    router.push("/Admin/Voucher");
+    if (!data.name) {
+      setError("LACK_VOUCHERNAME");
+      return;
+    }
+    if (!data.UsedTime) {
+      setError("LACK_VOUCHERUSETIME");
+      return;
+    }
+    if (!data.quantity) {
+      setError("LACK_VOUCHERQUANTITY");
+      return;
+    }
+    if (!data.beginDate) {
+      setError("LACK_VOUCHERBEGINDATE");
+      return;
+    }
+    if (!data.endDate) {
+      setError("LACK_VOUCHERENDDATE");
+      return;
+    }
+    if (!data.code) {
+      setError("LACK_VOUCHERCODE");
+      return;
+    }
+    if (!data.discount_type) {
+      setError("LACK_VOUCHERDISCOUNTTYPE");
+      return;
+    }
+    if (!data.discount_value.value) {
+      setError("LACK_VOUCHERDISCOUNTVALUE");
+      return;
+    }
+    if (!data.discount_value.min_require) {
+      setError("LACK_VOUCHERMINREQUIRE");
+      return;
+    }
+    if (!data.discount_value.max_discount) {
+      setError("LACK_VOUCHERMAXDISCOUNT");
+      return;
+    }
+    if (!data.description) {
+      setError("LACK_VOUCHERDESCRIPTION");
+      return;
+    }
+    if (!data.status) {
+      setError("LACK_VOUCHERSTATUS");
+      return;
+    }
+
+    setLoadWhat("SEND_UPDATEVOUCHER_REQUEST");
+    setIsLoading(true);
+
+    try {
+      const response = await axios.put(`/voucher/${voucherId}`, data);
+      mutate(`/voucher/${voucherId}`);
+      setIsLoading(false);
+      setIsComplete(true);
+    } catch (error) {
+      setIsLoading(false);
+      setError("Error saving pet data");
+      console.error("Error saving voucher data:", error);
+    }
   };
 
   const handleChangeClick = async () => {
@@ -82,9 +148,17 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
   if (!data) {
     return <div>Loading...</div>;
   }
+  console.log(data);
 
   return (
     <div className="flex flex-col w-full justify-center items-center">
+      <ErrorModal error={error} setError={setError} />
+      <LoadingModal
+        isLoading={isLoading}
+        isComplete={isComplete}
+        setIsComplete={setIsComplete}
+        loadWhat={loadWhat}
+      />
       <Header />
       <div className="flex w-full">
         <Sidebar />
@@ -135,8 +209,8 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                     type="text"
                     value={data.UsedTime}
                     onChange={handleInputChange}
-                    disabled
-                    // disabled={!isEditable}
+                    
+                    disabled={!isEditable}
                   />
                 </div>
               </div>
@@ -207,13 +281,13 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                 <div className="w-full px-3">
                   <label
                     className="text-xs font-bold mb-2"
-                    htmlFor="MinRequire"
+                    htmlFor="min_require"
                   >
                     Yêu cầu tối thiểu
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="MinRequire"
+                    id="min_require"
                     type="text"
                     value={data.discount_value.min_require}
                     onChange={handleInputChange}
@@ -223,13 +297,13 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                 <div className="w-full px-3">
                   <label
                     className="text-xs font-bold mb-2"
-                    htmlFor="MaxDiscount"
+                    htmlFor="max_discount"
                   >
                     Giá trị giảm tối đa
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="MaxDiscount"
+                    id="max_discount"
                     type="text"
                     value={data.discount_value.max_discount}
                     onChange={handleInputChange}
@@ -241,7 +315,7 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                 <div className="w-full px-3">
                   <label
                     className="text-xs font-bold mb-2"
-                    htmlFor="discount_value"
+                    htmlFor="value"
                   >
                     Giá trị giảm giá{" "}
                     {data.discount_type === "Giảm theo phần trăm"
@@ -250,7 +324,7 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="discount_value"
+                    id="value"
                     type="text"
                     value={data.discount_value.value}
                     onChange={handleInputChange}

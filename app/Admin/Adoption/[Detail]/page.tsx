@@ -112,24 +112,10 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
     }
   };
 
-  // const handleChangeClick = async () => {
-  //   setIsEditable(true);
-  //   setShowButton(true);
-  //   // const log = await axios.post(`/test`, data);
-  // };
 
   const handleDeleteClick = async () => {
     setIsConfirmModalOpen(true);
   };
-
-  // const handleConfirmDelete = async () => {
-  //   try {
-  //     await axios.delete(`/news/${id}`);
-  //     router.push("../Blog"); // Redirect to the news list page after deleting
-  //   } catch (error) {
-  //     console.error("Error deleting news:", error);
-  //   }
-  // };
   const handleConfirmDelete = async () => {
     try {
       const updatedData = {
@@ -237,14 +223,7 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
                   Hình ảnh
                 </label>
 
-                {/* <input
-                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="image"
-                  type="file"
-                  value={data.image}
-                  onChange={handleInputChange}
-                  disabled={!isEditable}
-                /> */}
+
                 {data.image && (
                   <img
                     className="mt-4"
@@ -307,22 +286,7 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
                 ></textarea>
               </div>
 
-              <div className="w-full px-3">
-                <label
-                  className="text-xs font-bold mb-2"
-                  htmlFor="employeeName"
-                >
-                  Nhân viên xử lý
-                </label>
-                <input
-                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="employeeName"
-                  type="text"
-                  value={data.employeeName}
-                  onChange={handleInputChange}
-                  disabled={!isEditable}
-                />
-              </div>
+
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="adoptStatus">
                   Trạng thái

@@ -29,6 +29,13 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
     if(loadWhat=="SEND_UPDATEPRODUCT_REQUEST"){
       window.location.href = "/Admin/Product";
     }
+    if(loadWhat=="SEND_UPDATEVOUCHER_REQUEST"){
+      window.location.href = "/Admin/Voucher";
+    }
+    if(loadWhat=="SEND_UPDATERESCUE_REQUEST"){
+      window.location.href = "/Admin/Rescue";
+
+    }
   };
 
   if (!isLoading && !isComplete) {
@@ -65,6 +72,9 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             {loadWhat=="SEND_UPDATEPET_REQUEST"&& <p>Đã cập nhật thông tin thành công!</p>}
             {loadWhat=="SEND_ADDPRODUCT_REQUEST"&& <p>Đã thêm sản phẩm thành công!</p>}
             {loadWhat=="SEND_UPDATEPRODUCT_REQUEST"&& <p>Đã cập nhật thông tin sản phẩm!</p>}
+            {loadWhat=="SEND_UPDATEVOUCHER_REQUEST"&& <p>Đã cập nhật thông tin mã giảm giá!</p>}
+            {loadWhat=="SEND_UPDATERESCUE_REQUEST"&& <p>Đã cập nhật thông tin yêu cầu cứu hộ!</p>}
+
 
 
 

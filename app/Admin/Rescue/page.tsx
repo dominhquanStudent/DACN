@@ -1,5 +1,14 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
+
+import ConfirmModal from '@/app/Component/ConfirmModal';
+
+
+library.add(faTrashCan, faPenToSquare);
 import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import { useRouter } from 'next/navigation';
@@ -18,6 +27,9 @@ function Rescue() {
   const [currentPage, setCurrentPage] = useState(1);
   const rescuesPerPage = 12;
   const Router = useRouter();
+  const [selectedRescue, setSelectedRescue] = useState<any | null>(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+
 
   useEffect(() => {
     const fetchRescues = async () => {
@@ -36,21 +48,29 @@ function Rescue() {
     Router.push(`/Admin/Rescue/${rescueId}`);
   };
 
-  const handleDeleteClick = async (rescueId: any) => {
-    console.log(`Delete for rescue ${rescueId}`);
-    try {
-      await axios.delete(`/rescueRequest/${rescueId}`);
-      const newRescues = rescues.filter((rescue) => rescue._id !== rescueId);
-      setRescues(newRescues);
-    } catch (error) {
-      console.error('Error deleting rescue:', error);
+  const handleDeleteClick = (rescue: any) => {
+    setSelectedRescue(rescue);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (selectedRescue) {
+      try {
+        await axios.delete(`/rescueRequest/${selectedRescue._id}`);
+        const newRescues = rescues.filter(
+          (rescue) => rescue._id !== selectedRescue._id
+        );
+        setRescues(newRescues);
+        setIsConfirmModalOpen(false);
+      } catch (error) {
+        console.error('Error deleting rescue:', error);
+      }
     }
   };
 
   const handleAddClick = () => {
     console.log(`Add for order`);
     Router.push('/Admin/Rescue/AddRescue');
-    // Here you can navigate to a detail page or open a modal
   };
 
   // Calculate the rescues to display on the current page
@@ -62,7 +82,7 @@ function Rescue() {
   const totalPages = Math.ceil(rescues.length / rescuesPerPage);
 
   // Handle page change
-  const handlePageChange = (pageNumber:any) => {
+  const handlePageChange = (pageNumber: any) => {
     setCurrentPage(pageNumber);
   };
 
@@ -87,6 +107,7 @@ function Rescue() {
 
   return (
     <div className='flex flex-col w-full justify-center items-center'>
+
       <Header></Header>
       <div className='flex w-full'>
         <Sidebar></Sidebar>
@@ -114,7 +135,7 @@ function Rescue() {
                   Trạng thái
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Xem 
+                  Chi tiết 
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Xóa
@@ -145,15 +166,25 @@ function Rescue() {
                     {rescue.requestStatus}
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <button onClick={() => handleChangeClick(rescue._id)} className="text-blue-500 hover:text-blue-700">Chi tiết</button>
+                    <button onClick={() => handleChangeClick(rescue._id)} className="text-blue-500 hover:text-blue-700">
+                      <FontAwesomeIcon icon={faPenToSquare} />
+                    </button>
                   </td>
                   <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <button onClick={() => handleDeleteClick(rescue._id)} className="text-red-500 hover:text-red-700">Xóa</button>
+                    <button onClick={() => handleDeleteClick(rescue)} className="text-red-500 hover:text-red-700">
+                      <FontAwesomeIcon icon={faTrashCan} />
+                    </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          <ConfirmModal
+            isOpen={isConfirmModalOpen}
+            onClose={() => setIsConfirmModalOpen(false)}
+            onConfirm={handleConfirmDelete}
+            message={`Bạn có muốn xóa yêu cầu cứu hộ này không?`}
+          />
           <div className="pagination flex justify-center mt-4">
             <button
               onClick={() => handlePageChange(1)}
