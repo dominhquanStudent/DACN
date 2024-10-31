@@ -78,7 +78,7 @@ export default function Header(props: any) {
   };
 
   const handleNotificationClick = (id: string) => {
-    router.push(`/Notification/${id}`);
+    router.push(`/Profile/Notification/${id}`);
   };
 
   return (
@@ -121,18 +121,28 @@ export default function Header(props: any) {
             <div onClick={toggleDropdown} className="cursor-pointer relative">
               <img className="h-7" src={notification.src} alt="Notification" />
               {showDropdown && (
-                <div className="absolute right-[-10px] mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                <div className="absolute right-[-10px] mt-2 w-60 bg-white border border-gray-300 rounded-md shadow-lg z-10">
                   <ul>
-                    {notifications.map((notification) => (
+                  {notifications.slice(0, 5).map((notification) => (
                       <li
                         key={notification._id}
                         className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                         onClick={() => handleNotificationClick(notification._id)}
                       >
-                        {notification.Title}
+                        <span className={`block truncate ${notification.status === "Chưa đọc" ? "font-bold text-blue-500" : ""}`}>
+                          {notification.Title}
+                        </span>
                       </li>
                     ))}
                   </ul>
+                  <div className="border-t border-gray-300">
+                    <button
+                      onClick={() => router.push('/Profile/Notification')}
+                      className="w-full px-4 py-1 text-blue-500 hover:bg-gray-100"
+                    >
+                      Thêm
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

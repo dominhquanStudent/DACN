@@ -66,13 +66,7 @@ function Profile() {
 
     return (
         <div className='flex flex-col w-full justify-center items-center'>
-{
-    data.avatar.url ? (
-        <Header avatar={data.avatar.url} />
-    ) : (
         <Header />
-    )
-}
             <div className='flex w-full'>
                 <Sidebar />
                 <div className='w-3/4 border-l-2 border-gray-200'>

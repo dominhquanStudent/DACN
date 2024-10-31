@@ -2,16 +2,15 @@
 import Header from "@/app/Component/Header/Header";
 import Footer from "@/app/Component/Footer/Footer";
 import Product_Frame from "./Product_Frame";
-import Momo from "@/public/img/Momo.png";
 import ZaloPay from "@/public/img/ZaloPay.png";
 import axios from "@/api/axios";
 import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
 import _ from 'lodash'; // Import lodash for debouncing
 import LoadingModal from "@/app/Component/Loading";
-import moment from "moment";
 import ErrorModal from "@/app/Component/Error";
 import { useRouter } from "next/navigation";
+import { sendNotifications } from "@/ultis/notificationUtils";
 export default function Cart() {
   //Handle loading and complete
   const router = useRouter();
@@ -198,6 +197,13 @@ export default function Cart() {
       setIsComplete(true);
       router.push("/Cart");
       fetchCartData();
+      sendNotifications({
+        user_id: cartData.cart.user_id,
+        category: 'Đơn hàng',
+        Title: 'Đặt đơn hàng thành công',
+        content: `Đơn hàng ${response.data.order._id} đã được đặt thành công`,
+        status: 'Chưa đọc'
+    });
     } catch (error) {
       console.error("Error placing order:", error);
     }

@@ -1,7 +1,7 @@
 import React from 'react';
-
+import Link from 'next/link';
 interface NotificationProps {
-  id: string;
+  _id: string;
   user_id: string;
   Title: string;
   category: string;
@@ -10,13 +10,15 @@ interface NotificationProps {
   onClick: (id: string) => void;
 }
 
-const Notification: React.FC<NotificationProps> = ({ Title, content, status }) => {
+const Notification: React.FC<NotificationProps> = ({ _id, Title, content, status, onClick }) => {
   return (
-    <div className="notification border border-gray-300 p-4 bg-white shadow-md rounded-md">
-      <h2 className="text-xl font-semibold mb-2">{Title}</h2>
-      <div className="text-gray-700" dangerouslySetInnerHTML={{ __html: content }} />
-      <p className="text-sm text-gray-500 mt-2">Status: {status}</p>
-    </div>
+    <Link href={`/Profile/Notification/${_id}`}>
+      <div className="notification border border-gray-300 p-4 bg-white shadow-md rounded-md mb-4">
+        <h2 className="text-xl font-semibold mb-2">{Title}</h2>
+        <div className="text-gray-700" dangerouslySetInnerHTML={{ __html: content }} />
+        {/* <p className="text-sm text-gray-500 mt-2">Status: {status}</p> */}
+      </div>
+    </Link>
   );
 };
 
