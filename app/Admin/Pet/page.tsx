@@ -1,5 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faTrashCan, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+
+
+
+import ConfirmModal from "@/app/Component/ConfirmModal";
+
+library.add(faTrashCan, faPenToSquare, faPlus);
 import Sidebar from "@/app/Admin/sidebar";
 import Header from "@/app/Admin/Header";
 import { useRouter } from "next/navigation";
@@ -13,11 +23,11 @@ function formatDate(dateString: string): string {
   return `${day}/${month}/${year}`;
 }
 
-function Pet() {
+function PetManagement() {
   const [pets, setPets] = useState<any[]>([]);
-  
-  
   const Router = useRouter();
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [selectedPet, setSelectedPet] = useState<any | null>(null);
 
   useEffect(() => {
     const fetchPets = async () => {
@@ -31,31 +41,37 @@ function Pet() {
     fetchPets();
   }, []);
 
+  const handleAddClick = () => {
+    Router.push("/Admin/Pet/AddPet");
+  }
+
   const handleChangeClick = (petId: any) => {
     console.log(`Details for pet ${petId}`);
     Router.push(`/Admin/Pet/${petId}`);
   };
 
-  const handleDeleteClick = async (petId: any) => {
-    console.log(`Delete for pet ${petId}`);
-    try {
-      await axios.delete(`/pet/${petId}`);
-      const newPets = pets.filter((pet) => pet._id !== petId);
-      setPets(newPets);
-    } catch (error) {
-      console.error("Error deleting pet:", error);
+  const handleDeleteClick = (pet: any) => {
+    setSelectedPet(pet);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (selectedPet) {
+      try {
+        await axios.delete(`/pet/${selectedPet._id}`);
+        const newPets = pets.filter((pet) => pet._id !== selectedPet._id);
+        setPets(newPets);
+        setIsConfirmModalOpen(false);
+      } catch (error) {
+        console.error("Error deleting pet:", error);
+      }
     }
   };
 
-  const handleAddClick = () => {
-    console.log(`Add for order`);
-    Router.push("/Admin/Pet/AddPet");
-    // Here you can navigate to a detail page or open a modal
-  };
-  const petsPerPage = 6;
   const [currentPage, setCurrentPage] = useState(1);
+  const petsPerPage = 6;
+
   // Calculate the pets to display on the current page
-  
   const indexOfLastPet = currentPage * petsPerPage;
   const indexOfFirstPet = indexOfLastPet - petsPerPage;
   const currentPets = pets.slice(indexOfFirstPet, indexOfLastPet);
@@ -64,7 +80,7 @@ function Pet() {
   const totalPages = Math.ceil(pets.length / petsPerPage);
 
   // Handle page change
-  const handlePageChange = (pageNumber:any) => {
+  const handlePageChange = (pageNumber: any) => {
     setCurrentPage(pageNumber);
   };
 
@@ -77,11 +93,19 @@ function Pet() {
       }
     } else {
       if (currentPage <= 3) {
-        pageNumbers.push(1, 2, 3, '...', totalPages);
+        pageNumbers.push(1, 2, 3, "...", totalPages);
       } else if (currentPage >= totalPages - 2) {
-        pageNumbers.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
+        pageNumbers.push(1, "...", totalPages - 2, totalPages - 1, totalPages);
       } else {
-        pageNumbers.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+        pageNumbers.push(
+          1,
+          "...",
+          currentPage - 1,
+          currentPage,
+          currentPage + 1,
+          "...",
+          totalPages
+        );
       }
     }
     return pageNumbers;
@@ -89,24 +113,24 @@ function Pet() {
 
   return (
     <div className="flex flex-col w-full justify-center items-center">
-      <Header></Header>
+      <Header />
       <div className="flex w-full">
-        <Sidebar></Sidebar>
+        <Sidebar />
         <div className="w-3/4 border-l-2 border-gray-200 px-4">
           <div
             className={
               "flex font-nunito text-xl font-bold w-full justify-center mb-4"
             }
           >
-            Quản lý sản phẩm
+            Quản lý thú cưng
           </div>
           {/* Table */}
           <div className="flex w-full space-x-2 mt-4">
             <button
               onClick={handleAddClick}
-              className="bg-transparent border border-[#CCCCCC] text-black font-bold py-1 px-4 rounded-xl mb-2"
+              className="bg-transparent border border-[#CCCCCC] text-black font-bold py-1 px-4 rounded-xl mb-2 hover:bg-blue-500 hover:border-blue-600 hover:text-white"
             >
-              Thêm
+              <FontAwesomeIcon icon={faPlus} className="h-4 w-4" />
             </button>
           </div>
           <table className="min-w-full leading-normal">
@@ -128,7 +152,7 @@ function Pet() {
                   Giống loại
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Vaccine
+                  Tiêm phòng
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Nhận nuôi
@@ -142,49 +166,64 @@ function Pet() {
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(currentPets) && currentPets.map((pet: any) => (
-                <tr key={pet._id}>
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <img loading="lazy" src={pet.image.url} alt={pet.name} className="h-16 rounded-full" />
-                  </td>
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {pet.petName}
-                  </td>
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {pet.gender}
-                  </td>
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {pet.age}
-                  </td>
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {pet.race}
-                  </td>
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {pet.vaccinated}
-                  </td>
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {pet.adoptStatus}
-                  </td>
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <button
-                      onClick={() => handleChangeClick(pet._id)}
-                      className="text-blue-500 hover:text-blue-700"
-                    >
-                      Xem{" "}
-                    </button>
-                  </td>
-                  <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    <button
-                      onClick={() => handleDeleteClick(pet._id)}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      Xóa
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {Array.isArray(currentPets) &&
+                currentPets.map((pet: any) => (
+                  <tr key={pet._id}>
+                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                      <img
+                        loading="lazy"
+                        src={pet.image.url}
+                        alt={pet.name}
+                        className="h-16 rounded-full"
+                      />
+                    </td>
+                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                      {pet.petName}
+                    </td>
+                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                      {pet.gender}
+                    </td>
+                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                      {pet.age}
+                    </td>
+                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                      {pet.race}
+                    </td>
+                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                      {pet.vaccinated}
+                    </td>
+                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                      {pet.adoptStatus}
+                    </td>
+                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm justify-center">
+                      <button
+                        onClick={() => handleChangeClick(pet._id)}
+                        className="text-blue-500 hover:text-blue-700 justify-center"
+                      >
+                        <FontAwesomeIcon icon={faPenToSquare} className="h-4 w-4" />
+                      </button>
+                    </td>
+                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                      <button
+                        onClick={() => handleDeleteClick(pet)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <FontAwesomeIcon
+                          icon={faTrashCan}
+                          className="h-4 w-4"
+                        />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
+          <ConfirmModal
+            isOpen={isConfirmModalOpen}
+            onClose={() => setIsConfirmModalOpen(false)}
+            onConfirm={handleConfirmDelete}
+            message={`Bạn có muốn xóa bé ${selectedPet?.petName} không?`}
+          />
           <div className="pagination flex justify-center mt-4">
             <button
               onClick={() => handlePageChange(1)}
@@ -203,11 +242,15 @@ function Pet() {
             {renderPageNumbers().map((pageNumber, index) => (
               <button
                 key={index}
-                onClick={() => typeof pageNumber === 'number' && handlePageChange(pageNumber)}
+                onClick={() =>
+                  typeof pageNumber === "number" && handlePageChange(pageNumber)
+                }
                 className={`px-3 py-1 mx-1 ${
-                  currentPage === pageNumber ? "bg-blue-500 text-white" : "bg-gray-200 hover:bg-gray-300"
+                  currentPage === pageNumber
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 hover:bg-gray-300"
                 }`}
-                disabled={typeof pageNumber !== 'number'}
+                disabled={typeof pageNumber !== "number"}
               >
                 {pageNumber}
               </button>
@@ -233,4 +276,4 @@ function Pet() {
   );
 }
 
-export default Pet;
+export default PetManagement;

@@ -1,10 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import ConfirmModal from "@/app/Component/ConfirmModal";
+
+library.add(faTrashCan, faPenToSquare);
 import Sidebar from "@/app/Admin/sidebar";
 import Header from "@/app/Admin/Header";
 import { useRouter } from "next/navigation";
 import axios from "@/api/axios";
-import Calendar from 'react-calendar';
 type ValuePiece = Date | null;
 
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -57,9 +63,11 @@ function isPast(dateString: string): boolean {
 function Appointment() {
   const [appointments, setAppointments] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("all");
-  
+
   const Router = useRouter();
   const [value, onChange] = useState<Value>(new Date());
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<any | null>(null);
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -78,16 +86,23 @@ function Appointment() {
     Router.push(`/Admin/Appointment/${appointmentId}`);
   };
 
-  const handleDeleteClick = async (appointmentId: any) => {
-    console.log(`Delete for appointment ${appointmentId}`);
-    try {
-      await axios.delete(`/appointment/${appointmentId}`);
-      const newAppointments = appointments.filter(
-        (appointment) => appointment._id !== appointmentId
-      );
-      setAppointments(newAppointments);
-    } catch (error) {
-      console.error("Error deleting appointment:", error);
+  const handleDeleteClick = (appointment: any) => {
+    setSelectedAppointment(appointment);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (selectedAppointment) {
+      try {
+        await axios.delete(`/appointment/${selectedAppointment._id}`);
+        const newAppointments = appointments.filter(
+          (appointment) => appointment._id !== selectedAppointment._id
+        );
+        setAppointments(newAppointments);
+        setIsConfirmModalOpen(false);
+      } catch (error) {
+        console.error("Error deleting appointment:", error);
+      }
     }
   };
 
@@ -98,22 +113,24 @@ function Appointment() {
     if (filter === "month") return isThisMonth(appointment.date);
     if (filter === "past") return isPast(appointment.date);
   });
+
   const [currentPage, setCurrentPage] = useState(1);
   const appointmentsPerPage = 12;
-  // Calculate the appointments to display on the current page
   const indexOfLastAppointment = currentPage * appointmentsPerPage;
   const indexOfFirstAppointment = indexOfLastAppointment - appointmentsPerPage;
-  const currentAppointments = filteredAppointments.slice(indexOfFirstAppointment, indexOfLastAppointment);
+  const currentAppointments = filteredAppointments.slice(
+    indexOfFirstAppointment,
+    indexOfLastAppointment
+  );
 
-  // Calculate total pages
-  const totalPages = Math.ceil(filteredAppointments.length / appointmentsPerPage);
+  const totalPages = Math.ceil(
+    filteredAppointments.length / appointmentsPerPage
+  );
 
-  // Handle page change
-  const handlePageChange = (pageNumber:any) => {
+  const handlePageChange = (pageNumber: any) => {
     setCurrentPage(pageNumber);
   };
 
-  // Generate pagination buttons
   const renderPageNumbers = () => {
     const pageNumbers = [];
     if (totalPages <= 4) {
@@ -122,11 +139,19 @@ function Appointment() {
       }
     } else {
       if (currentPage <= 3) {
-        pageNumbers.push(1, 2, 3, '...', totalPages);
+        pageNumbers.push(1, 2, 3, "...", totalPages);
       } else if (currentPage >= totalPages - 2) {
-        pageNumbers.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
+        pageNumbers.push(1, "...", totalPages - 2, totalPages - 1, totalPages);
       } else {
-        pageNumbers.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+        pageNumbers.push(
+          1,
+          "...",
+          currentPage - 1,
+          currentPage,
+          currentPage + 1,
+          "...",
+          totalPages
+        );
       }
     }
     return pageNumbers;
@@ -183,7 +208,7 @@ function Appointment() {
                   Bác sĩ chỉ định
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Xem
+                  Chi tiết
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Xóa
@@ -194,7 +219,14 @@ function Appointment() {
               {Array.isArray(currentAppointments) &&
                 currentAppointments.map((appointment: any) => {
                   return (
-                    <tr key={appointment._id} className={isToday(appointment.date) ? "bg-blue-50" : "bg-white text-sm"}>
+                    <tr
+                      key={appointment._id}
+                      className={
+                        isToday(appointment.date)
+                          ? "bg-blue-50"
+                          : "bg-white text-sm"
+                      }
+                    >
                       <td className="px-5 py-2 border-b border-gray-200">
                         {appointment.userName}
                       </td>
@@ -221,15 +253,15 @@ function Appointment() {
                           onClick={() => handleChangeClick(appointment._id)}
                           className="text-blue-500 hover:text-blue-700"
                         >
-                          Chi tiết
+                          <FontAwesomeIcon icon={faPenToSquare} />
                         </button>
                       </td>
                       <td className="px-5 py-2 border-b border-gray-200">
                         <button
-                          onClick={() => handleDeleteClick(appointment._id)}
+                          onClick={() => handleDeleteClick(appointment)}
                           className="text-red-500 hover:text-red-700"
                         >
-                          Xóa
+                          <FontAwesomeIcon icon={faTrashCan} />
                         </button>
                       </td>
                     </tr>
@@ -237,6 +269,12 @@ function Appointment() {
                 })}
             </tbody>
           </table>
+          <ConfirmModal
+            isOpen={isConfirmModalOpen}
+            onClose={() => setIsConfirmModalOpen(false)}
+            onConfirm={handleConfirmDelete}
+            message={`Bạn có muốn xóa lịch hẹn của ${selectedAppointment?.userName} không?`}
+          />
           <div className="pagination flex justify-center mt-4">
             <button
               onClick={() => handlePageChange(1)}
@@ -255,11 +293,15 @@ function Appointment() {
             {renderPageNumbers().map((pageNumber, index) => (
               <button
                 key={index}
-                onClick={() => typeof pageNumber === 'number' && handlePageChange(pageNumber)}
+                onClick={() =>
+                  typeof pageNumber === "number" && handlePageChange(pageNumber)
+                }
                 className={`px-3 py-1 mx-1 ${
-                  currentPage === pageNumber ? "bg-blue-500 text-white" : "bg-gray-200 hover:bg-gray-300"
+                  currentPage === pageNumber
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 hover:bg-gray-300"
                 }`}
-                disabled={typeof pageNumber !== 'number'}
+                disabled={typeof pageNumber !== "number"}
               >
                 {pageNumber}
               </button>
