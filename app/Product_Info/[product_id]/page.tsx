@@ -14,6 +14,7 @@ import getInfo from "@/hooks/getInfo";
 import RenderStars from "@/app/Product_Info/[product_id]/renderStars";
 import LoadingModal from "@/app/Component/Loading";
 import ErrorModal from "@/app/Component/Error";
+
 export default function ProductDetailPage({
   params,
 }: {
@@ -29,20 +30,53 @@ export default function ProductDetailPage({
   const [accountData, setAccountData] = useState<any>(null);
 
   const fetchData = async () => {
-   const getaccountData = await getInfo();
+    const getaccountData = await getInfo();
     setAccountData(getaccountData);
-    
   };
-  
-  
+
   const productId = params.product_id;
-  const [data, setData] = useState<any>({"name":"", "description":"", "price":0, "image":{"url":[""]}, "rating":0});
+  const [data, setData] = useState<any>({ "name": "", "description": "", "price": 0, "image": { "url": [""] }, "rating": 0 });
   const [reviews, setReviews] = useState<any[]>([]);
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
   const [comment, setComment] = useState('');
-  
-  //get comments from server
 
+  // Pagination state for comments
+  const [currentPage, setCurrentPage] = useState(1);
+  const commentsPerPage = 5;
+
+  // Calculate the comments to display on the current page
+  const indexOfLastComment = currentPage * commentsPerPage;
+  const indexOfFirstComment = indexOfLastComment - commentsPerPage;
+  const currentComments = reviews.slice(indexOfFirstComment, indexOfLastComment);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(reviews.length / commentsPerPage);
+
+  // Handle page change
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Generate pagination buttons
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    if (totalPages <= 4) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        pageNumbers.push(1, 2, 3, '...', totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pageNumbers.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pageNumbers.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+      }
+    }
+    return pageNumbers;
+  };
+
+  //get comments from server
   useEffect(() => {
     const fetchProductData = async () => {
       try {
@@ -58,45 +92,39 @@ export default function ProductDetailPage({
     const fetchReviews = async () => {
       try {
         const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const response = await axios.get(`${baseURL}/review/${productId}`);     
+        const response = await axios.get(`${baseURL}/review/${productId}`);
         setReviews(response.data.review);
-        
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
-      if(jwt){fetchData();}
+      if (jwt) { fetchData(); }
     };
     if (productId) {
       fetchReviews();
       fetchProductData();
     }
   }, [productId]);
-    //Automatically update current product rating
-    const [ratingTimes, setRatingTimes] = useState<number >(0);
-    const [productRating, setProductRating] = useState<number >(0);
-    useEffect(() => {
-      
-      const calculateAverageRating = () => {
-          if (reviews.length === 0) return 0;
-          const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
-          return totalRating / reviews.length;
-      };
-      const averageRating = calculateAverageRating();
-      setProductRating(averageRating);
-      setRatingTimes(reviews.length);
-      
-      
-  }, [reviews]);
 
+  //Automatically update current product rating
+  const [ratingTimes, setRatingTimes] = useState<number>(0);
+  const [productRating, setProductRating] = useState<number>(0);
+  useEffect(() => {
+    const calculateAverageRating = () => {
+      if (reviews.length === 0) return 0;
+      const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+      return totalRating / reviews.length;
+    };
+    const averageRating = calculateAverageRating();
+    setProductRating(averageRating);
+    setRatingTimes(reviews.length);
+  }, [reviews]);
 
   const handleRatingChange = (rating: number) => {
     setSelectedRating(rating);
   };
 
-
   //Error handling for empty comment and rating
-  
-    ///////post review to db
+  ///////post review to db
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (!comment.trim()) {
@@ -106,7 +134,6 @@ export default function ProductDetailPage({
     else if (!selectedRating) {
       setError("EMPTY RATING");
       return;
-      
     }
     else if (!accountData) {
       setError("NOT_LOGGED_IN_COMMENT");
@@ -114,15 +141,13 @@ export default function ProductDetailPage({
     }
     setIsLoading(true);
     setLoadWhat("ADD_COMMENT");
-     try {
+    try {
       const reviewInfo = {
         user_id: accountData._id, // Replace with actual user ID
         user_name: accountData.userName, // Replace with actual user name
         product_id: productId, // Replace with actual product ID
         rating: selectedRating,
         content: comment,
-        image: [], // Add image URLs if any
-        user_avatar: accountData.avatar.url,
       };
       const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await axios.post(`${baseURL}/review/add`, reviewInfo);
@@ -138,24 +163,24 @@ export default function ProductDetailPage({
       console.error("Error submitting review:", error);
     }
   };
-  //handle amount and total price of product
 
+  //handle amount and total price of product
   const [amount, setAmount] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
   const handleAmountChange = (Amount: number) => {
-
     if (Amount > 0) {
       setAmount(Amount);
       setTotalPrice(Amount * data.discount_price);
     }
   };
+
   //handle add to cart
-  
-  const handleAddToCart = async(e: any) => {
+  const handleAddToCart = async (e: any) => {
     e.preventDefault();
     if (!accountData) {
       setError("NOT_LOGGED_IN_CART");
-      return;}
+      return;
+    }
     setIsLoading(true);
     setLoadWhat("ADD_TO_CART");
     try {
@@ -163,19 +188,18 @@ export default function ProductDetailPage({
         user_id: accountData._id, // Replace with actual user ID
         product_id: productId,
         quantity: amount,
-       
       };
       const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
-      const response = await axios.post(`${baseURL}/cart/addProduct`, cartItem);  
+      const response = await axios.post(`${baseURL}/cart/addProduct`, cartItem);
       setIsComplete(true);
       console.log(response.data);
     } catch (error) {
       console.error("Error adding to cart:", error);
-    }finally {
+    } finally {
       setIsLoading(false);
     }
-      
   };
+
   return (
     <>
       <Header />
@@ -201,43 +225,82 @@ export default function ProductDetailPage({
           </div>
 
           {/* Comment box */}
-
-    
           <div className="mt-4 flex flex-col items-end border-b-2 ">
-              <div className="w-11/12 flex items-center text-lg font-semibold ">
-                Đánh giá sản phẩm <StarRating handleRatingChange={handleRatingChange} />
-              </div>
-              <textarea
-                className="w-11/12 h-20 border border-gray-300 rounded mb-3"
-                placeholder="Nhập bình luận"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-              ></textarea>
-              
-              <button
-                className="w-2/12 rounded-md bg-blue-500 py-2 px-6 font-kd2 text-xs font-bold 
+            <div className="w-11/12 flex items-center text-lg font-semibold ">
+              Đánh giá sản phẩm <StarRating handleRatingChange={handleRatingChange} />
+            </div>
+            <textarea
+              className="w-11/12 h-20 border border-gray-300 rounded mb-3"
+              placeholder="Nhập bình luận"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            ></textarea>
+            <button
+              className="w-2/12 rounded-md bg-blue-500 py-2 px-6 font-kd2 text-xs font-bold 
                     uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 
                     focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none 
                     disabled:opacity-50 disabled:shadow-none mb-4"
-                data-ripple-light="true"
-                onClick={handleSubmit}
-                
-              >
-                Gửi
-              </button>
-            </div>
-          
+              data-ripple-light="true"
+              onClick={handleSubmit}
+            >
+              Gửi
+            </button>
+          </div>
 
           {/* Comments */}
-          {reviews.map((review) => (
+          {currentComments.map((review) => (
             <Comment
               key={review._id}
               user_name={review.user_name}
               rating={review.rating}
               content={review.content}
               createdAt={review.createdAt}
+              avatar={review.user_avatar}
+              accountData={accountData}
             />
           ))}
+
+          {/* Pagination Controls */}
+          <div className="pagination flex justify-center mt-4">
+            <button
+              onClick={() => handlePageChange(1)}
+              className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+              disabled={currentPage === 1}
+            >
+              &laquo;
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+              disabled={currentPage === 1}
+            >
+              &lt;
+            </button>
+            {renderPageNumbers().map((pageNumber, index) => (
+              <button
+                key={index}
+                onClick={() => typeof pageNumber === 'number' && handlePageChange(pageNumber)}
+                className={`px-3 py-1 mx-1 ${currentPage === pageNumber ? "bg-blue-500 text-white" : "bg-gray-200 hover:bg-gray-300"}`}
+                disabled={typeof pageNumber !== 'number'}
+              >
+                {pageNumber}
+              </button>
+            ))}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+              disabled={currentPage === totalPages}
+            >
+              &gt;
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+              disabled={currentPage === totalPages}
+            >
+              &raquo;
+            </button>
+          </div>
         </div>
 
         {/* Right column */}
@@ -245,43 +308,43 @@ export default function ProductDetailPage({
           {/* Volume */}
           <div className="font-light mb-3">Số lượng</div>
           <div className="flex items-center max-[500px]:justify-center  max-md:mt-3">
-                <div className="flex items-center h-full">
-                    <button
-                        className="group rounded-l-xl px-5 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:bg-gray-50 hover:border-gray-300 hover:shadow-gray-300 focus-within:outline-gray-300" onClick={() => handleAmountChange(amount - 1)}>
-                        <svg className="stroke-gray-900 transition-all duration-500 group-hover:stroke-black"
-                            xmlns="http://www.w3.org/2000/svg" width="22" height="22"
-                            viewBox="0 0 22 22" fill="none">
-                            <path d="M16.5 11H5.5" stroke="" strokeWidth="1.6"
-                                strokeLinecap="round" />
-                            <path d="M16.5 11H5.5" stroke="" strokeOpacity="0.2" strokeWidth="1.6"
-                                strokeLinecap="round" />
-                            <path d="M16.5 11H5.5" stroke="" strokeOpacity="0.2" strokeWidth="1.6"
-                                strokeLinecap="round" />
-                        </svg>
-                    </button>
-                    <input type="number" value={amount} onChange={(e) => setAmount(parseInt(e.target.value))} min="1"
-                        className="border-y border-gray-200 outline-none text-gray-900 font-semibold text-lg w-full max-w-[73px] min-w-[60px] placeholder:text-gray-900 py-[15px]  text-center bg-transparent"
-                        placeholder="1"/>
-                    <button
-                        className="group rounded-r-xl px-5 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:bg-gray-50 hover:border-gray-300 hover:shadow-gray-300 focus-within:outline-gray-300" onClick={() => handleAmountChange(amount + 1)}>
-                        <svg className="stroke-gray-900 transition-all duration-500 group-hover:stroke-black"
-                            xmlns="http://www.w3.org/2000/svg" width="22" height="22"
-                            viewBox="0 0 22 22" fill="none">
-                            <path d="M11 5.5V16.5M16.5 11H5.5" stroke="" strokeWidth="1.6"
-                                strokeLinecap="round" />
-                            <path d="M11 5.5V16.5M16.5 11H5.5" stroke="" strokeOpacity="0.2"
-                                strokeWidth="1.6" strokeLinecap="round" />
-                            <path d="M11 5.5V16.5M16.5 11H5.5" stroke="" strokeOpacity="0.2"
-                                strokeWidth="1.6" strokeLinecap="round" />
-                        </svg>
-                    </button>
-                </div>
+            <div className="flex items-center h-full">
+              <button
+                className="group rounded-l-xl px-5 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:bg-gray-50 hover:border-gray-300 hover:shadow-gray-300 focus-within:outline-gray-300" onClick={() => handleAmountChange(amount - 1)}>
+                <svg className="stroke-gray-900 transition-all duration-500 group-hover:stroke-black"
+                  xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                  viewBox="0 0 22 22" fill="none">
+                  <path d="M16.5 11H5.5" stroke="" strokeWidth="1.6"
+                    strokeLinecap="round" />
+                  <path d="M16.5 11H5.5" stroke="" strokeOpacity="0.2" strokeWidth="1.6"
+                    strokeLinecap="round" />
+                  <path d="M16.5 11H5.5" stroke="" strokeOpacity="0.2" strokeWidth="1.6"
+                    strokeLinecap="round" />
+                </svg>
+              </button>
+              <input type="number" value={amount} onChange={(e) => setAmount(parseInt(e.target.value))} min="1"
+                className="border-y border-gray-200 outline-none text-gray-900 font-semibold text-lg w-full max-w-[73px] min-w-[60px] placeholder:text-gray-900 py-[15px]  text-center bg-transparent"
+                placeholder="1" />
+              <button
+                className="group rounded-r-xl px-5 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:bg-gray-50 hover:border-gray-300 hover:shadow-gray-300 focus-within:outline-gray-300" onClick={() => handleAmountChange(amount + 1)}>
+                <svg className="stroke-gray-900 transition-all duration-500 group-hover:stroke-black"
+                  xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                  viewBox="0 0 22 22" fill="none">
+                  <path d="M11 5.5V16.5M16.5 11H5.5" stroke="" strokeWidth="1.6"
+                    strokeLinecap="round" />
+                  <path d="M11 5.5V16.5M16.5 11H5.5" stroke="" strokeOpacity="0.2"
+                    strokeWidth="1.6" strokeLinecap="round" />
+                  <path d="M11 5.5V16.5M16.5 11H5.5" stroke="" strokeOpacity="0.2"
+                    strokeWidth="1.6" strokeLinecap="round" />
+                </svg>
+              </button>
             </div>
+          </div>
 
           {/* Price and buy button */}
           <div className="mt-4">
             <div className="flex items-center">
-              <p className="text-2xl ">{totalPrice}đ</p>
+              <p className="text-2xl "><span className="text-base underline" >đ</span> {totalPrice}</p>
               {/* <div className="bg-blue-500 text-white px-2 py-1 ml-2 font-bold">
                 40% off
               </div> */}

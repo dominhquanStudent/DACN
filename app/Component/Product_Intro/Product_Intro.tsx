@@ -47,16 +47,8 @@ export default function Product_Main(){
   
                 </div>
             </div>
-            {/* Trending Product */}
-            <div className='mx-40'> 
-                <div className='font-montserrat text-2xl font-semibold my-10'>Sản phẩm nổi bật</div>
-                <div className='flex space-x-4'>
-                    {sampleProducts.map((item) => (
-                        <Product_Frame name={item.name} price={item.price} discount_price={item.discount_price} image={item.image.url} id={item._id} key={item._id}/>
-                            ))}
-  
-                </div>
-            </div>
+          
+           
              {/* Brand Available */}
              <div className='mx-40'> 
                 <div className='font-montserrat text-2xl font-semibold my-10'>Nhãn hiệu hiện có</div>
