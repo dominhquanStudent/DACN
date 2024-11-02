@@ -117,7 +117,7 @@ function Order() {
                   Ngày đặt hàng
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Tổng đơn hàng
+                  Giá trị đơn
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Trạng thái
@@ -133,7 +133,7 @@ function Order() {
                 currentOrders.map((order: any) => (
                   <tr key={order._id}>
                     <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                      {order.user_id}
+                      {order.user_id.userName}
                     </td>
                     <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                       {order.phone_number}

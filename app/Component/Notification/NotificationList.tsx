@@ -44,7 +44,7 @@ const NotificationList: React.FC = () => {
       <div className="mb-4 flex space-x-2">
         <button
           onClick={() => handleCategoryChange('All')}
-          className={`px-4 py-2 rounded ${selectedCategory === 'All' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          className={`px-4 py-2 rounded ${selectedCategory === 'Tất cả' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
         >
           All
         </button>

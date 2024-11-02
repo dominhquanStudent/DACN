@@ -55,8 +55,20 @@ function Page() {
             console.error("Error rebuy orders:", error);
         }
     };
+    const handleCancel = async (order: Order) => {
+        const id = order._id;
+        try {
+            const response = await axios.put(`/order/${id}/cancel`);
+        } catch (error) {
+            console.error("Error rebuy orders:", error);
+        }
+    };
     const handleRefund = async (order: Order) => {
+        try {
 
+        } catch (error) {
+            console.error("Error refund orders:", error);
+        }
     };
     const handlePayment = async (order: Order) => {
         try {
@@ -73,7 +85,7 @@ function Page() {
                 }
             } else if (payment.data.return_code != 1) {
                 const checkStatus = await axios.post(`payment/check_order_status/${order.payment_id}`);
-                if(checkStatus.data.return_code != 1){
+                if (checkStatus.data.return_code != 1) {
                     window.open(order.payment_url, '_blank');
                 } else {
                     sendNotifications({
@@ -151,7 +163,7 @@ function Page() {
                             .map((order, index) => (
                                 <div key={index} className="flex flex-col mt-4 py-2 border border-[#969090] rounded-md shadow-xl font-nunito w-full">
                                     <div className="flex justify-between items-center py-2 mx-16">
-                                        <div className="text-sm font-bold text-left text-[#000000]">Mã đơn hàng: {order._id}</div>
+                                        <div className="text-xs font-bold text-left text-[#000000]">Mã đơn hàng: {order._id}</div>
                                         <div className="text-lg font-bold text-right text-[#ff0000]">{order.order_status}</div>
                                     </div>
                                     {order.product_list.map((product, productIndex) => (
@@ -187,15 +199,16 @@ function Page() {
 
                                                 </div>
                                             }
-                                            {/* {order.order_status === 'Chờ Xử lý' && order.payment_method != 'Trực tiếp' && 
-                                            <div className="w-1/2 flex justify-center">
-                                                <button className="bg-[#FC0E0E] text-white font-nunito p-2 rounded-md w-1/2">Trả hàng</button>
-                                            </div>
-                                            } */}
                                             <div className="w-1/2 flex justify-center">
                                                 <button className="bg-[#EDB24E] text-white font-nunito p-2 rounded-md w-1/2"
                                                     onClick={() => handleReBuy(order._id)}>Mua lại</button>
                                             </div>
+                                            {order.order_status === 'Chờ xử lý' &&
+                                                <div className="w-1/2 flex justify-center">
+                                                    <button className="bg-[#FC0E0E] text-white font-nunito p-2 rounded-md w-1/2"
+                                                        onClick={() => handleCancel(order)}>Hủy đơn hàng</button>
+                                                </div>
+                                            }
                                         </div>
                                         <div className="flex-grow flex-col text-lg ml-4">
                                             <div className="flex w-full">
