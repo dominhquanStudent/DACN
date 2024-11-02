@@ -167,16 +167,47 @@ export default function ProductDetailPage({
   //handle amount and total price of product
   const [amount, setAmount] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
+  const formatPrice = (price:any) => {
+    return new Intl.NumberFormat('en-US', { style: 'decimal' }).format(price);
+  };
+
   const handleAmountChange = (Amount: number) => {
-    if (Amount > 0) {
+    if (Amount > 0 && Amount <= data.stock) {
       setAmount(Amount);
       setTotalPrice(Amount * data.discount_price);
     }
   };
 
   //handle add to cart
+  const [cartData, setCartData] = useState({
+    cart: {
+      _id: "",
+      user_id: "",
+      product_list: [],
+      createdAt: "2024-09-14T12:22:23.395Z",
+      updatedAt: "2024-09-29T17:01:07.043Z",
+      __v: 5
+    }
+  });
+  const fetchCartData = async () => {
+    const response = await axios.get(`/cart`);
+    setCartData(response.data);
+  };
+  useEffect(() => {
+    if (jwt) {
+      fetchCartData();
+    }
+  }, [jwt]);
+
   const handleAddToCart = async (e: any) => {
     e.preventDefault();
+    
+    // if there is a product with the same id and its quantity is equal to the amount, return
+     if (cartData.cart.product_list.some((product: any) => product.product_id === productId && product.quantity+amount >= data.stock)) {
+      setError("MAX_QUANTITY_ALLOWED");
+      return;
+    }
+    
     if (!accountData) {
       setError("NOT_LOGGED_IN_CART");
       return;
@@ -199,7 +230,7 @@ export default function ProductDetailPage({
       setIsLoading(false);
     }
   };
-
+ 
   return (
     <>
       <Header />
@@ -216,10 +247,12 @@ export default function ProductDetailPage({
               <div className="flex">
                 {/* Replace with your star rating component */}
                 <RenderStars rating={productRating}></RenderStars>
-                <div className="text-yellow-400 mb-8 ml-3">
+                <div className="text-yellow-400 mb-2 ml-3">
                   Lượt đánh giá {ratingTimes}
                 </div>
               </div>
+              <div className="text-gray-500 mb-2">Còn lại: {data.stock} sản phẩm</div>
+
               <p className="">{data.description}</p>
             </div>
           </div>
@@ -322,7 +355,7 @@ export default function ProductDetailPage({
                     strokeLinecap="round" />
                 </svg>
               </button>
-              <input type="number" value={amount} onChange={(e) => setAmount(parseInt(e.target.value))} min="1"
+              <input type="number" value={amount} onChange={(e) => handleAmountChange(parseInt(e.target.value))} min="1" max={data.stock}
                 className="border-y border-gray-200 outline-none text-gray-900 font-semibold text-lg w-full max-w-[73px] min-w-[60px] placeholder:text-gray-900 py-[15px]  text-center bg-transparent"
                 placeholder="1" />
               <button
@@ -344,22 +377,33 @@ export default function ProductDetailPage({
           {/* Price and buy button */}
           <div className="mt-4">
             <div className="flex items-center">
-              <p className="text-2xl "><span className="text-base underline" >đ</span> {totalPrice}</p>
+              <p className="text-2xl "><span className="text-base underline" >đ</span> {formatPrice(totalPrice)}</p>
               {/* <div className="bg-blue-500 text-white px-2 py-1 ml-2 font-bold">
                 40% off
               </div> */}
             </div>
             {/* <p className="text-red-500 line-through mb-3">60.000đ</p> */}
-            <button
-              className="w-9/12 rounded-md bg-blue-500 py-2 px-6 font-kd2 text-xs font-bold 
-                        uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 
-                        focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none 
-                        disabled:opacity-50 disabled:shadow-none"
-              data-ripple-light="true"
-              onClick={handleAddToCart}
-            >
-              Thêm vào giỏ hàng
-            </button>
+            {(data.status === "inactive" || data.stock===0) ? (
+              <button
+                className="w-9/12 rounded-md bg-gray-500 py-2 px-6 font-kd2 text-xs font-bold 
+                          uppercase text-white shadow-md shadow-gray-500/20 transition-all 
+                          cursor-not-allowed opacity-50"
+                disabled
+              >
+                Sản phẩm tạm hết hàng
+              </button>
+            ) : (
+              <button
+                className="w-9/12 rounded-md bg-blue-500 py-2 px-6 font-kd2 text-xs font-bold 
+                          uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 
+                          focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none 
+                          disabled:opacity-50 disabled:shadow-none"
+                data-ripple-light="true"
+                onClick={handleAddToCart}
+              >
+                Thêm vào giỏ hàng
+              </button>
+            )}
           </div>
         </div>
       </div>

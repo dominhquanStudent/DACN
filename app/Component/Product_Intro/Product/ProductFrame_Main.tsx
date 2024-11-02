@@ -9,9 +9,16 @@ const ProductCard = (props: any) => {
 
     Router.push(`/Product_Info/${productId}`);
   };
+  //format props.product.price for example 1000000 => 1,000,000
+  const formatPrice = (price: number) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+   let price=formatPrice(props.product.price);
+   let discount_price=formatPrice(props.product.discount_price);
+  
   return (
     <div
-      className="flex flex-col border rounded-lg overflow-hidden w-60 transform transition-transform duration-300 hover:scale-110 hover:shadow-lg active:scale-95 bg-teal-100"
+      className="flex flex-col  rounded-lg overflow-hidden w-60 transform transition-transform duration-300 hover:scale-110 hover:shadow-lg active:scale-95 border-[#EDB24E] border-2"
       onClick={() => handleChangeClick(props.product._id)}
     >
       {/* Product Image */}
@@ -48,10 +55,10 @@ const ProductCard = (props: any) => {
 
         {/* Price */}
         <div className={`mt-2 flex ${props.product.discount_price === props.product.price ? 'justify-center' : 'justify-between'}`}>
-  <span className="text-lg font-semibold"><span className="text-base underline" >đ</span> {props.product.discount_price}</span>
+  <span className="text-lg font-semibold"><span className="text-base underline" >đ</span> {discount_price}</span>
   {props.product.discount_price !== props.product.price && (
     <span className="text-lg font-semibold text-red-500 line-through ml-2">
-      <span className="text-base underline" >đ</span> {props.product.price}
+      <span className="text-base underline" >đ</span> {price}
     </span>
   )}
 </div>

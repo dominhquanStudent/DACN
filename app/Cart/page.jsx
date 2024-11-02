@@ -23,7 +23,9 @@ export default function Cart() {
   // Get account data upon access
   const jwt = getCookie("jwt");
 
-
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-US', { style: 'decimal' }).format(price);
+  };
 
   // Get cart data
   const [cartData, setCartData] = useState({
@@ -379,7 +381,7 @@ export default function Cart() {
                     Tổng Đơn hàng
                   </p>
                   <p className="font-normal text-lg leading-8 text-black">
-                    {totalPrice}đ
+                    {formatPrice(totalPrice)}đ
                   </p>
                 </div>
                 <div className="flex justify-between">
@@ -387,7 +389,7 @@ export default function Cart() {
                     Giảm giá
                   </p>
                   <p className="font-normal text-lg leading-8 text-black">
-                    -{discount}đ
+                    -{formatPrice(discount)}đ
                   </p>
                 </div>
                 <div className="flex justify-between">
@@ -402,7 +404,7 @@ export default function Cart() {
                     Tổng cộng
                   </p>
                   <p className="font-normal text-lg leading-8 text-black">
-                    {totalPriceafterDiscount}đ
+                    {formatPrice(totalPriceafterDiscount)}đ
                   </p>
                 </div>
                 {/* Purchase button */}
