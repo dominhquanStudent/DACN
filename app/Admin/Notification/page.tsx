@@ -113,7 +113,7 @@ function NotificationPage() {
           {mode === 'input' ? (
             <form onSubmit={handleSendNotification} className="mb-4">
               <div className="mb-2">
-                <label className="block text-gray-700">User</label>
+                <label className="block text-gray-700">Người dùng</label>
                 <select
                   value={selectedUserId}
                   onChange={(e) => { setSelectedUserId(e.target.value); fetchNotifications(e.target.value); }}
