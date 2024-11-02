@@ -8,6 +8,8 @@ import axios from "@/api/axios";
 import { useRouter } from "next/navigation";
 import { getCookie } from "cookies-next";
 import getInfo from "@/hooks/getInfo";
+import LoadingModal from "@/app/Component/Loading";
+import ErrorModal from "@/app/Component/Error";
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -18,6 +20,11 @@ function formatDate(dateString: string): string {
 }
 const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 function PetDetail({ params }: { params: { Detail: string } }) {
+  //Handle loading and complete
+  const [isLoading, setIsLoading] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [loadWhat, setLoadWhat] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const petId = params.Detail;
   // const [data, setData] = useState<any>({});
   const [data, setData] = useState<any>({ image: { url: [""] } });
@@ -121,7 +128,13 @@ function PetDetail({ params }: { params: { Detail: string } }) {
     }
   };
   const handleSendRequestClick = (petId: any) => {
-    router.push(`./SendRequest/${petId}`);
+    if(!account){
+      setError("ADOPT_NOT_LOGIN");
+    }
+    else{
+      router.push(`./SendRequest/${petId}`);
+    };
+    
   };
 
   if (!data) {
@@ -132,7 +145,8 @@ function PetDetail({ params }: { params: { Detail: string } }) {
   return (
     <>
       <Header />
-
+      <ErrorModal error={error} setError={setError} />
+      <LoadingModal isLoading={isLoading} isComplete={isComplete} setIsComplete={setIsComplete} loadWhat={loadWhat} />
       {/* <div className="bg-white rounded-lg shadow-md p-8 w-1/2 mx-auto"> */}
 
       <form className="w-full mr-4" key={data._id}>

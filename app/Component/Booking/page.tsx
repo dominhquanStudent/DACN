@@ -40,7 +40,8 @@ function Booking() {
   const [loadWhat, setLoadWhat] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const handleSaveClick = async () => {
+  const handleSaveClick = async (e:any) => {
+    e.preventDefault();
     try {
       const data = {
         userName,
@@ -57,7 +58,7 @@ function Booking() {
       const phoneRegex = /^[0-9]{10}$/;
 
       if (
-        !(userName && phone && address && petAge && petGender && weight && service) 
+        !(userName && phone && address && petAge && petGender && weight && service && date && time && note) 
       ) {
         setError("NO_BOOKING_INFO");
         return;
@@ -75,7 +76,7 @@ function Booking() {
         setError("INVALID_DATE");
         return;
       }
-
+      
 
       setLoadWhat("SEND_BOOKING_REQUEST");
       setIsLoading(true);
