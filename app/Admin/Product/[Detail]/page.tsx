@@ -16,6 +16,7 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
   const [isComplete, setIsComplete] = useState(false);
   const [loadWhat, setLoadWhat] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [showButton, setShowButton] = useState(false);
   const router = useRouter();
   useEffect(() => {
     const fetchProductData = async (id: any) => {
@@ -108,12 +109,13 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
 
   const handleChangeClick = async () => {
     setIsEditable(true);
-    // const log = await axios.post(`/test`, data);
+    setShowButton(true);
   };
 
   if (!data) {
     return <div>Loading...</div>;
   }
+  console.log(data);
 
   return (
     <div className="flex flex-col w-full justify-center items-center">
@@ -165,7 +167,7 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
               </div>
               <div className="w-full px-3 mb-6 md:mb-0">
                 <label className="text-xs font-bold mb-2" htmlFor="discount">
-                  Giảm giá
+                  Giảm giá (%)
                 </label>
                 <input
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
@@ -193,7 +195,7 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
               <div className="flex w-full">
                 <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="price">
-                    Giá sản phẩm
+                    Giá sản phẩm (đ)
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
@@ -251,9 +253,10 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
                     onChange={handleInputChange}
                     disabled={!isEditable}
                   >
-                    <option value="">Select Status</option>
-                    <option value="inactive">Private</option>
-                    <option value="active">Public</option>
+                    <option value="">Chọn trạng thái</option>
+                    <option value="active">Đang còn hàng</option>
+                    <option value="inactive">Đã hết hàng</option>
+
                   </select>
                 </div>
               </div>
@@ -272,19 +275,23 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
               </div>
             </div>
           </form>
-          <div className="flex items-center justify-center w-full space-x-4">
-            <button
-              onClick={handleChangeClick}
-              className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Sửa
-            </button>
-            <button
-              onClick={handleSaveClick}
-              className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Lưu
-            </button>
+          <div className="flex items-center justify-center w-full space-x-4 mb-4">
+            {!showButton && (
+              <button
+                onClick={handleChangeClick}
+                className="bg-yellow-500 hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-3xl"
+              >
+                Sửa
+              </button>
+            )}
+            {showButton && (
+              <button
+                onClick={handleSaveClick}
+                className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl"
+              >
+                Lưu
+              </button>
+            )}
           </div>
         </div>
       </div>
