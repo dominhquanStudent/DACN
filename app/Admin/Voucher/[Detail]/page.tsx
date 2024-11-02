@@ -40,6 +40,8 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
   const [isComplete, setIsComplete] = useState(false);
   const [loadWhat, setLoadWhat] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [showButton, setShowButton] = useState(false);
+
   const router = useRouter();
   useEffect(() => {
     const fetchVoucherData = async (id: any) => {
@@ -143,6 +145,7 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
 
   const handleChangeClick = async () => {
     setIsEditable(true);
+    setShowButton(true);
   };
 
   if (!data) {
@@ -362,19 +365,19 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
               </div>
             </div>
           </form>
-          <div className="flex items-center justify-center w-full space-x-4">
-            <button
+          <div className="flex items-center justify-center w-full space-x-4 mb-4">
+            {!showButton && (<button
               onClick={handleChangeClick}
-              className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-yellow-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl"
             >
               Sửa
-            </button>
-            <button
+            </button>)}
+            {showButton &&(<button
               onClick={handleSaveClick}
-              className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl"
             >
               Lưu
-            </button>
+            </button>)}
           </div>
         </div>
       </div>

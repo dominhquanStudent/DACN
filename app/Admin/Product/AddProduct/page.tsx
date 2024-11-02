@@ -14,18 +14,19 @@ function ProductAdd() {
   const [name, setName] = useState("");
   const [brand, setBrand] = useState("");
   const [price, setPrice] = useState("");
+
+  const [discount, setDiscount] = useState("");
   const [stock, setStock] = useState("");
   const [category, setCategory] = useState("");
-  const [status, setStatus] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState({ public_id: "", url: "" });
 
-  //////
+  ///////
   const [isLoading, setIsLoading] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [loadWhat, setLoadWhat] = useState("");
   const [error, setError] = useState<string | null>(null);
-  /////
+  //////
 
   const handleSaveClick = async () => {
     try {
@@ -33,42 +34,43 @@ function ProductAdd() {
         name,
         brand,
         stock,
+        discount,
         category,
-        price,
+        price: Number(price.replace(/,/g, "")), // Convert formatted price to number
         description,
-        status,
         image,
       };
 
-      if (!name){
+      if (!name) {
         setError("LACK_PRODUCTNAME");
         return;
       }
-      if (!brand){
+      if (!brand) {
         setError("LACK_PRODUCTBRAND");
         return;
       }
-      if (!stock){
+      if (!stock) {
         setError("LACK_PRODUCTQUANTITY");
         return;
       }
-      if (!category){
+      if (!category) {
         setError("LACK_PRODUCTCATEGORY");
         return;
       }
-      if (!price){
+      if (!price) {
         setError("LACK_PRODUCTPRICE");
         return;
       }
-      if (!status){
-        setError("LACK_PRODUCTSTATUS");
+      if (!discount) {
+        setError("LACK_PRODUCTDISCOUNT");
         return;
       }
-      if (!description){
+
+      if (!description) {
         setError("LACK_PRODUCTDESCRIPTION");
         return;
       }
-      if (!image.url){
+      if (!image.url) {
         setError("LACK_PRODUCTIMAGE");
         return;
       }
@@ -96,6 +98,18 @@ function ProductAdd() {
       setImage({ public_id: "null", url: reader.result as string });
     };
   };
+
+  const formatCurrency = (value: string) => {
+    const numberValue = value.replace(/\D/g, ""); // Remove non-numeric characters
+    return new Intl.NumberFormat("vi-VN").format(Number(numberValue));
+  };
+
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    const numberValue = value.replace(/\D/g, ""); // Remove non-numeric characters
+    setPrice(numberValue);
+  };
+
   return (
     <div className="flex flex-col w-full justify-center items-center">
       <ErrorModal error={error} setError={setError} />
@@ -128,7 +142,7 @@ function ProductAdd() {
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="ProductName"
                   type="text"
-                  placeholder="Enter Product Name"
+                  placeholder="Nhập tên sản phẩm"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -141,7 +155,7 @@ function ProductAdd() {
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="Brand"
                   type="text"
-                  placeholder="Enter Brand Name"
+                  placeholder="Nhập tên thương hiệu"
                   value={brand}
                   onChange={(e) => setBrand(e.target.value)}
                 />
@@ -167,15 +181,15 @@ function ProductAdd() {
               <div className="flex w-full">
                 <div className="w-full px-3">
                   <label className="text-xs font-bold mb-2" htmlFor="Price">
-                    Giá sản phẩm
+                    Giá sản phẩm (đ)
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="ProductPrice"
                     type="text"
-                    placeholder="Enter Price"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
+                    placeholder="100,000"
+                    value={formatCurrency(price)}
+                    onChange={handlePriceChange}
                   />
                 </div>
                 <div className="w-full px-3">
@@ -186,11 +200,24 @@ function ProductAdd() {
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="Quantity"
                     type="text"
-                    placeholder="Enter Quantity"
+                    placeholder="Nhập số lượng sản phẩm"
                     value={stock}
                     onChange={(e) => setStock(e.target.value)}
                   />
                 </div>
+              </div>
+              <div className="w-full px-3">
+                <label className="text-xs font-bold mb-2" htmlFor="Discount">
+                  Giảm giá (%)
+                </label>
+                <input
+                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="discount"
+                  type="text"
+                  placeholder="0"
+                  value={discount}
+                  onChange={(e) => setDiscount(e.target.value)}
+                />
               </div>
               <div className="flex w-full">
                 <div className="w-full px-3">
@@ -203,7 +230,7 @@ function ProductAdd() {
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                   >
-                    <option value="">Select Status</option>
+                    <option value="">Chọn</option>
                     <option value="Thức ăn thú cưng">Thức ăn thú cưng</option>
                     <option value="Phụ kiện & Đồ chơi">
                       Phụ kiện & Đồ chơi
@@ -211,21 +238,6 @@ function ProductAdd() {
                     <option value="Đồ dùng vệ sinh">Đồ dùng vệ sinh</option>
                     <option value="Nhà thú cưng">Nhà thú cưng</option>
                     <option value="Đồ dùng thú y">Đồ dùng thú y</option>
-                  </select>
-                </div>
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="Status">
-                    Trạng thái
-                  </label>
-                  <select
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="Status"
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                  >
-                    <option value="">Select Status</option>
-                    <option value="inactive">active</option>
-                    <option value="active">inactive</option>
                   </select>
                 </div>
               </div>
@@ -236,17 +248,17 @@ function ProductAdd() {
                 <textarea
                   className="block w-full h-24 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="Description"
-                  placeholder="Enter Description"
+                  placeholder="Nhập mô tả sản phẩm"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 ></textarea>
               </div>
             </div>
           </form>
-          <div className="flex items-center justify-center w-full">
+          <div className="flex items-center justify-center w-full mb-4">
             <button
               onClick={handleSaveClick}
-              className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl"
             >
               Lưu
             </button>

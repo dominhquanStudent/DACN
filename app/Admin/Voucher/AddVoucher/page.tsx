@@ -293,17 +293,17 @@ function VoucherAdd() {
                 <textarea
                   className="block w-full h-24 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="Description"
-                  placeholder="Enter Description"
+                  placeholder="Nhập mô tả"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 ></textarea>
               </div>
             </div>
           </form>
-          <div className="flex items-center justify-center w-full">
+          <div className="flex items-center justify-center w-full mb-4">
             <button
               onClick={handleSaveClick}
-              className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl"
             >
               Lưu
             </button>

@@ -75,8 +75,8 @@ const ErrorModal = ({ error, setError }: any) => {
             {error == "LACK_PRODUCTCATEGORY" && (
               <p>Vui lòng chọn danh mục sản phẩm!</p>
             )}
-            {error == "LACK_PRODUCTSTATUS" && (
-              <p>Vui lòng chọn trạng thái sản phẩm!</p>
+            {error == "LACK_PRODUCTDISCOUNT" && (
+              <p>Vui lòng nhập giá trị giảm giá sản phẩm!</p>
             )}
             {error == "LACK_PRODUCTDESCRIPTION" && (
               <p>Vui lòng nhập mô tả sản phẩm!</p>

@@ -127,7 +127,7 @@ function PetDetail({ params }: { params: { Detail: string } }) {
   if (!data) {
     return <div>Loading...</div>;
   }
-  //   console.log(account);
+  console.log(data);
 
   return (
     <>

@@ -235,13 +235,13 @@ const setFileToBase = (file: any) =>{
 
             </div>
           </form>
-          <div className='flex items-center justify-center w-full space-x-4'>
+          <div className='flex items-center justify-center w-full space-x-4 mb-4'>
             {!showButton && (
-            <button onClick={handleChangeClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button onClick={handleChangeClick} className="bg-yellow-500 hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-3xl">
               Cập nhật trạng thái
             </button>)}
             {showButton && (
-            <button onClick={handleSaveClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button onClick={handleSaveClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl">
               Lưu
             </button>)}
           </div>

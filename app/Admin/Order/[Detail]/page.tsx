@@ -9,6 +9,7 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
   const orderId = params.Detail;
   const [data, setData] = useState<any>({ product_list: [] });
   const [isEditable, setIsEditable] = useState(false);
+  const [showButton, setShowButton] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -47,6 +48,7 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
 
   const handleChangeClick = async () => {
     setIsEditable(true);
+    setShowButton(true);
   };
 
   if (!data) {
@@ -197,13 +199,13 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
             </div>
 
           </div>
-          <div className='flex items-center justify-center w-full space-x-4'>
-            <button onClick={handleChangeClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          <div className='flex items-center justify-center w-full space-x-4 mb-4'>
+            {!showButton && (<button onClick={handleChangeClick} className="bg-yellow-500 hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-3xl">
               Sửa
-            </button>
-            <button onClick={handleSaveClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            </button>)}
+            {showButton && (<button onClick={handleSaveClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl">
               Lưu
-            </button>
+            </button>)}
           </div>
         </div>
       </div>
