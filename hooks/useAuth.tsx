@@ -15,18 +15,18 @@ interface Auth {
 const useAuth = () => {
   const [auth, setAuth] = useState<Auth | null>(null);
 
-  // useEffect(() => {
-  //   const fetchAccessToken = async () => {
-  //     try {
-  //       const data = await authService.refreshToken();
-  //       setAuth(data);
-  //     } catch (error) {
-  //       console.error('Failed to refresh token', error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchAccessToken = async () => {
+      try {
+        const data = await authService.refreshToken();
+        setAuth(data);
+      } catch (error) {
+        console.error('Failed to refresh token', error);
+      }
+    };
 
-  //   fetchAccessToken();
-  // }, []);
+    fetchAccessToken();
+  }, []);
 
   const login = async (email: string, password: string) => {
     try {

@@ -9,6 +9,7 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
   const orderId = params.Detail;
   const [data, setData] = useState<any>({ product_list: [] });
   const [isEditable, setIsEditable] = useState(false);
+  const [buttonLabel, setButtonLabel] = useState('Sửa đơn hàng');
   const router = useRouter();
 
   useEffect(() => {
@@ -33,20 +34,47 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
       [id]: value,
     }));
   };
-  const handleSaveClick = () => {
-    const updateOrderData = async (id: any) => {
-      try {
-        await axios.put(`/order/${orderId}`, data);
-      } catch (error) {
-        console.error('Error updating order data:', error);
-      }
-    };
-    updateOrderData(data);
-    router.push('/Admin/Order');
+
+  const handleSaveClick = async () => {
+    try {
+      await axios.put(`/order/${orderId}`, data);
+      setIsEditable(false);
+      setButtonLabel('Sửa đơn hàng');
+      router.push('/Admin/Order');
+    } catch (error) {
+      console.error('Error updating order data:', error);
+    }
   };
 
-  const handleChangeClick = async () => {
+  const handleChangeClick = () => {
     setIsEditable(true);
+    setButtonLabel('Lưu đơn hàng');
+  };
+
+  const handleButtonClick = () => {
+    if (isEditable) {
+      handleSaveClick();
+    } else {
+      handleChangeClick();
+    }
+  };
+
+  const handleProductClick = async () => {
+    try {
+      await axios.put(`/order/${orderId}/prepare`);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error updating order data:', error);
+    }
+  };
+
+  const handleDeliverClick = async () => {
+    try {
+      await axios.put(`/order/${orderId}/deliver`);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error updating order data:', error);
+    }
   };
 
   if (!data) {
@@ -65,11 +93,19 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
           <div className="w-full mx-4">
             <div className="flex flex-wrap -mx-3 mb-6 space-y-2">
               <div className="w-full px-3 mb-6 md:mb-0">
+                <label className="text-xs font-bold mb-2" htmlFor="userName">
+                  Tên khách hàng
+                </label>
+                <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
+                  {data.user_id ? data.user_id.userName : "Khách vãng lai"}
+                </div>
+              </div>
+              <div className="w-full px-3 mb-6 md:mb-0">
                 <label className="text-xs font-bold mb-2" htmlFor="user_id">
                   Mã khách hàng
                 </label>
                 <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
-                  {data.user_id}
+                  {data.user_id ? data.user_id._id : "N/A"}
                 </div>
               </div>
               <div className="w-full px-3 mb-6 md:mb-0">
@@ -94,7 +130,10 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
                   <thead className="bg-gray-50">
                     <tr>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Mã sản phẩm
+                        Ảnh
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Tên sản phẩm
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Số lượng
@@ -108,9 +147,16 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {data.product_list?.map((product: { product_id: string; quantity: number; price: number; discount_price: number }, index: number) => (
+                    {data.product_list?.map((product: { product_name: string; product_image: string; product_id: string; quantity: number; price: number; discount_price: number }, index: number) => (
                       <tr key={index}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.product_id}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-10 w-10">
+                              <img className="h-10 w-10 rounded-full" src={product.product_image} alt="" />
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.product_name}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.quantity}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.price}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.discount_price}</td>
@@ -157,12 +203,11 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
                   disabled={!isEditable}
                 >
                   <option value="">Chọn trạng thái</option>
-                  <option value="Chưa xử lý">Chưa xử lý</option>
-                  <option value="Đang xử lý">Đang xử lý</option>
+                  <option value="Chờ xử lý">Chờ xử lý</option>
                   <option value="Đã xử lý">Đã xử lý</option>
-
+                  <option value="Đã hoàn thành">Đã hoàn thành</option>
+                  <option value="Đã hủy">Đã hủy</option>
                 </select>
-
               </div>
               <div className="w-full px-3 mb-6 md:mb-0">
                 <label className="text-xs font-bold mb-2" htmlFor="order_address">
@@ -188,22 +233,31 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="employee_id"
                   type="text"
-                  value={data.employee_id}
+                  value={data.employee_id ? data.employee_id : "Chưa có"}
                   onChange={handleInputChange}
                   disabled={!isEditable}
                 />
               </div>
-
             </div>
-
           </div>
           <div className='flex items-center justify-center w-full space-x-4'>
-            <button onClick={handleChangeClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Sửa
+            <button onClick={handleButtonClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              {buttonLabel}
             </button>
-            <button onClick={handleSaveClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Lưu
-            </button>
+            {
+              data.order_status === 'Chờ xử lý' && (
+                <button onClick={handleProductClick} className="bg-[#1286CE] hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                  Đã chuẩn bị sản phẩm
+                </button>
+              )
+            }
+            {
+              data.order_status === 'Đã xử lý' && (
+                <button onClick={handleDeliverClick} className="bg-[#1286CE] hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                  Đã gửi hàng
+                </button>
+              )
+            }
           </div>
         </div>
       </div>

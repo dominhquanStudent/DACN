@@ -14,21 +14,22 @@ function Page() {
     const router = useRouter();
     const [data, setData] = useState<any>({
         avatar: {
-          public_id: '',
-          url: ''
+            public_id: '',
+            url: ''
         },
         _id: '',
-        userName: null,
+        userName: '',
         email: '',
         password: '',
-        phone: null,
-        address: null,
-        gender: null,
+        phone: '',
+        address: '',
+        gender: '',
         birthday: null,
         token: [],
-        role: 'user',});
+        role: 'user',
+    });
     const fetchData = async () => {
-        try{
+        try {
             const Data = await getInfo();
             setData(Data);
         } catch (error) {
@@ -54,14 +55,14 @@ function Page() {
         const file = e.target.files[0];
         setFileToBase(file);
         console.log(file);
-      }
+    }
     const setFileToBase = (file: any) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = () => {
-          setData({...data, avatar: {public_id: "null", url: reader.result as string}});
+            setData({ ...data, avatar: { public_id: "null", url: reader.result as string } });
         }
-      }
+    }
     const triggerFileInput = () => {
         document.getElementById('fileInput')?.click();
     };
@@ -94,7 +95,7 @@ function Page() {
                                 <div className="font-nunito w-1/4">Address</div>
                                 <input type="text" defaultValue={data.address ? data.address : ""} className="p-2 pl-4 font-nunito 
                                 rounded border border-gray-300 w-full text-lg"
-                                    onChange={e => setData({ ...data, address: e.target.value })} 
+                                    onChange={e => setData({ ...data, address: e.target.value })}
                                     placeholder="Chưa có" />
                             </div>
                             <div className="flex items-center my-4">
@@ -144,7 +145,7 @@ function Page() {
                         <div className="flex flex-col w-1/3 items-center justify-center">
                             <div className="flex flex-col items-center mt-8 w-full">
                                 <img loading="lazy" src={data.avatar.url ? data.avatar.url : "https://res.cloudinary.com/dzm879qpm/image/upload/v1724509562/defautProduct_mlmwsw.png"}
-                                    alt='Avatar'  className="w-24 h-24 rounded-full mr-4 mb-4" />
+                                    alt='Avatar' className="w-24 h-24 rounded-full mr-4 mb-4" />
                                 <input type="file" id="fileInput" accept="image/*" onChange={handleImage} className="mb-4 hidden" />
                                 <button type="submit" className="bg-[#EDB24E] text-white font-nunito p-1 text-lg rounded w-1/2" onClick={triggerFileInput}>Thay đổi Avatar</button>
                             </div>
