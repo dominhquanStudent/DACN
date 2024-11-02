@@ -2,14 +2,12 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faTrashCan, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan, faPlus, faFilter } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
-
-
 
 import ConfirmModal from "@/app/Component/ConfirmModal";
 
-library.add(faTrashCan, faPenToSquare, faPlus);
+library.add(faTrashCan, faPenToSquare, faPlus, faFilter);
 import Sidebar from "@/app/Admin/sidebar";
 import Header from "@/app/Admin/Header";
 import { useRouter } from "next/navigation";
@@ -28,6 +26,7 @@ function PetManagement() {
   const Router = useRouter();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedPet, setSelectedPet] = useState<any | null>(null);
+  const [filter, setFilter] = useState<string>('all');
 
   useEffect(() => {
     const fetchPets = async () => {
@@ -68,16 +67,24 @@ function PetManagement() {
     }
   };
 
+  const filteredPets = pets.filter((pet: any) => {
+    if (filter === 'all') return true;
+    if (filter === 'Chưa có chủ') return pet.adoptStatus === 'Chưa có chủ';
+    if (filter === 'Đã có chủ') return pet.adoptStatus === 'Đã có chủ';
+    if (filter === 'Đang được yêu cầu') return pet.adoptStatus === 'Đang được yêu cầu';
+    return true;
+  });
+
   const [currentPage, setCurrentPage] = useState(1);
   const petsPerPage = 6;
 
   // Calculate the pets to display on the current page
   const indexOfLastPet = currentPage * petsPerPage;
   const indexOfFirstPet = indexOfLastPet - petsPerPage;
-  const currentPets = pets.slice(indexOfFirstPet, indexOfLastPet);
+  const currentPets = filteredPets.slice(indexOfFirstPet, indexOfLastPet);
 
   // Calculate total pages
-  const totalPages = Math.ceil(pets.length / petsPerPage);
+  const totalPages = Math.ceil(filteredPets.length / petsPerPage);
 
   // Handle page change
   const handlePageChange = (pageNumber: any) => {
@@ -132,6 +139,22 @@ function PetManagement() {
             >
               <FontAwesomeIcon icon={faPlus} className="h-4 w-4" />
             </button>
+            <div className='flex w-full mt-4 mb-4 justify-end'>
+              <label className='text-lg font-nunito font-bold text-gray-400'>
+              <FontAwesomeIcon icon={faFilter} className="h-5 w-5" />
+
+              </label>
+              <select
+                className='border border-gray-300 rounded-md ml-2'
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+              >
+                <option value='all'>Tất cả</option>
+                <option value='Chưa có chủ'>Chưa có chủ</option>
+                <option value='Đã có chủ'>Đã có chủ</option>
+                <option value='Đang được yêu cầu'>Đang được yêu cầu</option>
+              </select>
+            </div>
           </div>
           <table className="min-w-full leading-normal">
             <thead>

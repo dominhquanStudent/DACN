@@ -7,8 +7,25 @@ export default function Product_Frame(props) {
   const [isRemoved, setIsRemoved] = useState(false);
   const [selected, setSelected] = useState(props.product.selected);
   const { onSelectChange } = props;
-
+  const [data, setData] = useState(0);
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-US', { style: 'decimal' }).format(price);
+  };
   // Handle update cart function
+  const fetchProductData = async () => {
+    try {
+    
+      const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const response = await axios.get(`${baseURL}/product/${props.product.product_id}`);
+      const productData = response.data;
+      setData(productData.product);
+    } catch (error) {
+      console.error("Error fetching product data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchProductData();
+  }, []);
   const handleUpdateCart = async (e) => {
     if (e) e.preventDefault();
     try {
@@ -32,7 +49,7 @@ export default function Product_Frame(props) {
   }, [props.product.quantity]);
 
   const handleAmountChange = (Amount) => {
-    if (Amount > 0) {
+    if (Amount > 0 && Amount <= data.stock) {
       setQuantity(Amount);
     }
   };
@@ -72,7 +89,7 @@ export default function Product_Frame(props) {
   if (isRemoved) {
     return null; // Don't render the component if the item is removed
   }
-
+  console.log(data.stock);
   return (
     <div className="relative flex flex-col min-[500px]:flex-row min-[500px]:items-center gap-5 py-6 border-b border-gray-200 group">
       <button
@@ -102,10 +119,10 @@ export default function Product_Frame(props) {
           <div className="flex flex-col max-[500px]:items-center gap-3">
             <h6 className="font-semibold text-base leading-7 text-black">{props.product.product_name}</h6>
             <h6 className={`font-normal text-base leading-7 transition-all duration-300 ${props.product.price === props.product.discount_price ? 'hidden' : 'text-red-500 line-through'}`}>
-              {props.product.price}
+              {formatPrice(props.product.price)} đ
             </h6>
             <h6 className="font-medium text-base leading-7 text-gray-600 transition-all duration-300 group-hover:text-indigo-600">
-              {props.product.discount_price}
+              {formatPrice(props.product.discount_price)} đ
             </h6>
           </div>
         </div>
@@ -141,7 +158,7 @@ export default function Product_Frame(props) {
           </div>
         </div>
         <div className="flex items-center max-[500px]:justify-center md:justify-end max-md:mt-3 h-full">
-          <p className="font-bold text-lg leading-8 text-gray-600 text-center transition-all duration-300 group-hover:text-indigo-600">{quantity * props.product.discount_price}đ</p>
+          <p className="font-bold text-lg leading-8 text-gray-600 text-center transition-all duration-300 group-hover:text-indigo-600">{formatPrice(quantity * props.product.discount_price)}đ</p>
         </div>
       </div>
       <div className="absolute bottom-4 right-1 p-1 rounded-full">

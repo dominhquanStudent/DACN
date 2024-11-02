@@ -36,6 +36,9 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
       window.location.href = "/Admin/Rescue";
 
     }
+    if(loadWhat=="ACCEPT_ADOPTION_REQUEST"){
+      window.location.href = "/Admin/Adoption";
+    }
   };
 
   if (!isLoading && !isComplete) {
@@ -74,6 +77,8 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             {loadWhat=="SEND_UPDATEPRODUCT_REQUEST"&& <p>Đã cập nhật thông tin sản phẩm!</p>}
             {loadWhat=="SEND_UPDATEVOUCHER_REQUEST"&& <p>Đã cập nhật thông tin mã giảm giá!</p>}
             {loadWhat=="SEND_UPDATERESCUE_REQUEST"&& <p>Đã cập nhật thông tin yêu cầu cứu hộ!</p>}
+            
+            {loadWhat=="ACCEPT_ADOPTION_REQUEST"&& <p>Đã chấp nhận yêu cầu!</p>}
 
 
 

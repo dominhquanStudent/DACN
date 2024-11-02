@@ -119,9 +119,7 @@ function PetDetail({ params }: { params: { Detail: string } }) {
       setIsComplete(true);
 
     } catch (error) {
-      setIsLoading(false);
-      setError("Error saving pet data");
-      console.error("Error saving pet data:", error);
+
     }
   };
 
@@ -281,18 +279,14 @@ function PetDetail({ params }: { params: { Detail: string } }) {
                 <label className="text-xs font-bold mb-2" htmlFor="AdoptStatus">
                   Tình trạng nhận nuôi
                 </label>
-                <select
+                <input
                   className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="adoptStatus"
                   value={data.adoptStatus}
-                  onChange={handleInputChange}
-                  disabled={!isEditable}
+                  readOnly
                 >
-                  <option value="">Select Species</option>
-                  <option value="Chưa có chủ">Chưa có chủ</option>
-                  <option value="Đã có chủ">Đã có chủ</option>
-                  <option value="Đang được yêu cầu">Đang được yêu cầu</option>
-                </select>
+                 
+                </input>
               </div>
               {data.adoptStatus === "Đã có chủ" && (
                 <>
@@ -373,10 +367,10 @@ function PetDetail({ params }: { params: { Detail: string } }) {
             </div>
           </form>
           <div className="flex justify-center space-x-4 mt-4">
-            {!showButton && (
+            {!showButton && data.adoptStatus !== 'Đã có chủ' && (
               <button
                 onClick={handleChangeClick}
-                className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                className="bg-yellow-500 hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-3xl mb-4"
               >
                 Cập nhật thông tin
               </button>
@@ -384,7 +378,7 @@ function PetDetail({ params }: { params: { Detail: string } }) {
             {showButton && (
               <button
                 onClick={handleSaveClick}
-                className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl mb-4"
               >
                 Lưu
               </button>

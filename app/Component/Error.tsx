@@ -2,12 +2,13 @@ import { FaExclamationCircle } from "react-icons/fa";
 
 const ErrorModal = ({ error, setError }: any) => {
   const handleClose = () => {
-    if (error === "NOT_LOGGED_IN") {
+    if (error === "NOT_LOGGED_IN" || error === "ADOPT_NOT_LOGIN") {
       window.location.href = "/Login";
     }
     if (error === "PAGE_NOT_FOUND") {
       window.location.href = "/Main";
-    } else {
+    }
+     else {
       setError(null);
     }
   };
@@ -35,6 +36,9 @@ const ErrorModal = ({ error, setError }: any) => {
             {/* Cart Errors */}
             {error == "NOT_LOGGED_IN_CART" && (
               <p>Bạn cần đăng nhập để mua sản phẩm</p>
+            )}
+            {error == "MAX_QUANTITY_ALLOWED" && (
+              <p>Hiện tại giỏ hàng đã có tối đa sản phẩm này</p>
             )}
             {/* Not log in errors */}
             {error == "NOT_LOGGED_IN" && <p>Bạn cần đăng nhập xem trang này</p>}
@@ -75,8 +79,8 @@ const ErrorModal = ({ error, setError }: any) => {
             {error == "LACK_PRODUCTCATEGORY" && (
               <p>Vui lòng chọn danh mục sản phẩm!</p>
             )}
-            {error == "LACK_PRODUCTSTATUS" && (
-              <p>Vui lòng chọn trạng thái sản phẩm!</p>
+            {error == "LACK_PRODUCTDISCOUNT" && (
+              <p>Vui lòng nhập giá trị giảm giá sản phẩm!</p>
             )}
             {error == "LACK_PRODUCTDESCRIPTION" && (
               <p>Vui lòng nhập mô tả sản phẩm!</p>
@@ -143,6 +147,8 @@ const ErrorModal = ({ error, setError }: any) => {
 
             {error == "INVALID_DATE" && <p>Ngày hẹn không hợp lệ!</p>}
             {error == "PAGE_NOT_FOUND" && <p>Trang bạn tìm kiếm không có !</p>}
+            {/* USER ADOPT */}
+            {error == "ADOPT_NOT_LOGIN" && <p>Bạn cần đăng nhập để nhận nuôi!</p>}
             <button
               className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
               onClick={handleClose}

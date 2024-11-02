@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import useSWR, { mutate } from "swr";
 import { getCookie } from "cookies-next";
 import getInfo from "@/hooks/getInfo";
+import ErrorModal from "@/app/Component/Error";
+import LoadingModal from "@/app/Component/Loading";
 import ConfirmModal from "@/app/Component/ConfirmModal";
 
 function formatDate(dateString: string): string {
@@ -20,7 +22,10 @@ function formatDate(dateString: string): string {
 function AdoptDetail({ params }: { params: { Detail: string } }) {
   const petId = params.Detail;
   const [data, setData] = useState<any>({});
-  const [isEditable, setIsEditable] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [loadWhat, setLoadWhat] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const jtw = getCookie("jwt");
   const [account, setAccount] = useState({
@@ -54,33 +59,7 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
     }
   }, [petId]);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { id, value } = e.target;
-    setData((prevData: any) => {
-      const updatedData = {
-        ...prevData,
-        [id]: value,
-      };
 
-      if (id === "adoptStatus" && value === "Đã có chủ") {
-        const currentDate = new Date();
-        const formattedDate = `${String(currentDate.getDate()).padStart(
-          2,
-          "0"
-        )}/${String(currentDate.getMonth() + 1).padStart(
-          2,
-          "0"
-        )}/${currentDate.getFullYear()}`;
-        updatedData.adoptDay = formattedDate;
-      }
-
-      return updatedData;
-    });
-  };
   const handleImage = (e: any) => {
     const file = e.target.files[0];
     setFileToBase(file);
@@ -95,6 +74,8 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
     };
   };
   const handleSaveClick = async () => {
+    setLoadWhat("ACCEPT_ADOPTION_REQUEST");
+    setIsLoading(true);
     try {
       const updatedData = {
         ...data,
@@ -106,7 +87,10 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
       const response = await axios.put(`/pet/${petId}`, updatedData);
       // Revalidate the data
       mutate(`/pet/${petId}`);
-      router.push(`/Admin/Adoption`);
+      setIsLoading(false);
+      setIsComplete(true);
+
+      // router.push(`/Admin/Adoption`);
     } catch (error) {
       console.error("Error updating pet data:", error);
     }
@@ -142,6 +126,12 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
   console.log(data);
   return (
     <div className="flex flex-col w-full justify-center items-center">
+            <LoadingModal
+        isLoading={isLoading}
+        isComplete={isComplete}
+        setIsComplete={setIsComplete}
+        loadWhat={loadWhat}
+      />
       <Header />
       <div className="flex w-full">
         <Sidebar />
@@ -165,8 +155,7 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
                   id="userName"
                   type="text"
                   value={data.userName}
-                  // onChange={handleInputChange}
-                  disabled={!isEditable}
+                  readOnly
                 />
               </div>
 
@@ -180,8 +169,7 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
                     id="address"
                     type="text"
                     value={data.address}
-                    // onChange={handleInputChange}
-                    disabled={!isEditable}
+                    readOnly
                   />
                 </div>
                 <div className="w-full px-3">
@@ -196,8 +184,7 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
                     id="phoneNumber"
                     type="text"
                     value={data.phoneNumber}
-                    // onChange={handleInputChange}
-                    disabled={!isEditable}
+                    readOnly
                   />
                 </div>
               </div>
@@ -212,8 +199,7 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
                     id="petName"
                     type="text"
                     value={data.petName}
-                    // onChange={handleInputChange}
-                    disabled={!isEditable}
+                    readOnly
                   />
                 </div>
               </div>
@@ -269,8 +255,7 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
                   id="method"
                   type="text"
                   value={data.method}
-                  // onChange={handleInputChange}
-                  disabled={!isEditable}
+                  readOnly
                 />
               </div>
               <div className="w-full px-3">
@@ -281,8 +266,7 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
                   className="block w-full h-24 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="message"
                   value={data.message}
-                  // onChange={handleInputChange}
-                  disabled={!isEditable}
+                  readOnly
                 ></textarea>
               </div>
 
@@ -291,18 +275,27 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
                 <label className="text-xs font-bold mb-2" htmlFor="adoptStatus">
                   Trạng thái
                 </label>
-                <select
+                <input
                   className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="adoptStatus"
                   value={data.adoptStatus}
-                  onChange={handleInputChange}
-                  disabled={!isEditable}
+                  readOnly
                 >
-                  <option value="">Chọn trạng thái</option>
-                  <option value="Chưa có chủ">Chưa có chủ</option>
-                  <option value="Đã có chủ">Đã có chủ</option>
-                  <option value="Đang được yêu cầu">Đang được yêu cầu</option>
-                </select>
+                 
+                </input>
+              </div>
+              <div className="w-full px-3">
+                <label className="text-xs font-bold mb-2" htmlFor="employeeName">
+                  Nhân viên xử lý
+                </label>
+                <input
+                  className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="employeeName"
+                  value={data.employeeName}
+                  readOnly
+                >
+                 
+                </input>
               </div>
               {data.adoptStatus === "Đã có chủ" && (
                 <div className="w-full px-3">
@@ -319,14 +312,14 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
           <div className="flex items-center justify-center w-full space-x-4">
             <button
               onClick={handleSaveClick}
-              className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl"
             >
               Xác nhận yêu cầu
             </button>
 
             <button
               onClick={handleDeleteClick}
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-3xl"
             >
               Xóa yêu cầu
             </button>
