@@ -276,6 +276,12 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
             </div>
           </form>
           <div className="flex items-center justify-center w-full space-x-4 mb-4">
+            <button
+              onClick={() => router.push("/Admin/Product")}
+              className="bg-red-500 hover:bg-red-300 text-white font-bold py-2 px-4 rounded-3xl"
+            >
+              Quay lại
+            </button>
             {!showButton && (
               <button
                 onClick={handleChangeClick}

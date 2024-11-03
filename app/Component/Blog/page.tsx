@@ -4,20 +4,18 @@ import Header from "../Header/Header";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-
 import p3 from "@/public/img/Blog/p3.jpg";
 import p4 from "@/public/img/Blog/p4.jpg";
-
 import p12 from "@/public/img/Blog/p12.png";
 import p111 from "@/public/img/Blog/p111.png";
-
+import blog_cover1 from "@/public/img/Blog/blog_cover1.png";
+import blog_cover2 from "@/public/img/Blog/blog_cover2.png";
 import Footer from "../../Component/Footer/Footer";
-
-// import React, { useState } from 'react';
 import Link from "next/link";
 import axios from "@/api/axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, "0");
@@ -25,6 +23,7 @@ function formatDate(dateString: string): string {
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 }
+
 function isToday(dateString: string): boolean {
   const today = new Date();
   const date = new Date(dateString);
@@ -58,7 +57,44 @@ function NewsPage() {
   const router = useRouter();
   const [news, setNews] = useState<any[]>([]); // State for the list of news
   const [filter, setFilter] = useState<string>("all");
-  const filteredNews = news.filter((news) => {
+
+  // Pagination state for news
+  const [currentPage, setCurrentPage] = useState(1);
+  const newsPerPage = 6;
+
+  // Calculate the news to display on the current page
+  const indexOfLastNews = currentPage * newsPerPage;
+  const indexOfFirstNews = indexOfLastNews - newsPerPage;
+  const currentNews = news.slice(indexOfFirstNews, indexOfLastNews);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(news.length / newsPerPage);
+
+  // Handle page change
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Generate pagination buttons
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    if (totalPages <= 4) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        pageNumbers.push(1, 2, 3, '...', totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pageNumbers.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pageNumbers.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+      }
+    }
+    return pageNumbers;
+  };
+
+  const filteredNews = currentNews.filter((news) => {
     if (filter === "all") return true;
     if (filter === "today") return isToday(news.date);
     if (filter === "week") return isThisWeek(news.date);
@@ -107,7 +143,10 @@ function NewsPage() {
           transitionTime={500}
         >
           <div>
-            <img src={p111.src} className=" h-[350px]" alt="Poster 1" />
+            <img src={blog_cover1.src} className=" h-[350px]" alt="Poster 1" />
+          </div>
+          <div>
+            <img src={blog_cover2.src} className=" h-[350px]" alt="Poster 2" />
           </div>
           <div>
             <img src={p12.src} className=" h-[350px]" alt="Poster 1" />
@@ -116,9 +155,7 @@ function NewsPage() {
           <div>
             <img src={p3.src} className=" h-[350px]" alt="Poster 2" />
           </div>
-          <div>
-            <img src={p4.src} className=" h-[350px]" alt="Poster 2" />
-          </div>
+          
         </Carousel>
       </div>
 
@@ -175,9 +212,9 @@ function NewsPage() {
                 <li
                   key={index}
                   className="mb-4 p-4 border rounded-md shadow-sm hover:shadow-lg transition-shadow duration-300 "
-                  onClick={()=>window.location.href = `/Component/Blog/${item._id}`}
+                  onClick={() => window.location.href = `/Component/Blog/${item._id}`}
                 >
-                  <div className="p-4 border rounded-md shadow-sm bg-white flex flex-col items-start space-y-4 hover:bg-blue-100 transition-colors duration-300">
+                  <div className="p-4 border rounded-md shadow-sm bg-white flex flex-col items-start space-y-4 hover:bg-blue-100 transition-colors duration-300 max-w-[455px]">
                     <img
                       src={item.image.url}
                       alt={item.title}
@@ -188,9 +225,9 @@ function NewsPage() {
                       {formatDate(item.date)}
                     </p>
                     <div
-                          className="text-sm text-gray-800 line-clamp-1"
-                          dangerouslySetInnerHTML={{ __html: item.content }}
-                        />
+                      className="text-sm text-gray-800 line-clamp-1"
+                      dangerouslySetInnerHTML={{ __html: item.content }}
+                    />
                   </div>
                 </li>
               ))}
@@ -198,6 +235,49 @@ function NewsPage() {
           )}
         </div>
       </div>
+
+      {/* Pagination Controls */}
+      <div className="pagination flex justify-center mt-4">
+        <button
+          onClick={() => handlePageChange(1)}
+          className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+          disabled={currentPage === 1}
+        >
+          &laquo;
+        </button>
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+          disabled={currentPage === 1}
+        >
+          &lt;
+        </button>
+        {renderPageNumbers().map((pageNumber, index) => (
+          <button
+            key={index}
+            onClick={() => typeof pageNumber === 'number' && handlePageChange(pageNumber)}
+            className={`px-3 py-1 mx-1 ${currentPage === pageNumber ? "bg-blue-500 text-white" : "bg-gray-200 hover:bg-gray-300"}`}
+            disabled={typeof pageNumber !== 'number'}
+          >
+            {pageNumber}
+          </button>
+        ))}
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+          disabled={currentPage === totalPages}
+        >
+          &gt;
+        </button>
+        <button
+          onClick={() => handlePageChange(totalPages)}
+          className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+          disabled={currentPage === totalPages}
+        >
+          &raquo;
+        </button>
+      </div>
+
       <Footer />
     </div>
   );

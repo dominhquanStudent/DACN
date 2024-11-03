@@ -39,8 +39,25 @@ export default function Booking() {
       };
       const phoneRegex = /^(0?)(3[2-9]|5[689]|7[06-9]|8[0-689]|9[0-46-9])[0-9]{7}$/;
 
-      if (!(user_name && contactPhone && image.url && location && message)) {
-        setError("NO_RESCUE_INFO");
+
+      if (!user_name) {
+        setError("NO_ADOPT_USER_NAME");
+        return;
+      }
+      if (!contactPhone) {
+        setError("NO_ADOPT_PHONE");
+        return;
+      }
+      if (!image.url) {
+        setError("NO_ADOPT_IMAGE");
+        return;
+      }
+      if (!location) {
+        setError("NO_ADOPT_LOCATION");
+        return;
+      }
+      if (!message) {
+        setError("NO_ADOPT_MESSAGE");
         return;
       }
 

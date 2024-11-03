@@ -11,6 +11,7 @@ import LoadingModal from "@/app/Component/Loading";
 import ErrorModal from "@/app/Component/Error";
 import { useRouter } from "next/navigation";
 import { sendNotifications } from "@/ultis/notificationUtils";
+import { mutate } from "swr";
 export default function Cart() {
   //Handle loading and complete
   const router = useRouter();
@@ -197,6 +198,7 @@ export default function Cart() {
         }
       }
       setIsComplete(true);
+      mutate('/cart');
       router.push("/Cart");
       fetchCartData();
       sendNotifications({
@@ -301,7 +303,7 @@ export default function Cart() {
             {/* Right side */}
             <div className=" col-span-12 xl:col-span-4 bg-gray-50 w-full max-xl:px-6 max-w-3xl xl:max-w-lg mx-auto lg:pl-8 py-24">
               <h2 className="font-manrope font-bold text-3xl leading-10 text-black pb-8 border-b border-gray-300">
-                Thanh toán
+                Đặt hàng
               </h2>
 
 
@@ -414,7 +416,7 @@ export default function Cart() {
                     onClick={handleOrder}
                     disabled={cartData.cart.product_list.length === 0}
                   >
-                    Thanh toán
+                    Đặt hàng
                   </button>
                 </div>
               </div>
