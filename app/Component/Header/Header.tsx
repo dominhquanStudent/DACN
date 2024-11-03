@@ -34,7 +34,8 @@ export default function Header(props: any) {
 
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
-  const { data: cartData, error } = useSWR('/cart', fetcher);
+  // Conditionally fetch cart data only when the user is logged in
+  const { data: cartData, error } = useSWR(isAuthenticated ? '/cart' : null, fetcher);
   const cartItemCount = cartData ? cartData.cart.product_list.length : 0;
 
   const handleLogout = async () => {
@@ -156,7 +157,10 @@ export default function Header(props: any) {
               <div className="relative">
                 <img className="w-7 h-7" src={ShoppingCart.src} alt="Cart" />
                 {cartItemCount > 0 && (
-                  <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                   <span
+                   className=" absolute bottom-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center"
+                   style={{ fontSize: '0.5rem' }}
+                 >
                     {cartItemCount}
                   </span>
                 )}
