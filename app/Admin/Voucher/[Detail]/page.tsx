@@ -366,9 +366,15 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
             </div>
           </form>
           <div className="flex items-center justify-center w-full space-x-4 mb-4">
+            <button
+              onClick={() => router.back()}
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl"
+            >
+              Quay lại
+            </button>
             {!showButton && (<button
               onClick={handleChangeClick}
-              className="bg-yellow-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl"
+              className="bg-yellow-500 hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-3xl"
             >
               Sửa
             </button>)}

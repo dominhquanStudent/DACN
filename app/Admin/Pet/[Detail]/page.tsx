@@ -367,6 +367,12 @@ function PetDetail({ params }: { params: { Detail: string } }) {
             </div>
           </form>
           <div className="flex justify-center space-x-4 mt-4">
+            <button
+              onClick={() => router.back()}
+              className="bg-red-500 hover:bg-red-300 text-white font-bold py-2 px-4 rounded-3xl mb-4"
+            >
+              Quay lại
+            </button>
             {!showButton && data.adoptStatus !== 'Đã có chủ' && (
               <button
                 onClick={handleChangeClick}

@@ -2,13 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faTrashCan, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 
 import ConfirmModal from '@/app/Component/ConfirmModal';
 
-
-library.add(faTrashCan, faPenToSquare);
+library.add(faTrashCan, faPenToSquare, faFilter);
 import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import { useRouter } from 'next/navigation';
@@ -29,7 +28,7 @@ function Rescue() {
   const Router = useRouter();
   const [selectedRescue, setSelectedRescue] = useState<any | null>(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-
+  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
     const fetchRescues = async () => {
@@ -73,13 +72,19 @@ function Rescue() {
     Router.push('/Admin/Rescue/AddRescue');
   };
 
+  // Filter rescues based on the selected filter value
+  const filteredRescues = rescues.filter((rescue) => {
+    if (filter === 'all') return true;
+    return rescue.requestStatus === filter;
+  });
+
   // Calculate the rescues to display on the current page
   const indexOfLastRescue = currentPage * rescuesPerPage;
   const indexOfFirstRescue = indexOfLastRescue - rescuesPerPage;
-  const currentRescues = rescues.slice(indexOfFirstRescue, indexOfLastRescue);
+  const currentRescues = filteredRescues.slice(indexOfFirstRescue, indexOfLastRescue);
 
   // Calculate total pages
-  const totalPages = Math.ceil(rescues.length / rescuesPerPage);
+  const totalPages = Math.ceil(filteredRescues.length / rescuesPerPage);
 
   // Handle page change
   const handlePageChange = (pageNumber: any) => {
@@ -107,13 +112,27 @@ function Rescue() {
 
   return (
     <div className='flex flex-col w-full justify-center items-center'>
-
       <Header></Header>
       <div className='flex w-full'>
         <Sidebar></Sidebar>
         <div className='w-3/4 border-l-2 border-gray-200 px-4'>
           <div className={'flex font-nunito text-xl font-bold w-full justify-center mb-4'}>
             Yêu cầu cứu hộ
+          </div>
+          <div className='flex w-full mt-4 mb-4 justify-end'>
+            <label className='text-lg font-nunito font-bold text-gray-400'>
+              <FontAwesomeIcon icon={faFilter} className="h-5 w-5" />
+            </label>
+            <select
+              className='border border-gray-300 rounded-md ml-2'
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            >
+              <option value='all'>Tất cả</option>
+              <option value='Chưa xử lý'>Chưa xử lý</option>
+              <option value='Đang xử lý'>Đang xử lý</option>
+              <option value='Đã xử lý'>Đã xử lý</option>
+            </select>
           </div>
           {/* Table */}
           <table className="min-w-full leading-normal">

@@ -2,6 +2,10 @@
 import React, { useState, useEffect } from "react";
 import Header from "@/app/Admin/Header";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import {  faPlus } from "@fortawesome/free-solid-svg-icons";
+library.add(faPlus);
 
 import Footer from "../../Component/Footer/Footer";
 
@@ -99,8 +103,8 @@ function NewsPage() {
               className="bg-blue-500 text-white font-bold py-2 px-4 rounded-full hover:bg-blue-700 transition duration-300 justify-self-start"
               onClick={handleAddButton}
             >
-              Thêm tin
-            </button>
+              <FontAwesomeIcon icon={faPlus} className="h-4 w-4" />
+              </button>
           </div>
 
           <div className="flex w-full justify-center space-x-2 mt-4">

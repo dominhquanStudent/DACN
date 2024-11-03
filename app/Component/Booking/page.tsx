@@ -40,7 +40,7 @@ function Booking() {
   const [loadWhat, setLoadWhat] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const handleSaveClick = async (e:any) => {
+  const handleSaveClick = async (e: any) => {
     e.preventDefault();
     try {
       const data = {
@@ -57,10 +57,40 @@ function Booking() {
       };
       const phoneRegex = /^[0-9]{10}$/;
 
-      if (
-        !(userName && phone && address && petAge && petGender && weight && service && date && time && note) 
-      ) {
-        setError("NO_BOOKING_INFO");
+      if (!userName) {
+        setError("NO_BOOKING_NAME");
+        return;
+      }
+      if (!phone) {
+        setError("NO_BOOKING_PHONE");
+        return;
+      }
+      if (!address) {
+        setError("NO_BOOKING_ADDRESS");
+        return;
+      }
+      if (!petAge) {
+        setError("NO_BOOKING_PETAGE");
+        return;
+      }
+      if (!petGender) {
+        setError("NO_BOOKING_PETGENDER");
+        return;
+      }
+      if (!weight) {
+        setError("NO_BOOKING_WEIGHT");
+        return;
+      }
+      if (!service) {
+        setError("NO_BOOKING_SERVICE");
+        return;
+      }
+      if (!date) {
+        setError("NO_BOOKING_DATE");
+        return;
+      }
+      if (!time) {
+        setError("NO_BOOKING_TIME");
         return;
       }
 
@@ -76,7 +106,6 @@ function Booking() {
         setError("INVALID_DATE");
         return;
       }
-      
 
       setLoadWhat("SEND_BOOKING_REQUEST");
       setIsLoading(true);
@@ -84,7 +113,6 @@ function Booking() {
       setIsLoading(false);
       setIsComplete(true);
       setLoadWhat("SEND_BOOKING_REQUEST");
-
     } catch (error) {
       // toast.error('Error saving product!');
       console.error("Error saving product:", error);
@@ -134,9 +162,11 @@ function Booking() {
           <h2 className="text-2xl font-bold mb-4 text-center">
             Dịch vụ chăm sóc thú cưng
           </h2>
-          <h2 className="text-lg font-semibold mb-4 ">Thông tin khách hàng</h2>
+          <h2 className="text-lg font-semibold mt-4 mb-4 ">Thông tin khách hàng</h2>
           <div className="flex items-center space-x-8">
-            <label className="flex-1">Họ tên <span className="text-red-500">*</span></label>
+            <label className="flex-1">
+              Họ tên <span className="text-red-500">*</span>
+            </label>
             <input
               type="text"
               value={userName}
@@ -147,7 +177,9 @@ function Booking() {
           </div>
 
           <div className="flex items-center space-x-8">
-            <label className="flex-1">SĐT <span className="text-red-500">*</span></label>
+            <label className="flex-1">
+              SĐT <span className="text-red-500">*</span>
+            </label>
             <input
               type="text"
               value={phone}
@@ -157,7 +189,9 @@ function Booking() {
             />
           </div>
           <div className="flex items-center space-x-8">
-            <label className="flex-1">Địa chỉ <span className="text-red-500">*</span></label>
+            <label className="flex-1">
+              Địa chỉ <span className="text-red-500">*</span>
+            </label>
             <input
               type="text"
               value={address}
@@ -166,15 +200,15 @@ function Booking() {
               className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
             />
           </div>
-          <h2 className="text-lg font-semibold mb-4 ">Thông tin thú cưng</h2>
+          <h2 className="text-lg font-semibold mt-4 mb-4 ">Thông tin thú cưng</h2>
           <div className="flex items-center mt-4 space-x-8">
-            <label className="flex-1">Tuổi</label>
+            <label className="flex-1">Tuổi <span className="text-red-500">*</span></label>
             <select
               value={petAge}
               onChange={(e) => setPetAge(e.target.value)}
               className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
             >
-              <option value="">Chọn độ tuổi</option>
+              <option value="">Chọn độ tuổi </option>
               <option value="Dưới 6 tháng">Dưới 6 tháng</option>
               <option value="6 tháng - 12 tháng">6 tháng - 12 tháng</option>
               <option value="12 tháng - 24 tháng">12 tháng - 24 tháng</option>
@@ -182,7 +216,7 @@ function Booking() {
             </select>
           </div>
           <div className="flex items-center mt-4 space-x-8">
-            <label className="flex-1">Giới tính</label>
+            <label className="flex-1">Giới tính <span className="text-red-500">*</span></label>
             <div className="flex flex-[4]">
               <div className="">
                 <input
@@ -207,7 +241,7 @@ function Booking() {
             </div>
           </div>
           <div className="flex items-center mt-4 space-x-8">
-            <label className="flex-1">Cân nặng</label>
+            <label className="flex-1">Cân nặng <span className="text-red-500">*</span></label>
             <select
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
@@ -221,7 +255,7 @@ function Booking() {
           </div>
 
           <div className="flex items-center mt-4 space-x-8">
-            <label className="flex-1">Chọn dịch vụ</label>
+            <label className="flex-1">Chọn dịch vụ <span className="text-red-500">*</span></label>
             <select
               value={service}
               onChange={(e) => setService(e.target.value)}
@@ -235,7 +269,7 @@ function Booking() {
             </select>
           </div>
           <div className="flex items-center mt-4 space-x-8">
-            <label className="flex-1">Ngày hẹn</label>
+            <label className="flex-1">Ngày hẹn <span className="text-red-500">*</span></label>
             <input
               type="date"
               value={date.toISOString().split("T")[0]}
@@ -245,7 +279,7 @@ function Booking() {
             />
           </div>
           <div className="flex items-center mt-4 space-x-8">
-            <label className="flex-1">Thời gian</label>
+            <label className="flex-1">Thời gian <span className="text-red-500">*</span></label>
             <input
               type="time"
               value={time}
@@ -255,12 +289,11 @@ function Booking() {
           </div>
           <div className="flex items-center mt-4 space-x-8">
             <label className="flex-1">Để lại lời nhắn</label>
-            <input
-              type="text"
+            <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
               className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
-            />
+            ></textarea>
           </div>
           <div className="flex justify-center">
             <button
@@ -275,17 +308,6 @@ function Booking() {
             </button>
           </div>
 
-          {/* {isSaved && (
-                <div className="mt-4 text-center text-green-500 font-bold">
-                  Cảm ơn quý khách đã đăng kí dịch vụ!
-                </div>
-        )} */}
-
-          {/* <div className='flex items-center justify-center w-full'>
-            <button onClick={handleSaveClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Lưu
-            </button>
-        </div> */}
         </form>
       </div>
       <Footer />

@@ -1,15 +1,16 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import Sidebar from '@/app/Doctor/sidebarDoctor';
-import Header from '@/app/Admin/Header';
-import axios from '@/api/axios';
-import { useRouter } from 'next/navigation';
-import Footer from '@/app/Component/Footer/Footer';
+"use client";
+import React, { useEffect, useState } from "react";
+import Sidebar from "@/app/Doctor/sidebarDoctor";
+import Header from "@/app/Admin/Header";
+import axios from "@/api/axios";
+import { useRouter } from "next/navigation";
+import Footer from "@/app/Component/Footer/Footer";
+
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 }
@@ -27,7 +28,7 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
         const appointmentData = response.data;
         setData(appointmentData.appointment);
       } catch (error) {
-        console.error('Error fetching appointment data:', error);
+        console.error("Error fetching appointment data:", error);
       }
     };
     if (appointmentId) {
@@ -35,7 +36,11 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
     }
   }, [appointmentId]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { id, value } = e.target;
     setData((prevData: any) => ({
       ...prevData,
@@ -62,12 +67,12 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
       try {
         const response = await axios.put(`/appointment/${appointmentId}`, data);
       } catch (error) {
-        console.error('Error fetching appointment data:', error);
+        console.error("Error fetching appointment data:", error);
       }
     };
     updateAppointmentData(data);
 
-    router.push('/Admin/Appointment');
+    router.push("/Doctor/Appointment");
   };
 
   const handleChangeClick = async () => {
@@ -181,25 +186,13 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
                   {data.note}
                 </div>
               </div>
-              <div className="w-full">
-                <label className="text-sm font-bold mb-2" htmlFor="doctorName">
-                  Bác sĩ chỉ định
-                </label>
-                <input
-                  className="block w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="doctorName"
-                  type="text"
-                  value={data.doctorName}
-                  onChange={handleInputChange}
-                  disabled={!isEditable}
-                />
-              </div>
+
               <div className="w-full">
                 <label className="text-sm font-bold mb-2" htmlFor="status">
                   Trạng thái
                 </label>
                 <select
-                  className="block w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  className="block w-full border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:bg-blue-50 focus:border-gray-500 bg-white"
                   id="status"
                   value={data.status}
                   onChange={handleInputChange}
@@ -207,17 +200,38 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
                 >
                   <option value="">Chọn trạng thái</option>
                   <option value="Chưa xử lý">Chưa xử lý</option>
-                  <option value="Đang xử lý">Đang xử lý</option>
                   <option value="Đã xử lý">Đã xử lý</option>
+                  <option value="Đã hủy">Đã hủy</option>
                 </select>
+              </div>
+              <div className="font-nunito text-xl font-bold w-full">
+                Lời nhắn của bác sĩ
+              </div>
+              <div className="w-full px-3">
+                <label className="text-xs font-bold mb-2" htmlFor="doctorMessage">
+                  Lời nhắn
+                </label>
+                <textarea
+                  className="block w-full border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500 bg-white"
+                  id="doctorMessage"
+                  value={data.doctorMessage}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                ></textarea>
               </div>
             </div>
           </form>
           <div className="flex items-center justify-center w-full space-x-4 mt-6">
+          <button
+              onClick={() => router.push("/Doctor/Appointment")}
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl transition duration-300"
+            >
+              Quay lại
+            </button>
             {!showButton && (
               <button
                 onClick={handleChangeClick}
-                className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+                className="bg-yellow-500 hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-3xl transition duration-300"
               >
                 Cập nhật trạng thái
               </button>
@@ -225,12 +239,14 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
             {showButton && (
               <button
                 onClick={handleSaveClick}
-                className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+                className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl transition duration-300"
               >
                 Lưu
               </button>
             )}
+
           </div>
+
         </div>
       </div>
       <Footer />
