@@ -39,6 +39,10 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
     if(loadWhat=="ACCEPT_ADOPTION_REQUEST"){
       window.location.href = "/Admin/Adoption";
     }
+    if(loadWhat=="SEND_UPDATE_PROFILE"){
+      window.location.href = "/Admin/Profile";
+    }
+    
   };
 
   if (!isLoading && !isComplete) {
@@ -79,6 +83,7 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             {loadWhat=="SEND_UPDATERESCUE_REQUEST"&& <p>Đã cập nhật thông tin yêu cầu cứu hộ!</p>}
             
             {loadWhat=="ACCEPT_ADOPTION_REQUEST"&& <p>Đã chấp nhận yêu cầu!</p>}
+            {loadWhat=="SEND_UPDATE_PROFILE"&& <p>Đã cập nhật thông tin thành công!</p>}
 
 
 

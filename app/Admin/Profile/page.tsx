@@ -1,12 +1,19 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { mutate } from 'swr';
 import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
 import axios from '@/api/axios';
 import getInfo from '@/hooks/getInfo';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import ErrorModal from "@/app/Component/Error";
+import LoadingModal from "@/app/Component/Loading";
 function Profile() {
+    const [isLoading, setIsLoading] = useState(false);
+    const [isComplete, setIsComplete] = useState(false);
+    const [loadWhat, setLoadWhat] = useState("");
+    const [error, setError] = useState<string | null>(null);
     const [data, setData] = useState<any>({
         avatar: {
             public_id: '',
@@ -33,18 +40,55 @@ function Profile() {
         fetchData();
     }, []);
 
-    const handleSave = () => {
-        const updateProfile = async () => {
-            try {
-                const response = await axios.put(`/account`, data);
-                alert('Cập nhật thông tin thành công');
-                window.location.reload();
-            } catch (error) {
-                console.error('Error update account data:', error);
-            }
-        };
-        updateProfile();
-    };
+    // const handleSave = () => {
+    //     const updateProfile = async () => {
+    //         try {
+    //             const response = await axios.put(`/account`, data);
+    //             // alert('Cập nhật thông tin thành công');
+    //             window.location.reload();
+    //         } catch (error) {
+    //             console.error('Error update account data:', error);
+    //         }
+    //     };
+    //     updateProfile();
+    // };
+    const handleSave = async (e: any) => {
+        e.preventDefault();
+        if (data.userName==="") {
+          setError("EMPTY_USERNAME");
+          return;
+        }
+        if (data.email==="") {
+          setError("EMPTY_EMAIL");
+          return;
+        }
+        if (data.address==="") {
+          setError("EMPTY_ADDRESS");
+          return;
+        }
+        if (data.phone==="") {
+          setError("EMPTY_PHONE");
+          return;
+        }
+        if (data.gender==="") {
+            setError("EMPTY_GENDER");
+            return;
+        }
+
+        setLoadWhat("SEND_UPDATE_PROFILE");
+        setIsLoading(true);
+    
+    
+        try {
+          const response = await axios.put(`/account`, data);
+          mutate(`/account`);
+          setIsLoading(false);
+          setIsComplete(true);
+    
+        } catch (error) {
+    
+        }
+      };
 
     const handleImage = (e: any) => {
         const file = e.target.files[0];
@@ -66,6 +110,13 @@ function Profile() {
 
     return (
         <div className='flex flex-col w-full justify-center items-center'>
+                  <ErrorModal error={error} setError={setError} />
+      <LoadingModal
+        isLoading={isLoading}
+        isComplete={isComplete}
+        setIsComplete={setIsComplete}
+        loadWhat={loadWhat}
+      />
         <Header />
             <div className='flex w-full'>
                 <Sidebar />
