@@ -11,7 +11,9 @@ import { deleteCookie } from "cookies-next";
 import { usePathname, useRouter } from 'next/navigation';
 import useAuth from '@/hooks/useAuth';
 import axios from "@/api/axios";
+import useSWR, { mutate } from 'swr';
 
+const fetcher = (url: string) => axios.get(url).then(res => res.data);
 
 export default function Header(props: any) {
   const pathname = usePathname();
@@ -20,6 +22,7 @@ export default function Header(props: any) {
   const [showSublist1, setShowSublist1] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+
   interface Notification {
     _id: string;
     user_id: string;
@@ -30,6 +33,9 @@ export default function Header(props: any) {
   }
 
   const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  const { data: cartData, error } = useSWR('/cart', fetcher);
+  const cartItemCount = cartData ? cartData.cart.product_list.length : 0;
 
   const handleLogout = async () => {
     // Call the logout endpoint
@@ -123,7 +129,7 @@ export default function Header(props: any) {
               {showDropdown && (
                 <div className="absolute right-[-10px] mt-2 w-60 bg-white border border-gray-300 rounded-md shadow-lg z-10">
                   <ul>
-                  {notifications.slice(0, 5).map((notification) => (
+                    {notifications.slice(0, 5).map((notification) => (
                       <li
                         key={notification._id}
                         className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
@@ -147,7 +153,14 @@ export default function Header(props: any) {
               )}
             </div>
             <Link href="/Cart">
-              <img className="w-7 h-7" src={ShoppingCart.src} alt="Cart" />
+              <div className="relative">
+                <img className="w-7 h-7" src={ShoppingCart.src} alt="Cart" />
+                {cartItemCount > 0 && (
+                  <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                    {cartItemCount}
+                  </span>
+                )}
+              </div>
             </Link>
             <Link href="/Profile">
               <img className="w-7 h-7" src={User.src} alt="User" />

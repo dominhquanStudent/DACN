@@ -146,7 +146,18 @@ const ErrorModal = ({ error, setError }: any) => {
             {error == "LACK_EMPLOYEE" && <p>Vui lòng nhập tên nhân viên xử lý!</p>}
 
             {error == "INVALID_DATE" && <p>Ngày hẹn không hợp lệ!</p>}
-            {error == "PAGE_NOT_FOUND" && <p>Trang bạn tìm kiếm không có !</p>}
+
+
+{/* ADMIN PROFILE */}
+            {error == "EMPTY_USERNAME" && <p>Vui lòng nhập tên!</p>}
+            {error == "EMPTY_EMAIL" && <p>Vui lòng nhập email!</p>}
+            {error == "EMPTY_ADDRESS" && <p>Vui lòng nhập địa chỉ!</p>}
+            {error == "EMPTY_PHONE" && <p>Vui lòng nhập số điện thoại!</p>}
+            {error == "EMPTY_GENDER" && <p>Vui lòng chọn giới tính!</p>}
+            {error == "EMPTY_BIRTHDAY" && <p>Vui lòng chọn ngày sinh!</p>}
+
+
+
             {/* USER ADOPT */}
             {error == "ADOPT_NOT_LOGIN" && <p>Bạn cần đăng nhập để nhận nuôi!</p>}
             <button

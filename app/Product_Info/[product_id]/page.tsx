@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
 import Header from "@/app/Component/Header/Header";
+import {mutate} from "swr";
 import Foto from "@/public/img/Product_Main/foto.png";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import StarRating from "@/app/Component/Product_Intro/Product/star_rating";
 import Comment from "@/app/Component/Product_Intro/Product_Info/comment";
 import Footer from "@/app/Component/Footer/Footer";
@@ -183,15 +184,21 @@ export default function ProductDetailPage({
     cart: {
       _id: "",
       user_id: "",
-      product_list: [],
+      product_list: [
+
+      ],
       createdAt: "2024-09-14T12:22:23.395Z",
       updatedAt: "2024-09-29T17:01:07.043Z",
       __v: 5
     }
   });
+  const [currentCartAmount, setCurrentCartAmount] = useState(0);
+
   const fetchCartData = async () => {
     const response = await axios.get(`/cart`);
+    const productIndex = response.data.cart.product_list.findIndex((product: any) => product.product_id === productId);
     setCartData(response.data);
+    setCurrentCartAmount(productIndex === -1 ? 0 : response.data.cart.product_list[productIndex].quantity);
   };
   useEffect(() => {
     if (jwt) {
@@ -199,38 +206,65 @@ export default function ProductDetailPage({
     }
   }, [jwt]);
 
-  const handleAddToCart = async (e: any) => {
+  const handleAddToCart = useCallback(async (e:any) => {
     e.preventDefault();
-    
-    // if there is a product with the same id and its quantity is equal to the amount, return
-     if (cartData.cart.product_list.some((product: any) => product.product_id === productId && product.quantity+amount >= data.stock)) {
+
+    // Check if the product is already in the cart and if the quantity exceeds the stock
+    if (cartData.cart.product_list.some((product: any) => product.product_id === productId && amount + currentCartAmount > data.stock)) {
       setError("MAX_QUANTITY_ALLOWED");
       return;
     }
-    
+
     if (!accountData) {
       setError("NOT_LOGGED_IN_CART");
       return;
     }
+
     setIsLoading(true);
     setLoadWhat("ADD_TO_CART");
+
     try {
       const cartItem = {
         user_id: accountData._id, // Replace with actual user ID
         product_id: productId,
         quantity: amount,
       };
+
       const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await axios.post(`${baseURL}/cart/addProduct`, cartItem);
+
+      console.log("Response data:", response.data);
+      console.log("Response data cart product list:", response.data.cart.product_list);
+
+      // Find product with the same product_id
+      const productIndex = response.data.cart.product_list.findIndex((product: any) => product.product_id === productId);
+
+      console.log("Product index:", productIndex);
+
+      // Update its quantity in currentCartAmount
+      const newCartAmount = productIndex === -1 ? amount : response.data.cart.product_list[productIndex].quantity;
+      
+      // Log the new cart amount directly from the response
+      console.log("New cart amount:", newCartAmount);
+
+      // Update the state with the new cart amount
+      setCurrentCartAmount(newCartAmount);
+
+      // Log the state value after setting it (this will show the previous state value due to async nature)
+      console.log("Current cart amount (state):", currentCartAmount);
+
       setIsComplete(true);
-      console.log(response.data);
+      mutate('/cart');
+
+
+      // Fetch the cart data again after adding to cart
+      fetchCartData();
     } catch (error) {
       console.error("Error adding to cart:", error);
     } finally {
       setIsLoading(false);
     }
-  };
- 
+  }, [cartData, currentCartAmount, amount, data.stock, accountData, productId]);
   return (
     <>
       <Header />
