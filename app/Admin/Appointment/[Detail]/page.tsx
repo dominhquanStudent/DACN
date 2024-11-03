@@ -224,9 +224,8 @@ const setFileToBase = (file: any) =>{
                   >
                     <option value="">Chọn trạng thái</option>
                     <option value="Chưa xử lý">Chưa xử lý</option>
-                    <option value="Đang xử lý">Đang xử lý</option>
                     <option value="Đã xử lý">Đã xử lý</option>
-
+                    <option value="Đã hủy">Đã hủy</option>
                   </select>
                 </div>
               
@@ -236,6 +235,12 @@ const setFileToBase = (file: any) =>{
             </div>
           </form>
           <div className='flex items-center justify-center w-full space-x-4 mb-4'>
+            <button
+              onClick={() => router.push('/Admin/Appointment')}
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl"
+            >
+              Quay lại
+            </button>
             {!showButton && (
             <button onClick={handleChangeClick} className="bg-yellow-500 hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-3xl">
               Cập nhật trạng thái

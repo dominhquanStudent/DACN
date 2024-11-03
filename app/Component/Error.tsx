@@ -50,14 +50,52 @@ const ErrorModal = ({ error, setError }: any) => {
             )}
 
             {/* BOOKING INFO */}
-            {error == "NO_BOOKING_INFO" && (
-              <p>Vui lòng nhập đầy đủ thông tin!</p>
+            {error == "NO_BOOKING_NAME" && (
+              <p>Vui lòng nhập tên của bạn!</p>
             )}
+            {error == "NO_BOOKING_PHONE" && (
+              <p>Vui lòng nhập email của bạn!</p>
+            )}
+            {error == "NO_BOOKING_ADDRESS" && (
+              <p>Vui lòng nhập địa chỉ của bạn!</p>
+            )}
+            {error == "NO_BOOKING_PETAGE" && (
+              <p>Vui lòng nhập tuổi bé!</p>
+            )}
+            {error == "NO_BOOKING_PETGENDER" && (
+              <p>Vui lòng chọn giới tính bé!</p>
+            )}
+            {error == "NO_BOOKING_WEIGHT" && (
+              <p>Vui lòng chọn cân nặng của bé!</p>
+            )}
+            {error == "NO_BOOKING_SERVICE" && (
+              <p>Vui lòng chọn dịch vụ!</p>
+            )}
+            {error == "NO_BOOKING_DATE" && <p>Vui lòng chọn ngày hẹn!</p>}
+            {error == "NO_BOOKING_TIME" && <p>Vui lòng chọn giờ hẹn!</p>}
+
+
+
+
 
             {/* RESCUE INFO */}
-            {error == "NO_RESCUE_INFO" && (
-              <p>Vui lòng nhập đầy đủ thông tin!</p>
+            {error == "NO_ADOPT_USER_NAME" && (
+              <p>Vui lòng nhập tên của bạn!</p>
             )}
+            {error == "NO_ADOPT_PHONE" && (
+              <p>Vui lòng nhập số điện thoại của bạn!</p>
+            )}
+            {error == "NO_ADOPT_IMAGE" && (
+              <p>Vui lòng gửi hình ảnh!</p>
+            )}
+            {error == "NO_ADOPT_LOCATION" && (
+              <p>Vui lòng nhập địa chỉ cần cứu hộ!</p>
+            )}
+            {error == "NO_ADOPT_MESSAGE" && (
+              <p>Vui lòng nhập lời nhắn!</p>
+            )}
+
+            {/* REGISTER */}
             {error == "INVALID_PHONENUMBER" && (
               <p>Số điện thoại không hợp lệ!</p>
             )}

@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan, faFilter } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import ConfirmModal from "@/app/Component/ConfirmModal";
 
-library.add(faTrashCan, faPenToSquare);
+library.add(faTrashCan, faPenToSquare, faFilter);
 import Sidebar from "@/app/Admin/sidebar";
 import Header from "@/app/Admin/Header";
 import { useRouter } from "next/navigation";
@@ -170,11 +170,14 @@ function Appointment() {
           >
             Lịch hẹn khám bệnh
           </div>
-          <div className="flex w-full space-x-2 mt-4">
+          <div className='flex w-full mt-4 mb-4 justify-end'>
+            <label className='text-lg font-nunito font-bold text-gray-400'>
+              <FontAwesomeIcon icon={faFilter} className="h-5 w-5" />
+            </label>
             <select
-              onChange={(e) => setFilter(e.target.value)}
-              className="bg-transparent border border-[#CCCCCC] text-black font-bold py-1 px-4 rounded-xl mb-2"
+              className='border border-gray-300 rounded-md ml-2'
               value={filter}
+              onChange={(e) => setFilter(e.target.value)}
             >
               <option value="all">Tất cả</option>
               <option value="today">Hôm nay</option>
@@ -183,6 +186,7 @@ function Appointment() {
               <option value="past">Đã qua</option>
             </select>
           </div>
+
           <table className="min-w-full leading-normal">
             <thead>
               <tr>

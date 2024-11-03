@@ -241,6 +241,9 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
             </div>
           </div>
           <div className='flex items-center justify-center w-full space-x-4'>
+            <button onClick={() => router.push('/Admin/Order')} className="bg-[#1286CE] hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+              Quay lại
+            </button>
             <button onClick={handleButtonClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               {buttonLabel}
             </button>
