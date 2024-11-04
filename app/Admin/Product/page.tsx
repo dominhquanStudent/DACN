@@ -188,6 +188,9 @@ function Product() {
                       {product.stock}
                     </td>
                     <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                      {product.category}
+                    </td>
+                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                     {new Intl.NumberFormat('vi-VN').format(product.price)}
                     </td>
                     <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">

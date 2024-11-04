@@ -90,7 +90,7 @@ export default function Header(props: any) {
 
   return (
     // global container
-    <div className="flex flex-col mx-8 mb-10">
+    <div className="flex flex-col mx-8 mb-3">
       {/* top part */}
       <div className="flex items-center justify-center space-x-11 border-b-[1px] border-gray-300">
         {/* image */}
@@ -190,7 +190,7 @@ export default function Header(props: any) {
           >
             <Link href="/Product">Sản phẩm thú cưng</Link>
             {/* sub list 1 */}
-            <ul
+            {/* <ul
               className={`absolute left-48 p-2 text-black text-base flex justify-center w-[75%] font-normal transition-all duration-300 ease-in-out ${showSublist1 ? "opacity-100 max-h-96" : "opacity-0 max-h-0"
                 }`}
             >
@@ -209,7 +209,7 @@ export default function Header(props: any) {
               <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
                 <Link href={{ pathname: '/Product', query: { filterMode: 5 } }}>Đồ dùng thú y</Link>
               </li>
-            </ul>
+            </ul> */}
           </li>
           <li className={`transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95 ${pathname === '/Price_Table' ? "text-yellow-500" : ""}`}>
             <Link className="hover:text-yellow-500" href="/Price_Table">

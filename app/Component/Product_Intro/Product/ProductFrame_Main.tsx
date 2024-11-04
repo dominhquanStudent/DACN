@@ -13,12 +13,13 @@ const ProductCard = (props: any) => {
   const formatPrice = (price: number) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
-   let price=formatPrice(props.product.price);
-   let discount_price=formatPrice(props.product.discount_price);
-  
+  let price = formatPrice(props.product.price);
+  let discount_price = formatPrice(props.product.discount_price);
+
   return (
     <div
-      className="flex flex-col  rounded-lg overflow-hidden w-60 transform transition-transform duration-300 hover:scale-110 hover:shadow-lg active:scale-95 border-[#EDB24E] border-2"
+      className="flex flex-col  rounded-lg overflow-hidden w-60 transform transition-transform duration-300
+       hover:scale-110 hover:shadow-lg active:scale-95 border-[#EDB24E] border-2 mt-5 ml-5"
       onClick={() => handleChangeClick(props.product._id)}
     >
       {/* Product Image */}
@@ -54,14 +55,22 @@ const ProductCard = (props: any) => {
         </div>
 
         {/* Price */}
-        <div className={`mt-2 flex ${props.product.discount_price === props.product.price ? 'justify-center' : 'justify-between'}`}>
-  <span className="text-lg font-semibold"><span className="text-base underline" >đ</span> {discount_price}</span>
-  {props.product.discount_price !== props.product.price && (
-    <span className="text-lg font-semibold text-red-500 line-through ml-2">
-      <span className="text-base underline" >đ</span> {price}
-    </span>
-  )}
-</div>
+        <div
+          className={`mt-2 flex ${
+            props.product.discount_price === props.product.price
+              ? "justify-center"
+              : "justify-between"
+          }`}
+        >
+          <span className="text-lg font-semibold">
+            <span className="text-base underline">đ</span> {discount_price}
+          </span>
+          {props.product.discount_price !== props.product.price && (
+            <span className="text-lg font-semibold text-red-500 line-through ml-2">
+              <span className="text-base underline">đ</span> {price}
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );

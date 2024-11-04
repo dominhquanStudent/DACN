@@ -22,15 +22,20 @@ const config: Config = {
         // Add more custom font families as needed
       },
       colors: {
-        'footer-yellow': '#ecedd3',
+        'footer-yellow': '#FCFAEE',
         'search-button-orange':'#EDB24E',
         'table-brown':'#FFE5B9',
         'table-line': '#F29A2E',
         'background-col': '#DDF2FF',
         'background-blue': '#296EB6',
+        'background-filter': '#FCFAEE',
+        'clicked_filter': '#DA8359',
+        'hover_filter': '#ECDFCC',
+        'title_filter': '#A5B68D',
       }
     },
   },
+
   plugins: [],
 };
 export default config;
