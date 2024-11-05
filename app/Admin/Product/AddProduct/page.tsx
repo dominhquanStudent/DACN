@@ -232,9 +232,9 @@ function ProductAdd() {
                   >
                     <option value="">Chọn</option>
                     <option value="Thức ăn thú cưng">Thức ăn thú cưng</option>
-                    <option value="Phụ kiện & Đồ chơi">
-                      Phụ kiện & Đồ chơi
-                    </option>
+                    <option value="Quần áo & Phụ kiện"> Quần áo & Phụ kiện</option>
+                    <option value="Đồ chơi cho thú cưng">Đồ chơi cho thú cưng</option>
+                    <option value="Đồ dùng tắm gội">Đồ dùng tắm gội</option>
                     <option value="Đồ dùng vệ sinh">Đồ dùng vệ sinh</option>
                     <option value="Nhà thú cưng">Nhà thú cưng</option>
                     <option value="Đồ dùng thú y">Đồ dùng thú y</option>

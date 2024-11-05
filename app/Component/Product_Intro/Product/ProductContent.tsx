@@ -1,17 +1,26 @@
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import axios from "@/api/axios";
-import StarRating from "./star_rating";
 import ProductCard from "./ProductFrame_Main";
 import ErrorModal from "@/app/Component/Error";
 import "@/app/Component/CheckboxStyles.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faList } from "@fortawesome/free-solid-svg-icons";
+
 const ProductContent = () => {
   const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
-  const queryFilterMode = Number(searchParams.get('filterMode') ?? "0");
+  const queryFilterMode = Number(searchParams.get("filterMode") ?? "0");
 
   const [products, setProducts] = useState<any[]>([]);
-  //get products from server
+  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [minPrice, setMinPrice] = useState<number | null>(null);
+  const [maxPrice, setMaxPrice] = useState<number | null>(null);
+  const [searchPerformed, setSearchPerformed] = useState<boolean>(false);
+  const [Params, setParams] = useState(0);
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -25,70 +34,81 @@ const ProductContent = () => {
 
     fetchProducts();
   }, []);
-  console.log(products);
-  const brands = Array.from(new Set(products.map((product) => product.brand)));
-  const category = Array.from(
-    new Set(products.map((product) => product.category))
-  );
-  //LOGIC FOR FILTERING PRODUCTS
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
-  const [minPrice, setMinPrice] = useState<number | null>(null);
-  const [maxPrice, setMaxPrice] = useState<number | null>(null);
-  const [selectedRating, setSelectedRating] = useState<number | null>(null);
-  const [searchPerformed, setSearchPerformed] = useState<boolean>(false);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  //if queryFilterMode is not 0 then filter products
-  const [Params, setParams] = useState(0);
+
   useEffect(() => {
     if (queryFilterMode === 1) {
-      console.log("Filtering products by category 'Thức ăn thú cưng'");
-      console.log("Products before filtering:", products);
-      
-      const filtered = products.filter(product => product.category === "Thức ăn thú cưng");
-  
+      const filtered = products.filter(
+        (product) => product.category === "Thức ăn thú cưng"
+      );
       setParams(1);
       setFilteredProducts(filtered);
-      console.log("Filtered products:", filteredProducts);
-    }
-    else if (queryFilterMode === 2) {
-      console.log("Filtering products by category 'Phụ kiện & Đồ chơi'");
-      console.log("Products before filtering:", products);
-  
-      const filtered = products.filter(product => product.category === "Phụ kiện & Đồ chơi");
+    } else if (queryFilterMode === 2) {
+      const filtered = products.filter(
+        (product) => product.category === "Phụ kiện & Đồ chơi"
+      );
       setParams(2);
       setFilteredProducts(filtered);
-      console.log("Filtered products:", filteredProducts);
-    }
-    else if (queryFilterMode === 3) {
-      console.log("Filtering products by category 'Đồ dùng vệ sinh'");
-      console.log("Products before filtering:", products);
-  
-      const filtered = products.filter(product => product.category === "Đồ dùng vệ sinh");
+    } else if (queryFilterMode === 3) {
+      const filtered = products.filter(
+        (product) => product.category === "Đồ dùng vệ sinh"
+      );
       setParams(3);
       setFilteredProducts(filtered);
-      console.log("Filtered products:", filteredProducts);
-    }
-    else if (queryFilterMode === 4) {
-      console.log("Filtering products by category 'Nhà thú cưng'");
-      console.log("Products before filtering:", products);
-  
-      const filtered = products.filter(product => product.category === "Nhà thú cưng");
+    } else if (queryFilterMode === 4) {
+      const filtered = products.filter(
+        (product) => product.category === "Nhà thú cưng"
+      );
       setParams(4);
       setFilteredProducts(filtered);
-      console.log("Filtered products:", filteredProducts);
-    }
-    else if (queryFilterMode === 5) {
-      console.log("Filtering products by category 'Đồ dùng thú y'");
-      console.log("Products before filtering:", products);
-  
-      const filtered = products.filter(product => product.category === "Đồ dùng thú y");
+    } else if (queryFilterMode === 5) {
+      const filtered = products.filter(
+        (product) => product.category === "Đồ dùng thú y"
+      );
       setParams(5);
       setFilteredProducts(filtered);
-      console.log("Filtered products:", filteredProducts);
     }
   }, [queryFilterMode, products]);
-////////////////////////////////////////
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category === selectedCategory ? null : category);
+    setSelectedBrands([]); // Reset selected brands when category changes
+  };
+
+  const categoryMapping: { [key: string]: string } = {
+    "Thức ăn thú cưng": "Boss ăn boss uống",
+    "Quần áo & Phụ kiện": "Boss mang Boss mặc",
+    "Đồ chơi cho thú cưng": "Boss học Boss chơi",
+    "Đồ dùng tắm gội": "Boss tắm Boss gội",
+    "Đồ dùng vệ sinh": "Boss sạch Boss thơm",
+    "Nhà thú cưng": "Boss ngủ Boss nghỉ",
+    "Đồ dùng thú y": "Boss khỏe Boss ngoan",
+  };
+
+  const categoryOrder = [
+    "Thức ăn thú cưng",
+    "Quần áo & Phụ kiện",
+    "Đồ chơi cho thú cưng",
+    "Đồ dùng tắm gội",
+    "Đồ dùng vệ sinh",
+    "Nhà thú cưng",
+    "Đồ dùng thú y",
+  ];
+
+  useEffect(() => {
+    let filtered = products;
+    if (selectedCategory) {
+      filtered = filtered.filter(
+        (product: any) => product.category === selectedCategory
+      );
+    }
+    if (selectedBrands.length > 0) {
+      filtered = filtered.filter((product: any) =>
+        selectedBrands.includes(product.brand)
+      );
+    }
+    setFilteredProducts(filtered);
+  }, [selectedCategory, selectedBrands, products]);
+
   const handleCheckboxChange = (brand: string) => {
     setSelectedBrands((prevSelectedBrands) =>
       prevSelectedBrands.includes(brand)
@@ -96,157 +116,176 @@ const ProductContent = () => {
         : [...prevSelectedBrands, brand]
     );
   };
-  const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handleMinPriceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setMinPrice(e.target.value ? parseFloat(e.target.value) : null);
   };
 
-  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setMaxPrice(e.target.value ? parseFloat(e.target.value) : null);
-  };
-  const handleRatingChange = (rating: number) => {
-    setSelectedRating(rating);
-  };
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategories((prevSelectedCategories) =>
-      prevSelectedCategories.includes(category)
-        ? prevSelectedCategories.filter((c) => c !== category)
-        : [...prevSelectedCategories, category]
-    );
   };
 
   const handleApplyClick = () => {
     setSearchPerformed(true);
-    let filtered = products;
+    let filtered = products; // Start filtering from the original list of products
+
     if (minPrice !== null && maxPrice !== null && minPrice > maxPrice) {
       setError("INVALID_PRICE_RANGE");
       return;
     }
+
+    // Apply category filter
+    if (selectedCategory) {
+      filtered = filtered.filter(
+        (product: any) => product.category === selectedCategory
+      );
+    }
+
+    // Apply brand filter
     if (selectedBrands.length > 0) {
       filtered = filtered.filter((product: any) =>
         selectedBrands.includes(product.brand)
       );
     }
-    if (selectedCategories.length > 0) {
-      filtered = filtered.filter((product: any) =>
-        selectedCategories.includes(product.category)
+
+    // Apply price filter
+    if (minPrice !== null) {
+      filtered = filtered.filter(
+        (product: any) => product.discount_price >= minPrice
       );
     }
-    
-    if (minPrice !== null) {
-      filtered = filtered.filter((product: any) => product.price >= minPrice);
+    if (maxPrice !== null) {
+      filtered = filtered.filter(
+        (product: any) => product.discount_price <= maxPrice
+      );
     }
 
-    if (maxPrice !== null) {
-      filtered = filtered.filter((product: any) => product.price <= maxPrice);
-    }
-    if (selectedRating !== null) {
-      filtered = filtered.filter((product: any) => {
-        if (selectedRating === 1) {
-          return product.rating >= 1 && product.rating < 1.5;
-        }
-        if (selectedRating === 2) {
-          return product.rating >= 1.5 && product.rating < 2.5;
-        }
-        if (selectedRating === 3) {
-          return product.rating >= 2.5 && product.rating < 3.5;
-        }
-        
-        if (selectedRating === 4) {
-          return product.rating >= 3.5 && product.rating < 4.5;
-        }
-        if (selectedRating === 5) {
-          return product.rating >= 4.5 && product.rating <= 5;
-        }
-        
-      });
-    }
     setFilteredProducts(filtered);
-    
   };
-  
-  //LOGIC FOR PAGINATION
-  
+
+  const priceOptions = [
+    0, 10000, 100000, 200000, 500000, 800000, 1000000, 2000000,
+  ];
+
+  const brands = Array.from(
+    new Set(
+      products
+        .filter((product) => product.category === selectedCategory)
+        .map((product) => product.brand)
+    )
+  );
+  const category = Array.from(
+    new Set(products.map((product) => product.category))
+  ).sort((a, b) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b));
 
   return (
     <>
       <ErrorModal error={error} setError={setError} />
       <div className="flex">
         {/* FilterSide */}
-        <div className="w-1/6 font-k2d   flex flex-col items-center border-r-[1px] border-black ">
+        <div className="w-1/6 font-k2d flex flex-col items-center border-r-[1px] border-clicked_filter p-4 space-y-6 ">
           {/* Bộ lọc */}
-          <div>
-            <h1 className=" text-lg text-center">Bộ lọc tìm kiếm</h1>
+          <div className="relative w-full flex-col">
+            <div className="flex justify-between items-center p-2 text-center font-bold bg-title_filter text-orange-700">
+              <FontAwesomeIcon icon={faList} />
+              <span className="flex-grow text-center">Theo danh mục</span>
+            </div>
+
             {/* Theo loại */}
-            <div className="space-y-4 border-b-[1px] pb-2">
-              <div className="text-center">Theo danh mục</div>
+            <div className="space-y-4 border-b-[1px] pb-4 bg-background-filter">
               {category.map((cat, index) => (
-                <div key={index}>
-                  <input
-                    type="checkbox"
-                    name={cat}
-                    id={cat}
-                    className="custom-checkbox"
-                    onChange={() => handleCategoryChange(cat)}
-                  />
-                  <label htmlFor={cat}>{cat}</label>
+                <div
+                  key={index}
+                  className={`flex items-center space-x-2  p-2  ${
+                    selectedCategory === cat ? "bg-clicked_filter" : ""
+                  } hover:bg-hover_filter`}
+                  onClick={() => handleCategoryChange(cat)}
+                >
+                  <label htmlFor={cat} className="text-sm">
+                    {categoryMapping[cat]}
+                  </label>
                 </div>
               ))}
             </div>
-            {/* Theo brand */}
-            <div className="space-y-3 border-b-[1px] pb-2">
-              <div className="text-center">Theo Thương Hiệu</div>
-              {brands.map((brand, index) => (
-                <div key={index}>
-                  <input
-                    type="checkbox"
-                    name={`brand${index + 1}`}
-                    id={`brand${index + 1}`}
-                    className="custom-checkbox"
-                    onChange={() => handleCheckboxChange(brand)}
-                  />
-                  <label htmlFor={`brand${index + 1}`}>{brand}</label>
+            {selectedCategory && (
+              <>
+                {/* Theo brand */}
+                <div className="space-y-4 border-b-[1px] pb-4 mt-4 bg-background-filter">
+                  <div className="flex justify-between items-center p-2 text-center font-bold bg-title_filter text-orange-700">
+                    <FontAwesomeIcon icon={faList} />
+                    <span className="flex-grow text-center">
+                      Theo thương hiệu
+                    </span>
+                  </div>
+                  {brands.map((brand, index) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        name={`brand${index + 1}`}
+                        id={`brand${index + 1}`}
+                        className="custom-checkbox"
+                        onChange={() => handleCheckboxChange(brand)}
+                      />
+                      <label htmlFor={`brand${index + 1}`} className="text-sm">
+                        {brand}
+                      </label>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            {/* Min and max price searching */}
-            <div className="space-y-3 border-b-[1px] pb-2 ">
-              <div className="text-center">Theo giá</div>
-              <div>
-                <input
-                  type="number"
-                  className="border-[1px] w-20"
-                  placeholder="Từ"
-                  onChange={handleMinPriceChange}
-                />
-                -
-                <input
-                  type="number"
-                  className="border-[1px] w-20"
-                  placeholder="Đến"
-                  onChange={handleMaxPriceChange}
-                />
-              </div>
-              {/* rating by stars */}
-              <div className="text-center">Đánh Giá</div>
-              <StarRating handleRatingChange={handleRatingChange} />
-              <button
-                className="w-full rounded-md bg-search-button-orange py-2 px-6 font-kd2 text-xs font-bold 
-                uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 
-                focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none active:bg-cyan-700 active:scale-95 
-                disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                data-ripple-light="true"
-                onClick={handleApplyClick}
-              >
-                Áp dụng
-              </button>
-            </div>
+                {/* Min and max price searching */}
+                <div className="space-y-4 border-b-[1px] pb-4 mt-4 bg-background-filter">
+                  <div className="flex justify-between items-center p-2 text-center font-bold bg-title_filter text-orange-700">
+                    <FontAwesomeIcon icon={faList} />
+                    <span className="flex-grow text-center">Theo giá</span>
+                  </div>
+                  <div className="flex items-center justify-center space-x-2">
+                    <select
+                      className="border-[1px] w-24 p-1 rounded"
+                      onChange={handleMinPriceChange}
+                    >
+                      <option value="">Từ</option>
+                      {priceOptions.map((price, index) => (
+                        <option key={index} value={price}>
+                          {price.toLocaleString()}
+                        </option>
+                      ))}
+                    </select>
+                    <span>-</span>
+                    <select
+                      className="border-[1px] w-24 p-1 rounded"
+                      onChange={handleMaxPriceChange}
+                    >
+                      <option value="">Đến</option>
+                      {priceOptions.map((price, index) => (
+                        <option key={index} value={price}>
+                          {price.toLocaleString()}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <button
+                  className="w-full rounded-md bg-search-button-orange py-2 px-6 font-kd2 text-xs font-bold 
+              uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 
+              focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none active:bg-cyan-700 active:scale-95 
+              disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none mt-4"
+                  data-ripple-light="true"
+                  onClick={handleApplyClick}
+                >
+                  Áp dụng
+                </button>
+              </>
+            )}
           </div>
         </div>
         {/* Product side*/}
-        <div className="w-5/6 grid grid-cols-3 gap-14 ml-16 snap-y snap-mandatory overflow-y-scroll h-[900px] hide-scrollbar">
-          {(searchPerformed && filteredProducts.length === 0) || (Params != 0 && filteredProducts.length === 0) ? (
-            <div className="col-span-3 text-center p-6 snap-center">
-              <h2 className="text-xl font-semibold mb-2">Không tìm thấy sản phẩm</h2>
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 ml-16 snap-y snap-mandatory overflow-y-scroll h-[900px] hide-scrollbar mt-2 mb-10">
+          {(searchPerformed && filteredProducts.length === 0) ||
+          (Params != 0 && filteredProducts.length === 0) ? (
+            <div className="col-span-4 text-center p-6 snap-center">
+              <h2 className="text-xl font-semibold mb-2">
+                Không tìm thấy sản phẩm
+              </h2>
               <p className="text-gray-600">
                 Hãy thử lại với bộ lọc khác hoặc xóa bộ lọc hiện tại
               </p>
@@ -256,13 +295,15 @@ const ProductContent = () => {
               ? filteredProducts
               : products
             ).map((product, index) => (
-              <div key={index} className="">
+              <div
+                key={index}
+                className="transition-transform transform hover:scale-105 w-48 h-64 p-2"
+              >
                 <ProductCard product={product} />
               </div>
             ))
           )}
         </div>
-
       </div>
     </>
   );
