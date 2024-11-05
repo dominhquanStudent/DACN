@@ -25,7 +25,7 @@ function FooterLarge() {
                 <div className="flex flex-col mt-8 mr-40 items-start">
                     <div className="font-bold mb-3 text-center">Liên Hệ</div>
                     <div>bkpetcare@gmail.com</div>
-                    <div>07 Lý Tự Trọng, Long Xiên, An Giang</div>
+                    <div>268 Lý Thường Kiệt, Phường 14, Quận 10, TP. HCM</div>
                     <div className="flex space-x-2">
                         <img src="https://www.edigitalagency.com.au/wp-content/uploads/Facebook-logo-blue-circle-large-transparent-png.png" alt="Facebook" className="w-9"/>
                         <img src="https://cdn-icons-png.freepik.com/256/145/145812.png?semt=ais_hybrid" alt="Twitter" className="w-9"/>

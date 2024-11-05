@@ -13,9 +13,10 @@ import Link from "next/link";
 import Sidebar from "@/app/Admin/sidebar";
 // import Header from '@/app/Admin/Header';
 import axios from "@/api/axios";
+import getInfo from "@/hooks/getInfo";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-
+import { getCookie } from "cookies-next"; 
 import "react-calendar/dist/Calendar.css"; // Import the calendar CSS
 
 function Booking() {
@@ -39,14 +40,33 @@ function Booking() {
   const [isComplete, setIsComplete] = useState(false);
   const [loadWhat, setLoadWhat] = useState("");
   const [error, setError] = useState<string | null>(null);
+  //get account data
+  const jwt = getCookie("jwt");
+  const [accountData, setAccountData] = useState<any>(null);
+ 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const jwt = getCookie("jwt");
+        if (jwt) {
+          const getaccountData = await getInfo();
+          setAccountData(getaccountData);
+        }
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleSaveClick = async (e: any) => {
     e.preventDefault();
     try {
       const data = {
-        userName,
-        phone,
-        address,
+        userName: accountData?.userName || userName,
+        phone: accountData?.phone ||phone,
+        address:accountData?.address ||address,
         petAge,
         petGender,
         service,
@@ -57,15 +77,15 @@ function Booking() {
       };
       const phoneRegex = /^[0-9]{10}$/;
 
-      if (!userName) {
+      if (!userName && !jwt) {
         setError("NO_BOOKING_NAME");
         return;
       }
-      if (!phone) {
+      if (!phone && !jwt) {
         setError("NO_BOOKING_PHONE");
         return;
       }
-      if (!address) {
+      if (!address && !jwt) {
         setError("NO_BOOKING_ADDRESS");
         return;
       }
@@ -93,8 +113,8 @@ function Booking() {
         setError("NO_BOOKING_TIME");
         return;
       }
-
-      if (!phoneRegex.test(phone)) {
+      
+      if (!phoneRegex.test(accountData?.phone || phone)) {
         setError("INVALID_PHONENUMBER");
         return;
       }
@@ -133,6 +153,7 @@ function Booking() {
     };
   };
   // JSX code with random content in each cell
+  console.log(accountData);
   return (
     // Global container
     <>
@@ -163,18 +184,19 @@ function Booking() {
             Dịch vụ chăm sóc thú cưng
           </h2>
           <h2 className="text-lg font-semibold mt-4 mb-4 ">Thông tin khách hàng</h2>
-          <div className="flex items-center space-x-8">
+            <div className="flex items-center space-x-8">
             <label className="flex-1">
               Họ tên <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
-              value={userName}
+              value={accountData?.userName || userName}
               onChange={(e) => setUserName(e.target.value)}
               placeholder="Nguyễn Văn A"
-              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] disabled:bg-gray-300"
+              disabled={accountData?.userName ? true : false}
             />
-          </div>
+            </div>
 
           <div className="flex items-center space-x-8">
             <label className="flex-1">
@@ -182,10 +204,11 @@ function Booking() {
             </label>
             <input
               type="text"
-              value={phone}
+              value={accountData?.phone ||phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="0123456789"
-              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] disabled:bg-gray-300"
+              disabled={accountData?.userName ? true : false}
             />
           </div>
           <div className="flex items-center space-x-8">
@@ -194,10 +217,11 @@ function Booking() {
             </label>
             <input
               type="text"
-              value={address}
+              value={accountData?.address ||address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder="247 Lý Thường Kiệt, Quận 10, TP.HCM"
-              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] disabled:bg-gray-300"
+              disabled={accountData?.userName ? true : false}
             />
           </div>
           <h2 className="text-lg font-semibold mt-4 mb-4 ">Thông tin thú cưng</h2>
