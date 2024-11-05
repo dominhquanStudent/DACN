@@ -5,7 +5,7 @@ import ProductCard from "./ProductFrame_Main";
 import ErrorModal from "@/app/Component/Error";
 import "@/app/Component/CheckboxStyles.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faList } from "@fortawesome/free-solid-svg-icons";
+import { faList, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 const ProductContent = () => {
   const [error, setError] = useState<string | null>(null);
@@ -16,8 +16,8 @@ const ProductContent = () => {
   const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [minPrice, setMinPrice] = useState<number | null>(null);
-  const [maxPrice, setMaxPrice] = useState<number | null>(null);
+  const [minPrice, setMinPrice] = useState<string>(""); // Initialize as empty string
+  const [maxPrice, setMaxPrice] = useState<string>(""); // Initialize as empty string
   const [searchPerformed, setSearchPerformed] = useState<boolean>(false);
   const [Params, setParams] = useState(0);
 
@@ -72,10 +72,18 @@ const ProductContent = () => {
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category === selectedCategory ? null : category);
     setSelectedBrands([]); // Reset selected brands when category changes
+    setMinPrice(""); // Reset min price when category changes
+    setMaxPrice(""); // Reset max price when category changes
+
+    // Reset checkboxes
+    const checkboxes = document.querySelectorAll('.custom-checkbox');
+    checkboxes.forEach((checkbox: any) => {
+      checkbox.checked = false;
+    });
   };
 
   const categoryMapping: { [key: string]: string } = {
-    "Thức ăn thú cưng": "Boss ăn boss uống",
+    "Thức ăn thú cưng": "Boss ăn Boss uống",
     "Quần áo & Phụ kiện": "Boss mang Boss mặc",
     "Đồ chơi cho thú cưng": "Boss học Boss chơi",
     "Đồ dùng tắm gội": "Boss tắm Boss gội",
@@ -118,18 +126,18 @@ const ProductContent = () => {
   };
 
   const handleMinPriceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setMinPrice(e.target.value ? parseFloat(e.target.value) : null);
+    setMinPrice(e.target.value ? e.target.value : ""); // Set to empty string if no value
   };
 
   const handleMaxPriceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setMaxPrice(e.target.value ? parseFloat(e.target.value) : null);
+    setMaxPrice(e.target.value ? e.target.value : ""); // Set to empty string if no value
   };
 
   const handleApplyClick = () => {
     setSearchPerformed(true);
     let filtered = products; // Start filtering from the original list of products
 
-    if (minPrice !== null && maxPrice !== null && minPrice > maxPrice) {
+    if (minPrice !== "" && maxPrice !== "" && parseFloat(minPrice) > parseFloat(maxPrice)) {
       setError("INVALID_PRICE_RANGE");
       return;
     }
@@ -149,14 +157,14 @@ const ProductContent = () => {
     }
 
     // Apply price filter
-    if (minPrice !== null) {
+    if (minPrice !== "") {
       filtered = filtered.filter(
-        (product: any) => product.discount_price >= minPrice
+        (product: any) => product.discount_price >= parseFloat(minPrice)
       );
     }
-    if (maxPrice !== null) {
+    if (maxPrice !== "") {
       filtered = filtered.filter(
-        (product: any) => product.discount_price <= maxPrice
+        (product: any) => product.discount_price <= parseFloat(maxPrice)
       );
     }
 
@@ -192,7 +200,7 @@ const ProductContent = () => {
             </div>
 
             {/* Theo loại */}
-            <div className="space-y-4 border-b-[1px] pb-4 bg-background-filter">
+            <div className=" space-y-2 border-b-[1px] pb-4 bg-background-filter">
               {category.map((cat, index) => (
                 <div
                   key={index}
@@ -223,7 +231,7 @@ const ProductContent = () => {
                         type="checkbox"
                         name={`brand${index + 1}`}
                         id={`brand${index + 1}`}
-                        className="custom-checkbox"
+                        className="custom-checkbox bg-blue-white"
                         onChange={() => handleCheckboxChange(brand)}
                       />
                       <label htmlFor={`brand${index + 1}`} className="text-sm">
@@ -240,7 +248,8 @@ const ProductContent = () => {
                   </div>
                   <div className="flex items-center justify-center space-x-2">
                     <select
-                      className="border-[1px] w-24 p-1 rounded"
+                      className="border-[1px] w-20 p-1 rounded "
+                      value={minPrice} // Bind value to state
                       onChange={handleMinPriceChange}
                     >
                       <option value="">Từ</option>
@@ -252,7 +261,8 @@ const ProductContent = () => {
                     </select>
                     <span>-</span>
                     <select
-                      className="border-[1px] w-24 p-1 rounded"
+                      className="border-[1px] w-20 p-1 rounded "
+                      value={maxPrice} // Bind value to state
                       onChange={handleMaxPriceChange}
                     >
                       <option value="">Đến</option>
@@ -279,10 +289,15 @@ const ProductContent = () => {
           </div>
         </div>
         {/* Product side*/}
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 ml-16 snap-y snap-mandatory overflow-y-scroll h-[900px] hide-scrollbar mt-2 mb-10">
+        <div className="w-full grid grid-cols-5 gap-4 ml-16 snap-y snap-mandatory overflow-y-scroll h-[900px] hide-scrollbar mt-2 mb-10">
           {(searchPerformed && filteredProducts.length === 0) ||
           (Params != 0 && filteredProducts.length === 0) ? (
             <div className="col-span-4 text-center p-6 snap-center">
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                className="h-20 w-20 mb-4 text-gray-400"
+              />
+
               <h2 className="text-xl font-semibold mb-2">
                 Không tìm thấy sản phẩm
               </h2>
