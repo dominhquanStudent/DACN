@@ -128,39 +128,43 @@ const ProductContent = () => {
   const handleApplyClick = () => {
     setSearchPerformed(true);
     let filtered = products; // Start filtering from the original list of products
-  
+
     if (minPrice !== null && maxPrice !== null && minPrice > maxPrice) {
       setError("INVALID_PRICE_RANGE");
       return;
     }
-  
+
     // Apply category filter
     if (selectedCategory) {
       filtered = filtered.filter(
         (product: any) => product.category === selectedCategory
       );
     }
-  
+
     // Apply brand filter
     if (selectedBrands.length > 0) {
       filtered = filtered.filter((product: any) =>
         selectedBrands.includes(product.brand)
       );
     }
-  
+
     // Apply price filter
     if (minPrice !== null) {
-      filtered = filtered.filter((product: any) => product.discount_price >= minPrice);
+      filtered = filtered.filter(
+        (product: any) => product.discount_price >= minPrice
+      );
     }
     if (maxPrice !== null) {
-      filtered = filtered.filter((product: any) => product.discount_price <= maxPrice);
+      filtered = filtered.filter(
+        (product: any) => product.discount_price <= maxPrice
+      );
     }
-  
+
     setFilteredProducts(filtered);
   };
 
   const priceOptions = [
-    0, 10000, 100000, 200000, 500000,  800000, 1000000, 2000000
+    0, 10000, 100000, 200000, 500000, 800000, 1000000, 2000000,
   ];
 
   const brands = Array.from(
@@ -230,11 +234,9 @@ const ProductContent = () => {
                 </div>
                 {/* Min and max price searching */}
                 <div className="space-y-4 border-b-[1px] pb-4 mt-4 bg-background-filter">
-                <div className="flex justify-between items-center p-2 text-center font-bold bg-title_filter text-orange-700">
+                  <div className="flex justify-between items-center p-2 text-center font-bold bg-title_filter text-orange-700">
                     <FontAwesomeIcon icon={faList} />
-                    <span className="flex-grow text-center">
-                      Theo giá
-                    </span>
+                    <span className="flex-grow text-center">Theo giá</span>
                   </div>
                   <div className="flex items-center justify-center space-x-2">
                     <select
@@ -244,7 +246,7 @@ const ProductContent = () => {
                       <option value="">Từ</option>
                       {priceOptions.map((price, index) => (
                         <option key={index} value={price}>
-                          {price.toLocaleString()} 
+                          {price.toLocaleString()}
                         </option>
                       ))}
                     </select>
@@ -277,10 +279,10 @@ const ProductContent = () => {
           </div>
         </div>
         {/* Product side*/}
-        <div className="w-5/6 grid grid-cols-3 gap-14 ml-16 snap-y snap-mandatory overflow-y-scroll h-[900px] hide-scrollbar mt-2">
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 ml-16 snap-y snap-mandatory overflow-y-scroll h-[900px] hide-scrollbar mt-2 mb-10">
           {(searchPerformed && filteredProducts.length === 0) ||
           (Params != 0 && filteredProducts.length === 0) ? (
-            <div className="col-span-3 text-center p-6 snap-center">
+            <div className="col-span-4 text-center p-6 snap-center">
               <h2 className="text-xl font-semibold mb-2">
                 Không tìm thấy sản phẩm
               </h2>
@@ -293,7 +295,10 @@ const ProductContent = () => {
               ? filteredProducts
               : products
             ).map((product, index) => (
-              <div key={index} className="transition-transform transform hover:scale-105 mt-4 ml-4">
+              <div
+                key={index}
+                className="transition-transform transform hover:scale-105 w-48 h-64 p-2"
+              >
                 <ProductCard product={product} />
               </div>
             ))
