@@ -76,7 +76,7 @@
 .animate-slideOut {
   animation: slideOut 0.3s forwards;
 }
-//////////////////////////////////
+ 
 @keyframes slideInFromLeft {
   from {
     transform: translateX(-100%);

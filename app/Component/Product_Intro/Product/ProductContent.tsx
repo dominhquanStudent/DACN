@@ -189,7 +189,7 @@ const ProductContent = () => {
   return (
     <>
       <ErrorModal error={error} setError={setError} />
-      <div className="flex">
+      <div className="flex mr-2">
         {/* FilterSide */}
         <div className="w-1/6 font-k2d flex flex-col items-center border-r-[1px] border-clicked_filter p-4 space-y-6 ">
           {/* Bộ lọc */}
@@ -289,7 +289,7 @@ const ProductContent = () => {
           </div>
         </div>
         {/* Product side*/}
-        <div className="w-full grid grid-cols-5 gap-4 ml-16 snap-y snap-mandatory overflow-y-scroll h-[900px] hide-scrollbar mt-2 mb-10">
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-16 ml-1 mr-2 snap-y snap-mandatory overflow-y-scroll  hide-scrollba  mt-2 ">
           {(searchPerformed && filteredProducts.length === 0) ||
           (Params != 0 && filteredProducts.length === 0) ? (
             <div className="col-span-4 text-center p-6 snap-center">
@@ -312,7 +312,7 @@ const ProductContent = () => {
             ).map((product, index) => (
               <div
                 key={index}
-                className="transition-transform transform hover:scale-105 w-48 h-64 p-2"
+                className="transition-transform transform hover:scale-105 w-53 h-64 p-2"
               >
                 <ProductCard product={product} />
               </div>
