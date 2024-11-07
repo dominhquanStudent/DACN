@@ -49,6 +49,7 @@ export default function Product_Main() {
               <Product_Frame
                 name={item.name}
                 brand={item.brand}
+                category={item.category}
                 price={item.price}
                 discount_price={item.discount_price}
                 image={item.image.url}

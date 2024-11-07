@@ -111,6 +111,8 @@ const ErrorModal = ({ error, setError }: any) => {
             {error == "LACK_PRODUCTNAME" && <p>Vui lòng nhập tên sản phẩm!</p>}
             {error == "LACK_PRODUCTBRAND" && <p>Vui lòng nhập thương hiệu!</p>}
             {error == "LACK_PRODUCTPRICE" && <p>Vui lòng nhập giá sản phẩm!</p>}
+            {error == "INVALID_PRODUCTDISCOUNT" && <p>Phần trăm giảm giá không hợp lệ!</p>}
+            
             {error == "LACK_PRODUCTQUANTITY" && (
               <p>Vui lòng nhập số lượng sản phẩm!</p>
             )}

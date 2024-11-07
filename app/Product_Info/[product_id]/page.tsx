@@ -108,6 +108,7 @@ export default function ProductDetailPage({
         const productData = response.data;
         setData(productData.product);
         setTotalPrice(productData.product.discount_price);
+        setPrice(productData.product.price);
 
         // Fetch similar products
         const similarResponse = await axios.get(`${baseURL}/product/list`);
@@ -206,6 +207,7 @@ export default function ProductDetailPage({
   //handle amount and total price of product
   const [amount, setAmount] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [price, setPrice] = useState(0);
   const formatPrice = (price: any) => {
     return new Intl.NumberFormat("en-US", { style: "decimal" }).format(price);
   };
@@ -214,6 +216,7 @@ export default function ProductDetailPage({
     if (Amount > 0 && Amount <= data.stock) {
       setAmount(Amount);
       setTotalPrice(Amount * data.discount_price);
+      setPrice(Amount * data.price);
     }
   };
 
@@ -336,21 +339,25 @@ export default function ProductDetailPage({
         setIsComplete={setIsComplete}
         loadWhat={loadWhat}
       />
-      <div className="flex flex-col items-start justify-center mt-8">
+      <div className="flex flex-col items-center justify-center mt-8">
         <div className="grid grid-cols-4 gap-4 font-montserrat ">
           {/* Left column */}
           <div className="col-span-3">
             {/* Product details */}
-            <div className="flex border-b-2 mb-4">
+            <div className="flex border-b-2 mb-4 ">
               <img
                 loading="lazy"
                 src={data.image.url[0]}
                 alt="Product"
-                className="ml-32 mr-8 mb-16 w-80 h-80 "
+                className="ml-20 mr-8 mb-16 w-80 h-80 "
               />
               <div className="p-8">
                 <h2 className="text-2xl font-bold mb-4">{data.name}</h2>
+                <div className="mb-2 text-gray-500">{data.category}</div>
+
                 <div className="mb-4 text-[#f79a36] text-xl">{data.brand}</div>
+
+
                 <div className="flex">
                   {/* Replace with your star rating component */}
                   {productRating.toFixed(1)}&nbsp;
@@ -369,40 +376,26 @@ export default function ProductDetailPage({
             </div>
           </div>
           {/* Right column */}
-          <div className="col-span-1 p-8">
+          <div className="col-span-1 p-8 justify-between">
             {/* Volume */}
             <div className="font-light mb-4">Số lượng</div>
-            <div className="flex items-center max-[500px]:justify-center  max-md:mt-3">
+            <div className="flex items-center max-[500px]:justify-center max-md:mt-3">
               <div className="flex items-center h-full">
                 <button
-                  className="group rounded-l-xl px-5 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:bg-gray-50 hover:border-gray-300 hover:shadow-gray-300 focus-within:outline-gray-300"
+                  className="group rounded-l-md px-3 py-2 border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:bg-gray-50 hover:border-gray-300 hover:shadow-gray-300 focus-within:outline-gray-300"
                   onClick={() => handleAmountChange(amount - 1)}
                 >
                   <svg
                     className="stroke-gray-900 transition-all duration-500 group-hover:stroke-black"
                     xmlns="http://www.w3.org/2000/svg"
-                    width="22"
-                    height="22"
+                    width="16"
+                    height="16"
                     viewBox="0 0 22 22"
                     fill="none"
                   >
                     <path
                       d="M16.5 11H5.5"
                       stroke=""
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M16.5 11H5.5"
-                      stroke=""
-                      strokeOpacity="0.2"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M16.5 11H5.5"
-                      stroke=""
-                      strokeOpacity="0.2"
                       strokeWidth="1.6"
                       strokeLinecap="round"
                     />
@@ -414,38 +407,24 @@ export default function ProductDetailPage({
                   onChange={(e) => handleAmountChange(parseInt(e.target.value))}
                   min="1"
                   max={data.stock}
-                  className="border-y border-gray-200 outline-none text-gray-900 font-semibold text-lg w-full max-w-[73px] min-w-[60px] placeholder:text-gray-900 py-[15px]  text-center bg-transparent"
+                  className="border-y border-gray-200 outline-none text-gray-900 font-semibold   max-w-[60px] min-w-[50px] placeholder:text-gray-900 py-2 text-center bg-transparent"
                   placeholder="1"
                 />
                 <button
-                  className="group rounded-r-xl px-5 py-[18px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:bg-gray-50 hover:border-gray-300 hover:shadow-gray-300 focus-within:outline-gray-300"
+                  className="group rounded-r-md px-3 py-2 border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:bg-gray-50 hover:border-gray-300 hover:shadow-gray-300 focus-within:outline-gray-300"
                   onClick={() => handleAmountChange(amount + 1)}
                 >
                   <svg
                     className="stroke-gray-900 transition-all duration-500 group-hover:stroke-black"
                     xmlns="http://www.w3.org/2000/svg"
-                    width="22"
-                    height="22"
+                    width="16"
+                    height="16"
                     viewBox="0 0 22 22"
                     fill="none"
                   >
                     <path
                       d="M11 5.5V16.5M16.5 11H5.5"
                       stroke=""
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M11 5.5V16.5M16.5 11H5.5"
-                      stroke=""
-                      strokeOpacity="0.2"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M11 5.5V16.5M16.5 11H5.5"
-                      stroke=""
-                      strokeOpacity="0.2"
                       strokeWidth="1.6"
                       strokeLinecap="round"
                     />
@@ -456,13 +435,42 @@ export default function ProductDetailPage({
 
             {/* Price and buy button */}
             <div className="mt-4">
-              <div className=" ">Tạm tính</div>
-              <div className="flex items-center">
-                <p className="text-2xl text-red-600">
-                  <span className="text-base underline">đ</span>{" "}
-                  {formatPrice(totalPrice)}
-                </p>
-              </div>
+              <table className="min-w-full divide-y">
+                <tbody className="bg-white divide-y ">
+                  <tr>
+                    
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          Tổng tiền
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-end w-50">
+                          <span className="text-xs underline">đ</span> {formatPrice(price)}
+                        </td>
+                    
+                  </tr>
+                  <tr>
+                    {price !== totalPrice && (
+                      <>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      Giảm giá
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-red-500 text-end w-50">
+                      -<span className="text-xs underline">đ</span>{" "}
+                      {formatPrice((data.discount * price) / 100)}
+                    </td>
+                    </>
+                    )}
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      Tạm tính
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-bold text-sm text-end w-50">
+                      <span className="text-xs underline">đ</span>{" "}
+                      {formatPrice(totalPrice)}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
               {/* <p className="text-red-500 line-through mb-3">60.000đ</p> */}
               {data.status === "inactive" || data.stock === 0 ? (
                 <button
@@ -490,7 +498,7 @@ export default function ProductDetailPage({
         </div>
 
         {/* Similar Products */}
-        <div className="flex-row grid-row justify-center p-8">
+        <div className="flex-row grid-row items-center justify-center p-8">
           <h2 className="font-montserrat text-2xl font-semibold ml-16 ">
             Sản phẩm tương tự
           </h2>
@@ -504,7 +512,7 @@ export default function ProductDetailPage({
                 onClick={() => router.push(`/Product_Info/${product._id}`)}
               >
                 {/* Product Image */}
-                <div className="w-full h-36 flex justify-center items-center">
+                <div className="w-full h-36 flex justify-center  items-start">
                   <img
                     src={product.image.url || Foto}
                     alt={product.name}
@@ -528,6 +536,8 @@ export default function ProductDetailPage({
                       {product.brand}
                     </span>
                   </div>
+
+  
 
                   <div className="flex justify-between items-center mt-2">
                     {/* Rating */}

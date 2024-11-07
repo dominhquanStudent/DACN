@@ -45,6 +45,11 @@ const ProductFrame = (props: any) => {
             {props.brand}
           </span>
         </div>
+        <div className="flex justify-between items-center mb-1">
+          <span className="text-xs text-gray-400">
+            {props.category}
+          </span>
+        </div>
 
         <div className="flex justify-between items-center mt-2">
           {/* Rating */}

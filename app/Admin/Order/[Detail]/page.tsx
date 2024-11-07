@@ -170,7 +170,9 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
                   Tổng giá
                 </label>
                 <div className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4">
-                  {data.total_price}
+                {new Intl.NumberFormat('vi-VN').format(data.total_price)}
+
+                  {/* {data.total_price} */}
                 </div>
               </div>
               <div className="flex w-full px-3 mb-6 md:mb-0">
