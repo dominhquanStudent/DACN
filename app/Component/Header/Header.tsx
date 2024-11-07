@@ -3,7 +3,7 @@ import logo from "@/public/img/Header/logo.png";
 import SearchBar from "./searchbar";
 import { useState, useEffect } from "react";
 import notification from "@/public/img/Header/notification.svg";
-import ShoppingCart from "@/public/img/Header/basket.svg";
+import ShoppingCart from "@/public/img/Header/Basket.svg";
 import Logout from "@/public/img/Header/Logout.svg";
 import User from "@/public/img/Header/User.svg";
 import Link from "next/link";
