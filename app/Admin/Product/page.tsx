@@ -2,7 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faTrashCan, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrashCan,
+  faPlus,
+  faFilter,
+} from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 
 import ConfirmModal from "@/app/Component/ConfirmModal";
@@ -15,6 +19,8 @@ import axios from "@/api/axios";
 
 function Product() {
   const [products, setProducts] = useState<any[]>([]);
+  const [filter, setFilter] = useState("all");
+  const [stockFilter, setStockFilter] = useState("all");
   const Router = useRouter();
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -23,13 +29,31 @@ function Product() {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("/product/list");
-        setProducts(response.data.products);
+        let fetchedProducts = response.data.products;
+
+        // Apply stock filter first
+        if (stockFilter !== "all") {
+          fetchedProducts = fetchedProducts.filter((product: any) =>
+            stockFilter === "available"
+              ? product.status === "active"
+              : product.status !== "active"
+          );
+        }
+
+        // Apply category filter next
+        if (filter !== "all") {
+          fetchedProducts = fetchedProducts.filter(
+            (product: any) => product.category === filter
+          );
+        }
+
+        setProducts(fetchedProducts);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
     fetchProducts();
-  }, []);
+  }, [filter, stockFilter]);
 
   const handleChangeClick = (productId: any) => {
     console.log(`Details for product ${productId}`);
@@ -126,8 +150,44 @@ function Product() {
               onClick={handleAddClick}
               className="bg-transparent border border-[#CCCCCC] text-black font-bold py-1 px-4 rounded-xl mb-2 hover:bg-blue-500 hover:border-blue-600 hover:text-white"
             >
-              <FontAwesomeIcon icon={faPlus} />
+              <FontAwesomeIcon icon={faPlus} className="h-4 w-4" />
             </button>
+            <div className="flex w-full mt-4 mb-4 justify-end">
+              <label className="text-lg font-nunito font-bold text-gray-400">
+                <FontAwesomeIcon icon={faFilter} className="h-5 w-5" />
+              </label>
+
+              <select
+                className="border border-gray-300 rounded-md ml-2"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+              >
+                <option value="all">Phân loại</option>
+                <option value="all">Tất cả</option>
+
+
+                <option value="Thức ăn thú cưng">Thức ăn thú cưng</option>
+                <option value="Quần áo & Phụ kiện">Quần áo & Phụ kiện</option>
+                <option value="Đồ chơi cho thú cưng">
+                  Đồ chơi cho thú cưng
+                </option>
+                <option value="Đồ dùng tắm gội">Đồ dùng tắm gội</option>
+                <option value="Đồ dùng vệ sinh">Đồ dùng vệ sinh</option>
+                <option value="Nhà thú cưng">Nhà thú cưng</option>
+                <option value="Đồ dùng thú y">Đồ dùng thú y</option>
+              </select>
+              <select
+                className="border border-gray-300 rounded-md ml-2"
+                value={stockFilter}
+                onChange={(e) => setStockFilter(e.target.value)}
+              >
+                <option value="all">Trạng thái</option>
+                <option value="all">Tất cả</option>
+                <option value="available">Đang còn hàng</option>
+                <option value="out_of_stock">Đã hết hàng</option>
+              </select>
+
+            </div>
           </div>
           <table className="min-w-full leading-normal">
             <thead>
@@ -151,7 +211,7 @@ function Product() {
                   Giá tiền (VNĐ)
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  Giảm giá 
+                  Giảm giá
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Trạng thái
@@ -172,8 +232,8 @@ function Product() {
             <tbody>
               {Array.isArray(currentProducts) &&
                 currentProducts.map((product: any) => (
-                  <tr key={product._id}>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                  <tr key={product._id} className={"bg-white"}>
+                    <td className="px-5 py-2 border-b border-gray-200  text-sm">
                       <img
                         loading="lazy"
                         src={product.image.url}
@@ -181,28 +241,34 @@ function Product() {
                         className="h-16 rounded-full"
                       />
                     </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="px-5 py-2 border-b border-gray-200  text-sm">
                       {product.name}
                     </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="px-5 py-2 border-b border-gray-200  text-sm">
                       {product.brand}
                     </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className={`px-5 py-2 border-b border-gray-200  text-sm ${product.stock===0 ? "text-red-500" : ""}`}>
                       {product.stock}
                     </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="px-5 py-2 border-b border-gray-200  text-sm">
                       {product.category}
                     </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                    {new Intl.NumberFormat('vi-VN').format(product.price)}
+                    <td className="px-5 py-2 border-b border-gray-200  text-sm">
+                      {new Intl.NumberFormat("vi-VN").format(product.price)}
                     </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="px-5 py-2 border-b border-gray-200  text-sm">
                       {product.discount}%
                     </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                      {product.status === "active" ? "Đang còn hàng" : "Đã hết hàng"}
+                    <td
+                      className={`px-5 py-2 border-b border-gray-200 text-sm ${
+                        product.status !== "active" ? "text-red-500" : ""
+                      }`}
+                    >
+                      {product.status === "active"
+                        ? "Đang còn hàng"
+                        : "Đã hết hàng"}
                     </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="px-5 py-2 border-b border-gray-200  text-sm">
                       <button
                         onClick={() => handleChangeClick(product._id)}
                         className="text-blue-500 hover:text-blue-700"
@@ -210,7 +276,7 @@ function Product() {
                         <FontAwesomeIcon icon={faPenToSquare} />
                       </button>
                     </td>
-                    <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
+                    <td className="px-5 py-2 border-b border-gray-200  text-sm">
                       <button
                         onClick={() => handleDeleteClick(product)}
                         className="text-red-500 hover:text-red-700"

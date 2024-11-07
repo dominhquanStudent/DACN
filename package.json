@@ -20,6 +20,7 @@
     "@mui/icons-material": "^5.15.17",
     "@mui/material": "^5.15.17",
     "@reduxjs/toolkit": "^2.2.6",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "axios": "^1.7.2",
     "chart.js": "^4.4.6",
     "cookies-next": "^4.2.1",
@@ -53,7 +54,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "postcss": "^8",
-    "tailwindcss": "^3.4.1",
+    "tailwindcss": "^3.4.14",
     "typescript": "^5"
   }
 }

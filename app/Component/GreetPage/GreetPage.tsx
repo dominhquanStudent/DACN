@@ -89,11 +89,11 @@ export default function GreetPage() {
                 chăm sóc thoải mái để giúp bạn có thú cưng có một ngày tuyệt
                 vời.
               </div>
-              <Link href="/Product">
+              <Link href="/Product_Intro">
                 <button
                   className="transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full md:w-auto flex justify-center items-center p-3 space-x-4 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100 hover:bg-opacity-90 mt-10"
                 >
-                  <span className="font-montserrat">SẢN PHẨM</span>
+                  <span className="font-montserrat">SẢN PHẨM NỔI BẬT</span>
                 </button>
               </Link>
             </div>
