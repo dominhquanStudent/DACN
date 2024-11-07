@@ -2,16 +2,16 @@
 import logo from "@/public/img/Header/logo.png";
 import SearchBar from "./searchbar";
 import { useState, useEffect } from "react";
-import notification from "@/public/img/Header/notification.png";
-import ShoppingCart from "@/public/img/Header/Shopping Cart.png";
-import Logout from "@/public/img/logouthl.svg";
-import User from "@/public/img/Header/User.png";
+import notification from "@/public/img/Header/notification.svg";
+import ShoppingCart from "@/public/img/Header/basket.svg";
+import Logout from "@/public/img/Header/Logout.svg";
+import User from "@/public/img/Header/User.svg";
 import Link from "next/link";
 import { deleteCookie } from "cookies-next";
 import { usePathname, useRouter } from 'next/navigation';
 import useAuth from '@/hooks/useAuth';
 import axios from "@/api/axios";
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 
 const fetcher = (url: string) => axios.get(url).then(res => res.data);
 
@@ -92,22 +92,22 @@ export default function Header(props: any) {
   };
   return (
     // global container
-    <div className="flex flex-col mx-8 mb-3">
+    <div className="flex flex-col mx-4 md:mx-8 items-center ">
       {/* top part */}
-      <div className="flex items-center justify-center space-x-11 border-b-[1px] border-gray-300">
+      <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 border-b-[1px] border-gray-300 py-1 mx-4 w-10/12">
         {/* image */}
         <Link href="/Product_Intro">
-          <img src={logo.src} alt="Logo" className="w-60 " />
+          <img src={logo.src} alt="Logo" className="w-40 md:w-60" />
         </Link>
         <SearchBar />
         {!isLoggedIn ? (
-          <div>
+          <div className="flex space-x-2 md:space-x-4">
             <Link href="/Login">
               <button
-                className="middle none center mr-4 rounded-lg bg-blue-500 py-2 px-6 font-sans text-xs font-bold 
-                        uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 
-                        focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none 
-                        disabled:opacity-50 disabled:shadow-none"
+                className="middle none center rounded-lg bg-blue-500 py-2 px-4 md:px-6 font-sans text-xs md:text-sm font-bold 
+                  uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 
+                  focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none 
+                  disabled:opacity-50 disabled:shadow-none"
                 data-ripple-light="true"
               >
                 Đăng nhập
@@ -115,10 +115,10 @@ export default function Header(props: any) {
             </Link>
             <Link href="/Sigup">
               <button
-                className="middle none center rounded-lg bg-yellow-400 py-2 px-6 font-sans text-xs font-bold 
-                        uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 
-                        focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none 
-                        disabled:opacity-50 disabled:shadow-none"
+                className="middle none center rounded-lg bg-yellow-400 py-2 px-4 md:px-6 font-sans text-xs md:text-sm font-bold 
+                  uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 
+                  focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none 
+                  disabled:opacity-50 disabled:shadow-none"
                 data-ripple-light="true"
               >
                 Đăng ký
@@ -126,7 +126,7 @@ export default function Header(props: any) {
             </Link>
           </div>
         ) : (
-          <div className="flex space-x-4 items-center relative">
+          <div className="flex space-x-2 md:space-x-4 items-center relative">
             <div onClick={toggleDropdown} className="cursor-pointer relative">
               <img className="h-7" src={notification.src} alt="Notification" />
               {unreadNotificationCount > 0 && (
@@ -138,7 +138,7 @@ export default function Header(props: any) {
                   </span>
                 )}
               {showDropdown && (
-                <div className="absolute right-[-10px] mt-2 w-60 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                <div className="absolute right-0 mt-2 w-48 md:w-60 bg-white border border-gray-300 rounded-md shadow-lg z-10">
                   <ul>
                     {notifications.slice(0, 5).map((notification) => (
                       <li
@@ -173,61 +173,37 @@ export default function Header(props: any) {
             </div>
             <Link href="/Cart">
               <div className="relative">
-                <img className="w-7 h-7" src={ShoppingCart.src} alt="Cart" />
+                <img className="h-9 w-9" src={ShoppingCart.src} alt="Cart" />
                 {cartItemCount > 0 && (
-                   <span
-                   className=" absolute bottom-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center"
-                   style={{ fontSize: '0.5rem' }}
-                 >
+                  <span
+                    className="absolute top-1 right-0 bg-red-500 text-white rounded-full w-3 h-3 flex items-center justify-center"
+                    style={{ fontSize: '0.5rem' }}
+                  >
                     {cartItemCount}
                   </span>
                 )}
               </div>
             </Link>
             <Link href="/Profile">
-              <img className="w-7 h-7" src={User.src} alt="User" />
+              <img className="h-9 w-9" src={User.src} alt="User" />
             </Link>
             <button onClick={handleLogout}>
-              <img className="w-7 h-7" src={Logout.src} alt="Logout" />
+              <img className="h-9 w-9" src={Logout.src} alt="Logout" />
             </button>
-            <div className="self-center text-3xl font-semibold text-yellow-500">
-              {">"}
-            </div>
           </div>
         )}
       </div>
       {/* dropdown list */}
-      <div className="mb-4">
+      <div className="py-2">
         {/* main list */}
-        <ul className="flex justify-center space-x-20 font-k2d text-lg font-bold ">
+        <ul className="flex flex-wrap justify-center space-x-4 md:space-x-20 font-k2d text-sm md:text-lg font-bold">
           {/* main list item 1 */}
           <li
             onMouseEnter={() => setShowSublist1(true)}
             onMouseLeave={() => setShowSublist1(false)}
             className={` ${showSublist1 ? "text-yellow-400 " : ""} ${pathname === '/Product' ? "text-yellow-500" : ""}`}
           >
-            <Link href="/Product">Sản phẩm thú cưng </Link>
-            {/* sub list 1 */}
-            {/* <ul
-              className={`absolute left-48 p-2 text-black text-base flex justify-center w-[75%] font-normal transition-all duration-300 ease-in-out ${showSublist1 ? "opacity-100 max-h-96" : "opacity-0 max-h-0"
-                }`}
-            >
-              <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
-                <Link href={{ pathname: '/Product', query: { filterMode: 1 } }}>Thức ăn thú cưng</Link>
-              </li>
-              <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
-                <Link href={{ pathname: '/Product', query: { filterMode: 2 } }}>Phụ kiện & Đồ chơi</Link>
-              </li>
-              <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
-                <Link href={{ pathname: '/Product', query: { filterMode: 3 } }}>Đồ dùng vệ sinh</Link>
-              </li>
-              <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
-                <Link href={{ pathname: '/Product', query: { filterMode: 4 } }}>Nhà thú cưng</Link>
-              </li>
-              <li className="px-10 transition-transform duration-300 hover:scale-125 hover:text-yellow-500 hover:font-semibold active:scale-95">
-                <Link href={{ pathname: '/Product', query: { filterMode: 5 } }}>Đồ dùng thú y</Link>
-              </li>
-            </ul> */}
+            <Link href="/Product">Sản phẩm thú cưng</Link>
           </li>
           <li className={`transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95 ${pathname === '/Price_Table' ? "text-yellow-500" : ""}`}>
             <Link className="hover:text-yellow-500" href="/Price_Table">

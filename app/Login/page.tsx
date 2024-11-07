@@ -113,7 +113,7 @@ function Page() {
               Google
             </button>
           </div>
-          <div className="mt-4 font-k2d text-lg text-center">
+          <div className="mt-8 font-k2d text-lg text-center">
             Chưa có tài khoản,
             <button
               className=" text-[#FC0E0E] rounded-md p-2 font-bold"
