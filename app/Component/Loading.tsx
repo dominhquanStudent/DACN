@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
-
+import LoadingGif from "@/public/img/Loading.gif";
 const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => {
   
   const handleClose = () => {
@@ -54,12 +54,12 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
       <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
         {isLoading && (
           <div className="flex flex-col items-center justify-center h-64 w-80">
-            <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-32 w-32 mb-4"></div>
+            <img src={LoadingGif.src} alt="Loading..." className="h-40 w-40 mb-4" />
             {loadWhat=="ADD_TO_CART"&& <p>Đang thêm vào giỏ hàng!</p>}
             {loadWhat=="ADD_COMMENT"&& <p>Đang đăng comment!</p>}
             {loadWhat=="SEND_ADOPT_REQUEST"&& <p>Đang gửi yêu cầu nhận thú cưng!</p>}
 
-
+            {loadWhat==""&& <p>Template loading!</p>}
             {loadWhat=="ORDERING"&& <p>Đang đặt hàng</p>}
 
           {loadWhat=="SEND_UPDATENEW_REQUEST"&& <p>Đã cập nhật thông tin bài viết!</p>}
