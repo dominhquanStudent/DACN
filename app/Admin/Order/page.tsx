@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 
 library.add(faTrashCan, faPenToSquare);
 import Sidebar from "@/app/Admin/sidebar";
@@ -41,8 +41,6 @@ function Order() {
     console.log(`Details for order ${orderId}`);
     Router.push(`/Admin/Order/${orderId}`);
   };
-
-
 
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 9;
@@ -86,7 +84,7 @@ function Order() {
     }
     return pageNumbers;
   };
-  console.log(orders)
+  console.log(orders);
 
   return (
     <div className="flex flex-col w-full justify-center items-center">
@@ -125,7 +123,6 @@ function Order() {
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Chi tiết
                 </th>
-
               </tr>
             </thead>
             <tbody>
@@ -145,8 +142,8 @@ function Order() {
                       {formatDate(order.order_date)}
                     </td>
                     <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                      {order.total_price}
-                    </td>
+  {new Intl.NumberFormat('vi-VN').format(order.total_price)}
+</td>
                     <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                       {order.order_status}
                     </td>
@@ -158,7 +155,6 @@ function Order() {
                         <FontAwesomeIcon icon={faPenToSquare} />
                       </button>
                     </td>
-
                   </tr>
                 ))}
             </tbody>

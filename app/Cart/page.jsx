@@ -207,7 +207,7 @@ export default function Cart() {
         Title: 'Đặt đơn hàng thành công',
         content: `Đơn hàng ${response.data.order._id} đã được đặt thành công`,
         status: 'Chưa đọc'
-    });
+      });
     } catch (error) {
       console.error("Error placing order:", error);
     }
@@ -258,11 +258,11 @@ export default function Cart() {
       <LoadingModal isLoading={isLoading} isComplete={isComplete} setIsComplete={setIsComplete} loadWhat={loadWhat} />
       <section className="relative z-10 after:contents-[''] after:absolute after:z-0 after:h-full xl:after:w-1/3 after:top-0 after:right-0 after:bg-gray-50">
         {/* Whole cart */}
-        <div className="w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto relative z-10">
+        <div className="w-full max-w-7xl px-4 md:px-5 lg:px-6 mx-auto relative z-10">
           <div className="grid grid-cols-12">
             {/* Left side */}
-            <div className="col-span-12 xl:col-span-8 lg:pr-8 pt-14 pb-8 lg:py-24 w-full max-xl:max-w-3xl max-xl:mx-auto">
-              <div className="flex items-center justify-between pb-8 border-b border-gray-300">
+            <div className="col-span-12 xl:col-span-8 lg:pr-8 pt-4 pb-4 lg:py-12 w-full max-xl:max-w-3xl max-xl:mx-auto">
+              <div className="flex items-center justify-between pb-4 border-b border-gray-300">
                 <h2 className="font-manrope font-bold text-3xl leading-10 text-black">
                   Giỏ Hàng
                 </h2>
@@ -270,7 +270,7 @@ export default function Cart() {
                   {cartData.cart.product_list.length} sản phẩm
                 </h2>
               </div>
-              <div className="grid grid-cols-12 mt-8 max-md:hidden pb-6 border-b border-gray-200">
+              <div className="grid grid-cols-12 mt-4 max-md:hidden pb-4 border-b border-gray-200">
                 <div className="col-span-12 md:col-span-7">
                   <p className="font-normal text-lg leading-8 text-gray-400">
                     Thông tin sản phẩm
@@ -301,11 +301,10 @@ export default function Cart() {
               </div>
             </div>
             {/* Right side */}
-            <div className=" col-span-12 xl:col-span-4 bg-gray-50 w-full max-xl:px-6 max-w-3xl xl:max-w-lg mx-auto lg:pl-8 py-24">
-              <h2 className="font-manrope font-bold text-3xl leading-10 text-black pb-8 border-b border-gray-300">
+            <div className="col-span-12 xl:col-span-4 bg-gray-50 w-full max-xl:px-6 max-w-3xl xl:max-w-lg mx-auto lg:pl-8 py-4 lg:py-12">
+              <h2 className="font-manrope font-bold text-3xl leading-10 text-black pb-4 border-b border-gray-300">
                 Đặt hàng
               </h2>
-
 
               {/* Payment method */}
               <div className="mt-4 mb-4">
@@ -324,17 +323,7 @@ export default function Cart() {
                     />
                     <span className="text-base">Thanh toán khi nhận hàng</span>
                   </label>
-                  {/* <label className=" mt-2 flex items-center">
-                    <input
-                      type="radio"
-                      name="payment"
-                      value="Momo"
-                      className="mr-2 leading-tight"
-                      onChange={() => setPaymentMethod("Momo")}
-                    />
-                    <img src={Momo.src} alt="Momo" className="text-base w-12 h-12" />
-                  </label> */}
-                  <label className=" mt-2 flex items-center">
+                  <label className="mt-2 flex items-center">
                     <input
                       type="radio"
                       name="payment"
@@ -342,7 +331,7 @@ export default function Cart() {
                       className="mr-2 leading-tight"
                       onChange={() => setPaymentMethod("ZaloPay")}
                     />
-                    <img src={ZaloPay.src} alt="Momo" className="text-base w-12 h-12" />
+                    <img src={ZaloPay.src} alt="ZaloPay" className="text-base w-12 h-12" />
                   </label>
                 </div>
               </div>
@@ -362,9 +351,9 @@ export default function Cart() {
                   />
                   <button
                     className="middle none center mr-4 rounded-lg bg-blue-500 py-2 px-4 font-sans text-xs font-bold
-                        uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40
-                        focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none
-                        disabled:opacity-50 disabled:shadow-none"
+            uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40
+            focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none
+            disabled:opacity-50 disabled:shadow-none"
                     onClick={handleApplyVoucher}
                   >
                     Áp dụng

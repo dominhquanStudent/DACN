@@ -121,15 +121,14 @@ export default function Product_Main() {
               Điều kiện nhận nuôi thú cưng
             </div>
             <div className="flex mb-2">
-              <img src={Paw.src} alt="" className="mx-2" />
+              <img src={Paw.src} alt="" className="mx-2 w-6 h-5" />
               Có khả năng nuôi dưỡng thú cưng
             </div>
             <div className="flex mb-2">
               <img
                 src={Paw.src}
                 alt=""
-                className="mx-2"
-                style={{ width: "25px", height: "25px" }}
+                className="mx-2 w-6 h-5"
               />
               Không sử dụng thú cưng mục đích thương mại
             </div>

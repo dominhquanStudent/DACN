@@ -39,7 +39,7 @@ export default function Booking() {
   // Function to generate random service name
   const generateRandomService = (index: number) => {
     const services = [
-      "",
+      "Cân nặng",
       "Điều trị",
       "Tiêm phòng",
       "Triệt",
@@ -81,7 +81,7 @@ export default function Booking() {
   };
 
   const generateRandomServiceSpa = (index: number) => {
-    const services = ["", "Tắm rửa", "Tỉa lông", "Vệ sinh tai", "Cắt móng"];
+    const services = ["Cân nặng", "Tắm rửa", "Tỉa lông", "Vệ sinh tai", "Cắt móng"];
     return services[index % services.length];
   };
   const generateRandomPriceSpa = (index: number) => {
@@ -115,13 +115,13 @@ export default function Booking() {
         <div className="border-b lg:border-r border-gray-300 mx-4"></div> {/* Divider line */}
         <div className="flex-[8] p-4">
           <div className="flex flex-col items-center">
-            <h2 className="mb-4 text-center text-orange-500 font-bold text-2xl lg:text-4xl">
+            <h2 className="mb-4 text-center text-orange-500 font-bold text-2xl lg:text-3xl">
               Bảng giá dịch vụ
             </h2>
             <div className="border-b border-gray-500 w-full my-2"></div> {/* Horizontal line */}
             <div className="flex flex-col lg:flex-row gap-4 p-4">
               <div className="w-full lg:w-1/2">
-                <h2 className="mb-4 text-orange-500 font-bold">
+                <h2 className="mb-4 text-orange-500 font-bold text-center">
                   Kiểm tra sức khỏe
                 </h2>
                 <div className="relative overflow-x-auto">
@@ -131,7 +131,7 @@ export default function Booking() {
                         <th scope="col" className="px-6 py-3">
                           Dịch vụ
                         </th>
-                        <th scope="col" className="px-6 py-3" colSpan={2}>
+                        <th scope="col" className="px-6 py-3 text-center" colSpan={2}>
                           Giá tiền
                         </th>
                       </tr>
@@ -158,7 +158,7 @@ export default function Booking() {
               </div>
               <div className="border-b lg:border-r border-gray-300 mx-4"></div> {/* Divider line */}
               <div className="w-full lg:w-1/2">
-                <h2 className="mb-4 text-orange-500 font-bold">
+                <h2 className="mb-4 text-orange-500 font-bold text-center">
                   Spa and Grooming
                 </h2>
                 <div className="relative overflow-x-auto">
@@ -168,7 +168,7 @@ export default function Booking() {
                         <th scope="col" className="px-6 py-3">
                           Dịch vụ
                         </th>
-                        <th scope="col" className="px-6 py-3" colSpan={2}>
+                        <th scope="col" className="px-6 py-3 text-center" colSpan={2}>
                           Giá tiền
                         </th>
                       </tr>
@@ -209,9 +209,9 @@ export default function Booking() {
           </div>
         </div>
         <div className="border-b lg:border-r border-gray-300 mx-4"></div> {/* Divider line */}
-        <div className="flex flex-col items-center min-h-screen p-4">
-          <h2 className="mb-4 text-orange-500 font-bold text-center text-2xl lg:text-4xl">Đặt lịch ngay</h2>
-          <div className="p-4">
+        <div className="flex flex-col items-center min-h-screen">
+          <h2 className="mb-4 text-orange-500 font-bold text-center text-xl lg:text-2xl">Đặt lịch ngay</h2>
+          <div className="">
             <Calendar onChange={(value) => setDate(value as Date)} value={date} />
           </div>
           <div className="p-4">

@@ -65,6 +65,10 @@ function ProductAdd() {
         setError("LACK_PRODUCTDISCOUNT");
         return;
       }
+      if(Number(discount) < 0 || Number(discount) > 100){
+        setError("INVALID_PRODUCTDISCOUNT");
+        return;
+      }
 
       if (!description) {
         setError("LACK_PRODUCTDESCRIPTION");
