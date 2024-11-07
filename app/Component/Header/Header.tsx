@@ -128,7 +128,7 @@ export default function Header(props: any) {
         ) : (
           <div className="flex space-x-2 md:space-x-4 items-center relative">
             <div onClick={toggleDropdown} className="cursor-pointer relative">
-              <img className="h-7" src={notification.src} alt="Notification" />
+              <img className="h-9 w-9" src={notification.src} alt="Notification" />
               {unreadNotificationCount > 0 && (
                    <span
                    className=" absolute bottom-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center"
