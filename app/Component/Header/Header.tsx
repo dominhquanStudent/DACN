@@ -30,14 +30,16 @@ export default function Header(props: any) {
     category: string;
     content: string;
     status: string;
+    createdAt: string;
   }
 
   const [notifications, setNotifications] = useState<Notification[]>([]);
-
+  const [isNewNotification, setIsNewNotification] = useState(false);
   // Conditionally fetch cart data only when the user is logged in
   const { data: cartData, error } = useSWR(isAuthenticated ? '/cart' : null, fetcher);
   const cartItemCount = cartData ? cartData.cart.product_list.length : 0;
-
+  const { data: news } = useSWR(isAuthenticated ? '/notification/user' : null, fetcher);
+  const unreadNotificationCount = news ? news.filter((n: Notification) => n.status === "Chưa đọc").length : 0;
   const handleLogout = async () => {
     // Call the logout endpoint
     try {
@@ -71,23 +73,23 @@ export default function Header(props: any) {
     checkLogin();
   }, []); // Empty dependency array ensures this runs only once
 
+
+
   const toggleDropdown = async () => {
     setShowDropdown(!showDropdown);
     if (!showDropdown) {
       // Fetch notifications from API
       try {
         const response = await axios.get('/notification/user');
-        setNotifications(response.data);
+        setNotifications(response.data);       
       } catch (error) {
         console.error('Error fetching notifications:', error);
       }
     }
   };
-
   const handleNotificationClick = (id: string) => {
     router.push(`/Profile/Notification/${id}`);
   };
-
   return (
     // global container
     <div className="flex flex-col mx-4 md:mx-8 items-center ">
@@ -126,19 +128,35 @@ export default function Header(props: any) {
         ) : (
           <div className="flex space-x-2 md:space-x-4 items-center relative">
             <div onClick={toggleDropdown} className="cursor-pointer relative">
-              <img className="h-9 w-9" src={notification.src} alt="Notification" />
+              <img className="h-7" src={notification.src} alt="Notification" />
+              {unreadNotificationCount > 0 && (
+                   <span
+                   className=" absolute bottom-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center"
+                   style={{ fontSize: '0.5rem' }}
+                 >
+                    {unreadNotificationCount}
+                  </span>
+                )}
               {showDropdown && (
                 <div className="absolute right-0 mt-2 w-48 md:w-60 bg-white border border-gray-300 rounded-md shadow-lg z-10">
                   <ul>
                     {notifications.slice(0, 5).map((notification) => (
                       <li
                         key={notification._id}
-                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        className={`px-4 py-2 hover:bg-blue-100 cursor-pointer border-b border-gray-200 ${notification.status === "Chưa đọc" ? "bg-blue-100" : "bg-white"}`}
                         onClick={() => handleNotificationClick(notification._id)}
                       >
-                        <span className={`block truncate ${notification.status === "Chưa đọc" ? "font-bold text-blue-500" : ""}`}>
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-sm font-semibold text-blue-600">{notification.category}</span>
+                          <span className={`text-xs ${notification.status === "Chưa đọc" ? "font-bold text-blue-500" : "text-gray-400"}`}>
+                            {new Date(notification.createdAt).toLocaleString()}
+                          </span>
+                        </div>
+                        <div className={`block truncate ${notification.status === "Chưa đọc" ? "font-bold text-blue-700" : "text-gray-800"}`}>
                           {notification.Title}
-                        </span>
+                        </div>
+                        
+                        
                       </li>
                     ))}
                   </ul>

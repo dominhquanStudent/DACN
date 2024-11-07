@@ -8,9 +8,11 @@ import axios from "@/api/axios";
 import { useRouter } from "next/navigation";
 import ErrorModal from "@/app/Component/Error";
 import LoadingModal from "@/app/Component/Loading";
+
 function ProductDetail({ params }: { params: { Detail: string } }) {
   const productId = params.Detail;
   const [data, setData] = useState<any>({});
+  const [price, setPrice] = useState("");
   const [isEditable, setIsEditable] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
@@ -18,13 +20,14 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
   const [error, setError] = useState<string | null>(null);
   const [showButton, setShowButton] = useState(false);
   const router = useRouter();
+
   useEffect(() => {
     const fetchProductData = async (id: any) => {
       try {
         const response = await axios.get(`/product/${productId}`);
         const productData = response.data;
         setData(productData.product);
-        // const log = await axios.post(`/test`, productData.product);
+        setPrice(productData.product.price.toString());
       } catch (error) {
         console.error("Error fetching product data:", error);
       }
@@ -45,10 +48,27 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
       [id]: value,
     }));
   };
+
   const handleImage = (e: any) => {
     const file = e.target.files[0];
     setFileToBase(file);
     console.log(file);
+  };
+
+  const formatCurrency = (value: string) => {
+    if (!value) return "";
+    const numberValue = value.replace(/\D/g, ""); // Remove non-numeric characters
+    return new Intl.NumberFormat("vi-VN").format(Number(numberValue));
+  };
+
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    const numberValue = value.replace(/\D/g, ""); // Remove non-numeric characters
+    setPrice(numberValue);
+    setData((prevData: any) => ({
+      ...prevData,
+      price: numberValue,
+    }));
   };
 
   const setFileToBase = (file: any) => {
@@ -61,6 +81,7 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
       });
     };
   };
+
   const handleSaveClick = async (e: any) => {
     e.preventDefault();
     if (!data.name) {
@@ -85,6 +106,14 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
     }
     if (!data.status) {
       setError("LACK_PRODUCTSTATUS");
+      return;
+    }
+    if (!data.discount) {
+      setError("LACK_PRODUCTDISCOUNT");
+      return;
+    }
+    if(Number(data.discount) < 0 || Number(data.discount) > 100){
+      setError("INVALID_PRODUCTDISCOUNT");
       return;
     }
     if (!data.description) {
@@ -201,8 +230,8 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="price"
                     type="text"
-                    value={data.price}
-                    onChange={handleInputChange}
+                    value={formatCurrency(price)}
+                    onChange={handlePriceChange}
                     disabled={!isEditable}
                   />
                 </div>
@@ -256,7 +285,6 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
                     <option value="">Chọn trạng thái</option>
                     <option value="active">Đang còn hàng</option>
                     <option value="inactive">Đã hết hàng</option>
-
                   </select>
                 </div>
               </div>
