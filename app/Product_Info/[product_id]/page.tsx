@@ -115,7 +115,7 @@ export default function ProductDetailPage({
         const similarProducts = similarResponse.data.products.filter(
           (product: any) =>
             product.category === productData.product.category &&
-            product._id !== productId
+            product._id !== productId && product.status === "active"
         );
         setSimilarProducts(similarProducts);
         const topRatedProductsSimilar = similarProducts
@@ -357,7 +357,6 @@ export default function ProductDetailPage({
 
                 <div className="mb-4 text-[#f79a36] text-xl">{data.brand}</div>
 
-
                 <div className="flex">
                   {/* Replace with your star rating component */}
                   {productRating.toFixed(1)}&nbsp;
@@ -371,7 +370,8 @@ export default function ProductDetailPage({
                   Còn lại: {data.stock} sản phẩm
                 </div>
 
-                <p className="mt-6">{data.description}</p>
+                <p className="mt-6 text-gray-500">
+                  {data.description}</p>
               </div>
             </div>
           </div>
@@ -438,26 +438,27 @@ export default function ProductDetailPage({
               <table className="min-w-full divide-y">
                 <tbody className="bg-white divide-y ">
                   <tr>
-                    
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          Tổng tiền
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-end w-50">
-                          <span className="text-xs underline">đ</span> {formatPrice(price)}
-                        </td>
-                    
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      Tổng tiền
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-end w-50">
+                      <span className="text-xs underline">đ</span>{" "}
+                      {formatPrice(price)}
+                    </td>
                   </tr>
                   <tr>
                     {price !== totalPrice && (
                       <>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      Giảm giá
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-red-500 text-end w-50">
-                      -<span className="text-xs underline">đ</span>{" "}
-                      {formatPrice((data.discount * price) / 100)}
-                    </td>
-                    </>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          Giảm giá
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-red-500 text-end w-50">
+                          -<span className="text-xs underline">đ</span>{" "}
+                          {new Intl.NumberFormat("vi-VN", {
+                            maximumFractionDigits: 0,
+                          }).format((data.discount * price) / 100)}
+                        </td>
+                      </>
                     )}
                   </tr>
                   <tr>
@@ -537,8 +538,6 @@ export default function ProductDetailPage({
                     </span>
                   </div>
 
-  
-
                   <div className="flex justify-between items-center mt-2">
                     {/* Rating */}
                     <div className="flex">
@@ -586,7 +585,7 @@ export default function ProductDetailPage({
               <StarRating handleRatingChange={handleRatingChange} />
             </div>
             <textarea
-              className="w-full h-24 border border-gray-300 rounded-md  focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              className="w-full h-24 border border-gray-300 rounded-md  focus:outline-none focus:ring-2 focus:ring-yellow-500 p-3"
               placeholder="Nhập bình luận"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
