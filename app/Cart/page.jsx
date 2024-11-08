@@ -199,15 +199,68 @@ export default function Cart() {
       }
       setIsComplete(true);
       mutate('/cart');
-      router.push("/Cart");
+      // router.push("/Cart");
       fetchCartData();
+      const productDetails = cartData.cart.product_list.map((product, productIndex) => (
+        `<div key="${productIndex}" class="flex flex-col w-full items-center my-2">
+          <div class="border border-[#C5C5CF] w-11/12"></div>
+          <div class="flex w-11/12 justify-between py-2">
+            <div class="flex w-10/12">
+              <img src="${product.product_image}" class="h-20 w-auto" alt="${product.product_name}" />
+              <div class="flex flex-col ml-4">
+                <div class="text-lg font-semibold">${product.product_name}</div>
+                <div class="text-sm text-gray-600">x ${product.quantity}</div>
+              </div>
+            </div>
+            <div class="flex items-center justify-center w-1/6">
+              <div class="text-lg font-bold text-gray-800">${(product.discount_price * product.quantity).toLocaleString('vi-VN')}đ</div>
+            </div>
+          </div>
+        </div>`
+      )).join('');
+
+      const totalPrice = response.data.order.product_list.reduce((total, product) => total + product.discount_price * product.quantity, 0);
+      const discount = totalPrice - response.data.order.total_price;
+      const finalPrice = response.data.order.total_price;
+
+      const notificationContent = `
+        <div style="padding: 16px; font-family: Arial, sans-serif;">
+          <div style="margin-bottom: 16px;">
+            <strong style="font-size: 18px;">Đơn hàng ${response.data.order._id} đã được đặt thành công.</strong>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <strong style="font-size: 16px;">Chi tiết đơn hàng:</strong>
+          </div>
+          <div class="flex justify-between">
+            <div class="flex-grow">
+              ${productDetails}
+            </div>
+            <div class="flex-grow flex-col text-lg ml-4 mt-4 w-1/3">
+              <div class="flex w-full mb-2">
+                <div class="w-full font-semibold">Tổng cộng:</div>
+                <div class="font-bold">${totalPrice.toLocaleString('vi-VN')} đ</div>
+              </div>
+              <div class="flex w-full mb-2">
+                <div class="w-full font-semibold">Giảm giá:</div>
+                <div class="font-bold text-red-600">- ${discount.toLocaleString('vi-VN')} đ</div>
+              </div>
+              <div class="flex w-full">
+                <div class="w-full font-semibold">Thành tiền:</div>
+                <div class="text-[#ff0000] font-bold">${finalPrice.toLocaleString('vi-VN')} đ</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
       sendNotifications({
         user_id: cartData.cart.user_id,
         category: 'Đơn hàng',
         Title: 'Đặt đơn hàng thành công',
-        content: `Đơn hàng ${response.data.order._id} đã được đặt thành công`,
+        content: notificationContent,
         status: 'Chưa đọc'
       });
+
     } catch (error) {
       console.error("Error placing order:", error);
     }

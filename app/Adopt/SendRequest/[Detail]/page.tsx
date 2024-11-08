@@ -11,19 +11,19 @@ import { getCookie } from "cookies-next";
 import getInfo from "@/hooks/getInfo";
 import logo from "../../../../public/img/Booking/petcare.png";
 import logoname from "../../../../public/img/Booking/pc.jpg";
-
+import { sendNotifications } from "@/ultis/notificationUtils";
 import ErrorModal from "@/app/Component/Error";
 import LoadingModal from "@/app/Component/Loading";
 
 
 
- ///////////////////////////////
+///////////////////////////////
 function SendRequest({ params }: { params: { Detail: string } }) {
-   //Handle loading and complete
- const [isLoading, setIsLoading] = useState(false);
- const [isComplete, setIsComplete] = useState(false);
- const [loadWhat, setLoadWhat] = useState("");
- const [error, setError] = useState<string | null>(null);
+  //Handle loading and complete
+  const [isLoading, setIsLoading] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [loadWhat, setLoadWhat] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const petId = params.Detail;
   // const [data, setData] = useState<any>({});
   const [method, setMethod] = useState<string>('Chưa có phương thức');
@@ -33,12 +33,13 @@ function SendRequest({ params }: { params: { Detail: string } }) {
   const [isEditable, setIsEditable] = useState(false);
   const router = useRouter();
   const [account, setAccount] = useState({
+    _id: "",
     userName: "",
     phone: "",
     address: "",
   });
   const jtw = getCookie("jwt");
-  
+
 
   const fetchData = async () => {
     const getAccount = await getInfo();
@@ -80,7 +81,7 @@ function SendRequest({ params }: { params: { Detail: string } }) {
     setData((prevData: any) => ({
       ...prevData,
       [id]: value,
-      
+
     }));
   };
 
@@ -105,11 +106,11 @@ function SendRequest({ params }: { params: { Detail: string } }) {
   };
 
   const handleAdoptClick = async () => {
-    
+
     try {
-      
+
       const currentDate = new Date().toISOString().split("T")[0]; // Get current date in YYYY-MM-DD format
-      
+
       const updatedData = {
         ...data,
         userName: account.userName,
@@ -119,15 +120,55 @@ function SendRequest({ params }: { params: { Detail: string } }) {
         adoptStatus: "Đang được yêu cầu",
         method: method,
       };
+      const notificationContent = `
+  <div style="padding: 16px; font-family: Arial, sans-serif;">
+    <div style="margin-bottom: 16px;">
+      <strong style="font-size: 18px;">Gửi yêu cầu nhận nuôi thành công</strong>
+    </div>
+    <div style="margin-bottom: 16px;">
+      <strong style="font-size: 16px;">Chi tiết yêu cầu:</strong>
+    </div>
+    <div style="margin-bottom: 8px;">
+      <strong>Tên người dùng:</strong> ${updatedData.userName}
+    </div>
+    <div style="margin-bottom: 8px;">
+      <strong>Số điện thoại:</strong> ${updatedData.phoneNumber}
+    </div>
+    <div style="margin-bottom: 8px;">
+      <strong>Địa chỉ:</strong> ${updatedData.address}
+    </div>
+    <div style="margin-bottom: 8px;">
+      <strong>Ngày yêu cầu:</strong> ${updatedData.requestDay}
+    </div>
+    <div style="margin-bottom: 8px;">
+      <strong>Trạng thái nhận nuôi:</strong> ${updatedData.adoptStatus}
+    </div>
+    <div style="margin-bottom: 8px;">
+      <strong>Phương thức:</strong> ${updatedData.method}
+    </div>
+    <div style="margin-top: 16px;">
+      Bạn đã gửi yêu cầu nhận nuôi bé ${updatedData.petName} thành công! Vui lòng chờ xác nhận từ cửa hàng!
+    </div>
+  </div>
+`;
+      const notification = {
+        user_id: account._id || "",
+        category: "Thú cưng",
+        Title: "Gửi yêu cầu nhận nuôi thành công",
+        content: notificationContent,
+        status: "Chưa đọc",
+      };
+      sendNotifications(notification);
       console.log("Updated Data:", updatedData); // Log the updated data
-      if (updatedData.message==="Chưa có lời nhắn" || updatedData.message==="") {
+      if (updatedData.message === "Chưa có lời nhắn" || updatedData.message === "") {
         setError("NO_ADOPT_MESSAGE");
-        return;}
-      if(!updatedData.arriveDay){
+        return;
+      }
+      if (!updatedData.arriveDay) {
         setError("NO_ARRIVE_DAY");
         return;
       }
-      if(updatedData.method==="Chưa có phương thức"){
+      if (updatedData.method === "Chưa có phương thức") {
         setError("NO_ADOPT_METHOD");
         return;
       }
@@ -138,7 +179,7 @@ function SendRequest({ params }: { params: { Detail: string } }) {
       setIsComplete(true);
       // Revalidate the data
       mutate(`/pet/${petId}`);
-      
+
       // router.push(`/Adopt`);
 
       // alert("Đăng kí nhận nuôi thành công!");
@@ -221,26 +262,26 @@ function SendRequest({ params }: { params: { Detail: string } }) {
               </div>
 
               <div>
-      <div className="flex w-full">
-        <div className="w-full px-3">
-          <label className="text-xs font-bold mb-2" htmlFor="method">
-            Chọn phương thực nhận thú cưng
-          </label>
-          <select
-            id="method"
-            name="method"
-            className="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            onChange={handleMethodChange}
-            value={method}
-          >
-            <option value="Chưa có phương thức">Chọn phương thức</option>
-            <option value="Trực tiếp">Trực tiếp</option>
-            <option value="Đơn vị vận chuyển">Đơn vị vận chuyển (Khu vực TP HCM và Bình Dương)</option>
-          </select>
-        </div>
-      </div>
-      {/* <button onClick={handleSubmit}>Submit</button> */}
-    </div>
+                <div className="flex w-full">
+                  <div className="w-full px-3">
+                    <label className="text-xs font-bold mb-2" htmlFor="method">
+                      Chọn phương thực nhận thú cưng
+                    </label>
+                    <select
+                      id="method"
+                      name="method"
+                      className="form-select mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      onChange={handleMethodChange}
+                      value={method}
+                    >
+                      <option value="Chưa có phương thức">Chọn phương thức</option>
+                      <option value="Trực tiếp">Trực tiếp</option>
+                      <option value="Đơn vị vận chuyển">Đơn vị vận chuyển (Khu vực TP HCM và Bình Dương)</option>
+                    </select>
+                  </div>
+                </div>
+                {/* <button onClick={handleSubmit}>Submit</button> */}
+              </div>
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="arriveDay">
                   Chọn ngày nhận thú cưng
@@ -251,7 +292,7 @@ function SendRequest({ params }: { params: { Detail: string } }) {
                   type="date"
                   value={data.arriveDay}
                   min={new Date().toISOString().split("T")[0]}
-                  
+
                   onChange={handleInputChange}
                 />
               </div>

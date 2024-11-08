@@ -16,9 +16,9 @@ import axios from "@/api/axios";
 import getInfo from "@/hooks/getInfo";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { getCookie } from "cookies-next"; 
+import { getCookie } from "cookies-next";
 import "react-calendar/dist/Calendar.css"; // Import the calendar CSS
-
+import { sendNotifications } from "@/ultis/notificationUtils";
 function Booking() {
   const router = useRouter();
 
@@ -43,7 +43,7 @@ function Booking() {
   //get account data
   const jwt = getCookie("jwt");
   const [accountData, setAccountData] = useState<any>(null);
- 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -65,8 +65,8 @@ function Booking() {
     try {
       const data = {
         userName: accountData?.userName || userName,
-        phone: accountData?.phone ||phone,
-        address:accountData?.address ||address,
+        phone: accountData?.phone || phone,
+        address: accountData?.address || address,
         petAge,
         petGender,
         service,
@@ -113,7 +113,7 @@ function Booking() {
         setError("NO_BOOKING_TIME");
         return;
       }
-      
+
       if (!phoneRegex.test(accountData?.phone || phone)) {
         setError("INVALID_PHONENUMBER");
         return;
@@ -130,6 +130,16 @@ function Booking() {
       setLoadWhat("SEND_BOOKING_REQUEST");
       setIsLoading(true);
       const response = await axios.post("/appointment/add", data);
+      if (accountData) {
+        const notification = {
+          user_id: accountData?._id || "",
+          category: "Khám bệnh",
+          Title: "Đặt lịch khám bệnh thành công",
+          content: `Bạn đã đặt lịch hẹn thành công vào lúc ${time} ngày ${date.toISOString().split("T")[0]}.`,
+          status: "Chưa đọc",
+        }
+        sendNotifications(notification);
+      }
       setIsLoading(false);
       setIsComplete(true);
       setLoadWhat("SEND_BOOKING_REQUEST");
@@ -184,7 +194,7 @@ function Booking() {
             Dịch vụ chăm sóc thú cưng
           </h2>
           <h2 className="text-lg font-semibold mt-4 mb-4 ">Thông tin khách hàng</h2>
-            <div className="flex items-center space-x-8">
+          <div className="flex items-center space-x-8">
             <label className="flex-1">
               Họ tên <span className="text-red-500">*</span>
             </label>
@@ -196,7 +206,7 @@ function Booking() {
               className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] disabled:bg-gray-300"
               disabled={accountData?.userName ? true : false}
             />
-            </div>
+          </div>
 
           <div className="flex items-center space-x-8">
             <label className="flex-1">
@@ -204,7 +214,7 @@ function Booking() {
             </label>
             <input
               type="text"
-              value={accountData?.phone ||phone}
+              value={accountData?.phone || phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="0123456789"
               className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] disabled:bg-gray-300"
@@ -217,7 +227,7 @@ function Booking() {
             </label>
             <input
               type="text"
-              value={accountData?.address ||address}
+              value={accountData?.address || address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder="247 Lý Thường Kiệt, Quận 10, TP.HCM"
               className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] disabled:bg-gray-300"
