@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
 import LoadingGif from "@/public/img/Loading.gif";
+import Dog from "@/public/img/Success_Dog.png";
 const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => {
   
   const handleClose = () => {
@@ -67,7 +68,7 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
         )}
         {isComplete && (
           <div className="flex flex-col items-center justify-center h-64 w-80">
-            <FaCheckCircle className="text-green-500 text-6xl mb-4 h-32 w-32" />
+            <img src={Dog.src} className=" mb-4 h-40 w-40" />
             {loadWhat=="ADD_TO_CART"&& <p>Đã thêm vào giỏ hàng thành công!</p>}
             {loadWhat=="ADD_COMMENT"&& <p>Đã comment thành công!</p>}
             {/* Adopt Pet */}

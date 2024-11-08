@@ -172,6 +172,7 @@ export default function Cart() {
 
   // Order
   const [paymentMethod, setPaymentMethod] = useState("Trực tiếp");
+  const [failedProducts, setFailedProducts] = useState("45545");
   const handleOrder = async () => {
     const order = {
       user_id: cartData.cart.user_id,
@@ -179,6 +180,14 @@ export default function Cart() {
       payment_method: paymentMethod,
       voucher_id: voucherInfo._id,
       total_price: totalPriceafterDiscount
+    }
+    //if order.product_list has product that its quantity is higher than stock then return
+    for (let i = 0; i < order.product_list.length; i++) {
+      if (order.product_list[i].quantity > order.product_list[i].stock) {
+        setError("NOT_ENOUGH_STOCK");
+        setFailedProducts(order.product_list[i].product_name);
+        return;
+      }
     }
     try {
       setIsLoading(true);
@@ -308,6 +317,7 @@ export default function Cart() {
   return (
     <>
       <Header />
+      <ErrorModal error={error} setError={setError} product={failedProducts}/>
       <LoadingModal isLoading={isLoading} isComplete={isComplete} setIsComplete={setIsComplete} loadWhat={loadWhat} />
       <section className="relative z-10 after:contents-[''] after:absolute after:z-0 after:h-full xl:after:w-1/3 after:top-0 after:right-0 after:bg-gray-50">
         {/* Whole cart */}
