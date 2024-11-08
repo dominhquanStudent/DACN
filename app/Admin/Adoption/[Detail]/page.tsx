@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import useSWR, { mutate } from "swr";
 import { getCookie } from "cookies-next";
 import getInfo from "@/hooks/getInfo";
+import { sendNotifications } from "@/ultis/notificationUtils";
 import ErrorModal from "@/app/Component/Error";
 import LoadingModal from "@/app/Component/Loading";
 import ConfirmModal from "@/app/Component/ConfirmModal";
@@ -83,8 +84,7 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
         employeeName: account.userName,
         adoptDay: new Date(),
       };
-
-      const response = await axios.put(`/pet/${petId}`, updatedData);
+      // Cái pet ko có user_id thì gửi cho ai
       // Revalidate the data
       mutate(`/pet/${petId}`);
       setIsLoading(false);
