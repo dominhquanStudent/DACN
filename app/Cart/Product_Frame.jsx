@@ -92,7 +92,6 @@ export default function Product_Frame(props) {
   if (isRemoved) {
     return null; // Don't render the component if the item is removed
   }
-  console.log(data.stock);
   return (
     <div className="relative flex flex-col min-[500px]:flex-row min-[500px]:items-center gap-5 py-6 border-b border-gray-200 group">
       <button

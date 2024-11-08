@@ -179,6 +179,14 @@ export default function ProductDetailPage({
       setError("NOT_LOGGED_IN_COMMENT");
       return;
     }
+    //check if user already rated
+    const userAlreadyRated = reviews.some(
+      (review) => review.user_id === accountData._id
+    );
+    if (userAlreadyRated) {
+      setError("USER_ALREADY_RATED");
+      return;
+    }
     setIsLoading(true);
     setLoadWhat("ADD_COMMENT");
     try {
@@ -195,7 +203,7 @@ export default function ProductDetailPage({
         ...response.data.review,
         user_name: accountData.userName, // Ensure user name is included
       };
-      setReviews([...reviews, newReview]);
+      setReviews([newReview, ...reviews]);
       setIsComplete(true);
       setIsLoading(false);
       setError(null);
@@ -218,7 +226,10 @@ export default function ProductDetailPage({
       setTotalPrice(Amount * data.discount_price);
       setPrice(Amount * data.price);
     }
+    else if (Amount > data.stock) {
+      setAmount(data.stock);
   };
+}
 
   //handle add to cart
   const [cartData, setCartData] = useState({
@@ -455,7 +466,7 @@ export default function ProductDetailPage({
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-red-500 text-end w-50">
                       -<span className="text-xs underline">đ</span>{" "}
-                      {formatPrice((data.discount * price) / 100)}
+                        {formatPrice(Math.floor((data.discount * price) / 100))}
                     </td>
                     </>
                     )}
