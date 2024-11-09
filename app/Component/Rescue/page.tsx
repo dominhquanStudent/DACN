@@ -2,18 +2,15 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import Calendar from "react-calendar";
 import logo from "../../../public/img/Booking/petcare.png";
 import logoname from "../../../public/img/Booking/pc.jpg";
-import Doggo1 from "../../../public/img/Greet page/Doggo1.png";
-import Link from 'next/link';
-import Sidebar from '@/app/Admin/sidebar';
 import axios from '@/api/axios';
-import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import ErrorModal from "@/app/Component/Error";
 import LoadingModal from "@/app/Component/Loading";
 import "react-calendar/dist/Calendar.css"; // Import the calendar CSS
+import { getCookie } from "cookies-next";
+import getInfo from "@/hooks/getInfo";
 
 export default function Booking() {
   const router = useRouter();
@@ -27,24 +24,42 @@ export default function Booking() {
   const [isComplete, setIsComplete] = useState(false);
   const [loadWhat, setLoadWhat] = useState("");
   const [error, setError] = useState<string | null>(null);
+//get account data
+const jwt = getCookie("jwt");
+const [accountData, setAccountData] = useState<any>(null);
 
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const jwt = getCookie("jwt");
+      if (jwt) {
+        const getaccountData = await getInfo();
+        setAccountData(getaccountData);
+      }
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  };
+
+  fetchData();
+}, []);
   const handleSaveClick = async () => {
     try {
       const data = {
-        user_name,
-        contactPhone,
+        user_name:accountData?.userName || user_name,
+        contactPhone:accountData?.phone || contactPhone,
         image,
         location,
         message,
       };
-      const phoneRegex = /^(0?)(3[2-9]|5[689]|7[06-9]|8[0-689]|9[0-46-9])[0-9]{7}$/;
+      const phoneRegex = /^[0-9]{10}$/;
 
 
-      if (!user_name) {
+      if (!user_name && !jwt) {
         setError("NO_ADOPT_USER_NAME");
         return;
       }
-      if (!contactPhone) {
+      if (!contactPhone && !jwt) {
         setError("NO_ADOPT_PHONE");
         return;
       }
@@ -61,7 +76,7 @@ export default function Booking() {
         return;
       }
 
-      if (!phoneRegex.test(contactPhone)) {
+      if (!phoneRegex.test(accountData?.phone ||contactPhone)) {
         setError("INVALID_PHONENUMBER");
         return;
       }
@@ -88,7 +103,7 @@ export default function Booking() {
       setImage({public_id: 'null', url: reader.result as string});
     }
   }
-
+  console.log(accountData);
   return (
     <>
       <Header />
@@ -100,7 +115,7 @@ export default function Booking() {
         loadWhat={loadWhat}
       />
 
-      <div className="flex flex-col lg:flex-row gap-4 p-4 bg-background-blue">
+      <div className="flex flex-col lg:flex-row gap-4 p-4 bg-background-blue font-montserrat">
         <div className="relative lg:left-28 flex flex-col items-center lg:items-start">
           <div className="p-3">
             <img src={logo.src} alt="Logo" className="w-40 lg:w-60" />
@@ -121,20 +136,22 @@ export default function Booking() {
               <label className="flex-1">Tên người gửi <span className="text-red-500">*</span></label>
               <input
                 type="text"
-                value={user_name}
+                value={accountData?.userName ||user_name}
                 onChange={(e) => setUser_name(e.target.value)}
                 placeholder="Nhập tên khách hàng"
-                className="block w-full mt-2 p-2 border rounded lg:ml-2 flex-[4]"
+                className="block w-full mt-2 p-2 border rounded lg:ml-2 flex-[4] disabled:bg-gray-300"
+                disabled={accountData?.userName ? true : false}
               />
             </div>
             <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-8">
               <label className="flex-1">SĐT liên hệ <span className="text-red-500">*</span></label>
               <input
                 type="text"
-                value={contactPhone}
+                value={accountData?.phone ||contactPhone}
                 onChange={(e) => setContact_phone(e.target.value)}
                 placeholder="Nhập số điện thoại"
-                className="block w-full mt-2 p-2 border rounded lg:ml-2 flex-[4]"
+                className="block w-full mt-2 p-2 border rounded lg:ml-2 flex-[4] disabled:bg-gray-300"
+                disabled={accountData?.userName ? true : false}
               />
             </div>
             <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-8">

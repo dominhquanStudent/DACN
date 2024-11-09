@@ -57,20 +57,22 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
           <div className="flex flex-col items-center justify-center h-64 w-80">
             <img src={LoadingGif.src} alt="Loading..." className="h-40 w-40 mb-4" />
             {loadWhat=="ADD_TO_CART"&& <p>Đang thêm vào giỏ hàng!</p>}
-            {loadWhat=="ADD_COMMENT"&& <p>Đang đăng comment!</p>}
+            {loadWhat=="ADD_COMMENT"&& <p>Đang đăng review!</p>}
             {loadWhat=="SEND_ADOPT_REQUEST"&& <p>Đang gửi yêu cầu nhận thú cưng!</p>}
-
+            {loadWhat=="LOADING_PRODUCT"&& <p>Đang load sản phẩm của bạn</p>}
+            {loadWhat=="LOADING_PET_INFO"&& <p>Đang lấy thông tin pet</p>}
             {loadWhat==""&& <p>Template loading!</p>}
             {loadWhat=="ORDERING"&& <p>Đang đặt hàng</p>}
-
-          {loadWhat=="SEND_UPDATENEW_REQUEST"&& <p>Đã cập nhật thông tin bài viết!</p>}
+            {loadWhat=="REBUY"&& <p>Đang add lại vào giỏ hàng</p>}
+           {loadWhat=="SEND_UPDATENEW_REQUEST"&& <p>Đã cập nhật thông tin bài viết!</p>}
+           {loadWhat=="SEND_RESCUE_REQUEST"&& <p>Đang gửi yêu cầu cứu hộ!</p>}
           </div>
         )}
         {isComplete && (
           <div className="flex flex-col items-center justify-center h-64 w-80">
             <img src={Dog.src} className=" mb-4 h-40 w-40" />
             {loadWhat=="ADD_TO_CART"&& <p>Đã thêm vào giỏ hàng thành công!</p>}
-            {loadWhat=="ADD_COMMENT"&& <p>Đã comment thành công!</p>}
+            {loadWhat=="ADD_COMMENT"&& <p>Đã review thành công!</p>}
             {/* Adopt Pet */}
             {loadWhat=="SEND_ADOPT_REQUEST"&& <p>Đã gửi yêu cầu nhận thú cưng!</p>}
             {loadWhat=="SEND_BOOKING_REQUEST"&& <p>Đã đặt lịch thành công!</p>}
@@ -85,7 +87,7 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             
             {loadWhat=="ACCEPT_ADOPTION_REQUEST"&& <p>Đã chấp nhận yêu cầu!</p>}
             {loadWhat=="SEND_UPDATE_PROFILE"&& <p>Đã cập nhật thông tin thành công!</p>}
-
+            {loadWhat=="REBUY"&& <p>Đã add lại vào giỏ hàng</p>}
 
 
 
@@ -111,12 +113,3 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
 };
 
 export default LoadingModal;
-//   useEffect(() => {
-//     // Simulate loading process
-//     const timer = setTimeout(() => {
-//       setIsLoading(false);
-//       setIsComplete(true);
-//     }, 3000); // 3 seconds for demonstration
-
-//     return () => clearTimeout(timer);
-//   }, []);

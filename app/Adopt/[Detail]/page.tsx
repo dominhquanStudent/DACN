@@ -20,11 +20,13 @@ function formatDate(dateString: string): string {
 }
 const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 function PetDetail({ params }: { params: { Detail: string } }) {
+
   //Handle loading and complete
   const [isLoading, setIsLoading] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [loadWhat, setLoadWhat] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [notFound, setNotFound] = useState(false);
   const petId = params.Detail;
   // const [data, setData] = useState<any>({});
   const [data, setData] = useState<any>({ image: { url: [""] } });
@@ -48,6 +50,7 @@ function PetDetail({ params }: { params: { Detail: string } }) {
         setData(petData.pet);
       } catch (error) {
         console.error("Error fetching pet data:", error);
+        setNotFound(true);
       }
     };
     if (petId) {
@@ -136,20 +139,14 @@ function PetDetail({ params }: { params: { Detail: string } }) {
     };
     
   };
-
-  if (!data) {
-    return <div>Loading...</div>;
-  }
-  console.log(data);
-
-  return (
+  if(data.petName) return (
     <>
       <Header />
       <ErrorModal error={error} setError={setError} />
       <LoadingModal isLoading={isLoading} isComplete={isComplete} setIsComplete={setIsComplete} loadWhat={loadWhat} />
       {/* <div className="bg-white rounded-lg shadow-md p-8 w-1/2 mx-auto"> */}
 
-      <form className="w-full mr-4" key={data._id}>
+      <form className="w-full mr-4 " key={data._id}>
         <div className="flex flex-row justify-center">
         <div className="w-[300px] h-[300px] bg-gray-300 rounded-md justify-center mr-4">
           <img
@@ -237,6 +234,8 @@ function PetDetail({ params }: { params: { Detail: string } }) {
       <Footer />
     </>
   );
+  if (!data.petName && !notFound) return  <LoadingModal isLoading={true} isComplete={false} setIsComplete={setIsComplete} loadWhat="LOADING_PET_INFO" />;
+  if (notFound) return <ErrorModal error="PET_NOT_FOUND" setError={setError} />;
 }
 
 export default PetDetail;

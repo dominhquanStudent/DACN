@@ -8,6 +8,16 @@ const ErrorModal = ({ error, setError, product }: any ) => {
     if (error === "PAGE_NOT_FOUND") {
       window.location.href = "/Main";
     }
+    if (error === "PRODUCT_NOT_FOUND") {
+      window.location.href = "/Product";
+    }
+    if (error === "PET_NOT_FOUND") {
+      window.location.href = "/Adopt";
+    }
+    if (error === "PET_OWNED") {
+      window.location.href = "/Adopt";
+    }
+    
      else {
       setError(null);
     }
@@ -21,10 +31,12 @@ const ErrorModal = ({ error, setError, product }: any ) => {
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
         {error && (
-          <div className="flex flex-col items-center justify-center h-64 w-80">
+          <div className="flex flex-col items-center justify-center h-64 w-80 font-montserrat">
             <img src={Cat_Error.src} className="text-red-500 text-6xl mb-4 h-40 w-40" />
+            {/* Page not found */}
+            {error == "PAGE_NOT_FOUND" && <p>Trang bạn tìm hiện không tồn tại</p>}
             {/* Comment Errors */}
-            {error == "EMPTY COMMENT" && <p>Nội dung review không được phép rỗng</p>}
+            {error == "EMPTY COMMENT" && <p>Nội dung không được phép rỗng</p>}
             {error == "EMPTY RATING" && <p>Đánh giá không được phép rỗng</p>}
             {error == "NOT_LOGGED_IN_COMMENT" && (
               <p>Bạn phải đăng nhập để đánh giá sản phẩm</p>
@@ -113,6 +125,7 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "LACK_IMAGE" && <p>Vui lòng chọn ảnh bìa!</p>}
 
             {/* PRODUCT */}
+            {error == "PRODUCT_NOT_FOUND" && <p>Sản phẩm không tồn tại</p>}
             {error == "LACK_PRODUCTNAME" && <p>Vui lòng nhập tên sản phẩm!</p>}
             {error == "LACK_PRODUCTBRAND" && <p>Vui lòng nhập thương hiệu!</p>}
             {error == "LACK_PRODUCTPRICE" && <p>Vui lòng nhập giá sản phẩm!</p>}
@@ -133,6 +146,8 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "LACK_PRODUCTIMAGE" && <p>Vui lòng chọn ảnh sản phẩm!</p>}
 
             {/* PET */}
+            {error == "PET_OWNED" && <p>Pet này đã có người khác rồi :(</p>}
+            {error == "PET_NOT_FOUND" && <p>Pet này không có trong cửa hàng!</p>}
             {error == "LACK_PETNAME" && <p>Vui lòng nhập tên thú cưng!</p>}
             {error == "LACK_PETGENDER" && (
               <p>Vui lòng chọn giới tính thú cưng!</p>
@@ -193,7 +208,7 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "INVALID_DATE" && <p>Ngày hẹn không hợp lệ!</p>}
 
 
-{/* ADMIN PROFILE */}
+            {/* ADMIN PROFILE */}
             {error == "EMPTY_USERNAME" && <p>Vui lòng nhập tên!</p>}
             {error == "EMPTY_EMAIL" && <p>Vui lòng nhập email!</p>}
             {error == "EMPTY_ADDRESS" && <p>Vui lòng nhập địa chỉ!</p>}

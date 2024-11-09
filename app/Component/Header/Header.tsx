@@ -199,11 +199,9 @@ export default function Header(props: any) {
         <ul className="flex flex-wrap justify-center space-x-4 md:space-x-20 font-k2d text-sm md:text-lg font-bold">
           {/* main list item 1 */}
           <li
-            onMouseEnter={() => setShowSublist1(true)}
-            onMouseLeave={() => setShowSublist1(false)}
-            className={` ${showSublist1 ? "text-yellow-400 " : ""} ${pathname === '/Product' ? "text-yellow-500" : ""}`}
+            className={`transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95 ${pathname === '/Product' ? "text-yellow-500" : ""}`}
           >
-            <Link href="/Product">Sản phẩm thú cưng</Link>
+            <Link className="hover:text-yellow-500" href="/Product">Sản phẩm thú cưng</Link>
           </li>
           <li className={`transition-transform duration-300 hover:scale-105 hover:rotate-3 active:scale-95 ${pathname === '/Price_Table' ? "text-yellow-500" : ""}`}>
             <Link className="hover:text-yellow-500" href="/Price_Table">
