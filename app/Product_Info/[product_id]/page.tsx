@@ -30,6 +30,7 @@ export default function ProductDetailPage({
   //get account data
   const jwt = getCookie("jwt");
   const [accountData, setAccountData] = useState<any>(null);
+  const [notFound, setNotFound] = useState(false);
 
   const fetchData = async () => {
     const getaccountData = await getInfo();
@@ -124,6 +125,7 @@ export default function ProductDetailPage({
         setTopRatedProductsSimilar(topRatedProductsSimilar);
       } catch (error) {
         console.error("Error fetching product data:", error);
+        setNotFound(true);
       }
     };
     const fetchReviews = async () => {
@@ -340,7 +342,9 @@ export default function ProductDetailPage({
     },
     [cartData, currentCartAmount, amount, data.stock, accountData, productId]
   );
-  return (
+
+  
+   if (data.name) return (
     <>
       <Header />
       <ErrorModal error={error} setError={setError} />
@@ -596,7 +600,7 @@ export default function ProductDetailPage({
             </div>
             <textarea
               className="w-full h-24 border border-gray-300 rounded-md  focus:outline-none focus:ring-2 focus:ring-yellow-500 p-3"
-              placeholder="Nhập bình luận"
+              placeholder="Nhập review của bạn"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
             ></textarea>
@@ -679,5 +683,9 @@ export default function ProductDetailPage({
 
       <Footer />
     </>
+    
   );
+
+  if (!data.name && !notFound) return  <LoadingModal isLoading={true} isComplete={false} setIsComplete={setIsComplete} loadWhat="LOADING_PRODUCT" />;
+  if (notFound) return <ErrorModal error="PRODUCT_NOT_FOUND" setError={setError} />;
 }

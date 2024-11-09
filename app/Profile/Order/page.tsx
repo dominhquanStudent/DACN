@@ -5,6 +5,7 @@ import ProfileNav from "@/app/Component/ProfileNav/ProfileNav";
 import React, { useState, useEffect } from 'react';
 import axios from '@/api/axios';
 import { sendNotifications } from "@/ultis/notificationUtils";
+import LoadingModal from "@/app/Component/Loading";
 interface Product {
     product_id: number;
     product_name: string;
@@ -32,6 +33,10 @@ interface Order {
 }
 
 function Page() {
+    const [isLoading, setIsLoading] = useState(false);
+    const [isComplete, setIsComplete] = useState(false);
+    const [loadWhat, setLoadWhat] = useState("");
+    const [error, setError] = useState<string | null>(null);
     const [sort, setSort] = useState('Tất cả')
     const handleSort = (e: any) => {
         setSort(e)
@@ -49,8 +54,13 @@ function Page() {
         fetchOrderData();
     },);
     const handleReBuy = async (id: string) => {
+            
+        setLoadWhat("REBUY");
         try {
+            setIsLoading(true);
             const response = await axios.post(`/order/rebuy/${id}`);
+            setIsComplete(true);
+            setIsLoading(false);
         } catch (error) {
             console.error("Error rebuy orders:", error);
         }
@@ -134,9 +144,14 @@ function Page() {
         }
         return pageNumbers;
     };
-
     return (
         <div className="flex flex-col w-full ">
+            <LoadingModal
+                isLoading={isLoading}
+                isComplete={isComplete}
+                setIsComplete={setIsComplete}
+                loadWhat={loadWhat}
+            />
             <Header />
             <div className="flex bg-[#DFF3FF] w-full " style={{ minHeight: '80vh' }}>
                 <ProfileNav />

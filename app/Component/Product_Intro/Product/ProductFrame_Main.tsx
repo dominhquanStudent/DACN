@@ -48,6 +48,9 @@ const ProductCard = (props: any) => {
           <span className="text-xs text-[#f79a36]">
             {props.product.brand}
           </span>
+          <span className="text-xs text-gray-500">
+           {props.product.category}
+          </span>
         </div>
 
         {/* Price */}

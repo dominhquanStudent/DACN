@@ -20,11 +20,13 @@ function formatDate(dateString: string): string {
 }
 const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 function PetDetail({ params }: { params: { Detail: string } }) {
+
   //Handle loading and complete
   const [isLoading, setIsLoading] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [loadWhat, setLoadWhat] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [notFound, setNotFound] = useState(false);
   const petId = params.Detail;
   // const [data, setData] = useState<any>({});
   const [data, setData] = useState<any>({ image: { url: [""] } });
@@ -48,6 +50,7 @@ function PetDetail({ params }: { params: { Detail: string } }) {
         setData(petData.pet);
       } catch (error) {
         console.error("Error fetching pet data:", error);
+        setNotFound(true);
       }
     };
     if (petId) {
@@ -136,13 +139,7 @@ function PetDetail({ params }: { params: { Detail: string } }) {
     };
     
   };
-
-  if (!data) {
-    return <div>Loading...</div>;
-  }
-  console.log(data);
-
-  return (
+  if(data.petName) return (
     <>
       <Header />
       <ErrorModal error={error} setError={setError} />
@@ -237,6 +234,8 @@ function PetDetail({ params }: { params: { Detail: string } }) {
       <Footer />
     </>
   );
+  if (!data.petName && !notFound) return  <LoadingModal isLoading={true} isComplete={false} setIsComplete={setIsComplete} loadWhat="LOADING_PET_INFO" />;
+  if (notFound) return <ErrorModal error="PET_NOT_FOUND" setError={setError} />;
 }
 
 export default PetDetail;

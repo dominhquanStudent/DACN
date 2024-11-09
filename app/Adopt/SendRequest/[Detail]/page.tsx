@@ -24,6 +24,7 @@ function SendRequest({ params }: { params: { Detail: string } }) {
   const [isComplete, setIsComplete] = useState(false);
   const [loadWhat, setLoadWhat] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [notFound, setNotFound] = useState(false);
   const petId = params.Detail;
   // const [data, setData] = useState<any>({});
   const [method, setMethod] = useState<string>('Chưa có phương thức');
@@ -55,6 +56,7 @@ function SendRequest({ params }: { params: { Detail: string } }) {
         setData(petData.pet);
       } catch (error) {
         console.error("Error fetching pet data:", error);
+        setNotFound(true);
       }
     };
     if (petId) {
@@ -191,14 +193,14 @@ function SendRequest({ params }: { params: { Detail: string } }) {
   if (!data) {
     return <div>Loading...</div>;
   }
-  //   console.log(account);
-
-  return (
+     console.log(data.adoptStatus);
+  if (data.petName && data.adoptStatus!="Chưa có chủ") return <ErrorModal error="PET_OWNED" setError={setError} />;
+  if(data.petName) return (
     <>
       <Header />
       <ErrorModal error={error} setError={setError} />
       <LoadingModal isLoading={isLoading} isComplete={isComplete} setIsComplete={setIsComplete} loadWhat={loadWhat} />
-      <div className="flex gap-4 p-4 bg-background-blue justify-center">
+      <div className="flex gap-4 p-4 bg-background-blue justify-center font-nunito">
         <div className="relative left-28">
           <div className="p-3">
             <img src={logo.src} alt="Logo" className="w-60" />
@@ -329,6 +331,9 @@ function SendRequest({ params }: { params: { Detail: string } }) {
       <Footer />
     </>
   );
+  if (!data.petName && !notFound) return  <LoadingModal isLoading={true} isComplete={false} setIsComplete={setIsComplete} loadWhat="LOADING_PET_INFO" />;
+  if (notFound) return <ErrorModal error="PET_NOT_FOUND" setError={setError} />;
+  
 }
 
 export default SendRequest;
