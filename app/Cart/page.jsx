@@ -210,7 +210,7 @@ export default function Cart() {
       mutate('/cart');
       // router.push("/Cart");
       fetchCartData();
-      const productDetails = cartData.cart.product_list.map((product, productIndex) => (
+      const productDetails = cartData.cart.product_list.filter(product => product.selected).map((product, productIndex) => (
         `<div key="${productIndex}" class="flex flex-col w-full items-center my-2">
           <div class="border border-[#C5C5CF] w-11/12"></div>
           <div class="flex w-11/12 justify-between py-2">
@@ -244,7 +244,7 @@ export default function Cart() {
             <div class="flex-grow">
               ${productDetails}
             </div>
-            <div class="flex-grow flex-col text-lg ml-4 mt-4 w-1/3">
+            <div class="flex-grow flex-col text-lg ml-4 mt-4 w-1/2">
               <div class="flex w-full mb-2">
                 <div class="w-full font-semibold">Tổng cộng:</div>
                 <div class="font-bold">${totalPrice.toLocaleString('vi-VN')} đ</div>
@@ -324,7 +324,7 @@ export default function Cart() {
         <div className="w-full max-w-7xl px-4 md:px-5 lg:px-6 mx-auto relative z-10">
           <div className="grid grid-cols-12">
             {/* Left side */}
-            <div className="col-span-12 xl:col-span-8 lg:pr-8 pt-4 pb-4 lg:py-12 w-full max-xl:max-w-3xl max-xl:mx-auto">
+            <div className="col-span-12 xl:col-span-8 lg:pr-8 pt-2 pb-4 lg:py-4 w-full max-xl:max-w-3xl max-xl:mx-auto">
               <div className="flex items-center justify-between pb-4 border-b border-gray-300">
                 <h2 className="font-manrope font-bold text-3xl leading-10 text-black">
                   Giỏ Hàng
@@ -364,8 +364,8 @@ export default function Cart() {
               </div>
             </div>
             {/* Right side */}
-            <div className="col-span-12 xl:col-span-4 bg-gray-50 w-full max-xl:px-6 max-w-3xl xl:max-w-lg mx-auto lg:pl-8 py-4 lg:py-12">
-              <h2 className="font-manrope font-bold text-3xl leading-10 text-black pb-4 border-b border-gray-300">
+            <div className="col-span-12 xl:col-span-4 bg-gray-50 w-full max-xl:px-6 max-w-3xl xl:max-w-lg mx-auto lg:pl-8 py-2 lg:py-4">
+              <h2 className="font-manrope font-bold text-3xl leading-10 text-black pb-4 border-b border-gray-300 text-center">
                 Đặt hàng
               </h2>
 
@@ -408,7 +408,7 @@ export default function Cart() {
                     type="text"
                     name="redemption_code"
                     className="mr-2 flex-grow border-gray-300 p-2 rounded-md"
-                    placeholder="Enter code"
+                    placeholder="Nhập mã"
                     value={voucher}
                     onChange={(e) => setVoucher(e.target.value)}
                   />

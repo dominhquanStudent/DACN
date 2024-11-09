@@ -146,7 +146,7 @@ function PetDetail({ params }: { params: { Detail: string } }) {
       <LoadingModal isLoading={isLoading} isComplete={isComplete} setIsComplete={setIsComplete} loadWhat={loadWhat} />
       {/* <div className="bg-white rounded-lg shadow-md p-8 w-1/2 mx-auto"> */}
 
-      <form className="w-full mr-4 " key={data._id}>
+      <form className="w-full mr-4 mt-4" key={data._id}>
         <div className="flex flex-row justify-center">
         <div className="w-[300px] h-[300px] bg-gray-300 rounded-md justify-center mr-4">
           <img

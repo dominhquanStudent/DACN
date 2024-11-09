@@ -16,7 +16,7 @@ function Page() {
     const response = await login(email, password);
     console.log(response);
     if (response.role === "admin") { router.push("/Admin"); }
-    else if (response.role === "doctor") { router.push("/Doctor/Blog"); }
+    else if (response.role === "doctor") { router.push("/Doctor"); }
     else { router.back(); }
   };
 

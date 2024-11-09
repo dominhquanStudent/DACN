@@ -1,20 +1,5 @@
-<svg width="48" height="41" viewBox="0 0 48 41" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g filter="url(#filter0_d_105_5)">
-<path d="M29.5 2.5H18.5C15.3174 2.5 12.2651 3.76433 10.0147 6.01477C7.76427 8.26521 6.5 11.3174 6.5 14.5V16.5V30.5L10.04 28.5C12.6305 27.127 15.5288 26.4386 18.46 26.5H29.13C32.1544 26.5358 35.0852 25.4514 37.3579 23.4556C39.6306 21.4598 41.0847 18.6936 41.44 15.6899C41.6062 14.0221 41.4212 12.3379 40.8968 10.7458C40.3725 9.15384 39.5204 7.68941 38.3955 6.44678C37.2706 5.20414 35.8979 4.2109 34.3658 3.53113C32.8337 2.85136 31.1761 2.50012 29.5 2.5V2.5Z" stroke="#EDB24E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M24 15.83C24.2761 15.83 24.5 15.6061 24.5 15.33C24.5 15.0538 24.2761 14.83 24 14.83C23.7239 14.83 23.5 15.0538 23.5 15.33C23.5 15.6061 23.7239 15.83 24 15.83Z" stroke="#EDB24E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M31.5 16C31.7761 16 32 15.7761 32 15.5C32 15.2239 31.7761 15 31.5 15C31.2239 15 31 15.2239 31 15.5C31 15.7761 31.2239 16 31.5 16Z" stroke="#EDB24E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M16.5 15.83C16.7761 15.83 17 15.6061 17 15.33C17 15.0538 16.7761 14.83 16.5 14.83C16.2239 14.83 16 15.0538 16 15.33C16 15.6061 16.2239 15.83 16.5 15.83Z" stroke="#EDB24E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<defs>
-<filter id="filter0_d_105_5" x="0" y="0" width="47.9991" height="41" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="4"/>
-<feGaussianBlur stdDeviation="2"/>
-<feComposite in2="hardAlpha" operator="out"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_105_5"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_105_5" result="shape"/>
-</filter>
-</defs>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M10.35 23.999L5.6247 27.7789C4.96993 28.3027 4 27.8366 4 26.998V6.99805C4 5.34119 5.34315 3.99805 7 3.99805H25C26.6569 3.99805 28 5.34119 28 6.99805V20.998C28 22.6549 26.6569 23.998 25 23.998L10.35 23.999ZM6 24.919L9.37531 22.2172C9.55262 22.0753 9.77293 21.998 10 21.998H25C25.5523 21.998 26 21.5503 26 20.998V6.99805C26 6.44576 25.5523 5.99805 25 5.99805H7C6.44772 5.99805 6 6.44576 6 6.99805V24.919Z" fill="#EDB24E"/>
+<path d="M11 17C10.4477 17 10 16.5523 10 16C10 15.4872 10.386 15.0645 10.8834 15.0067L11 15H15C15.5523 15 16 15.4477 16 16C16 16.5128 15.614 16.9355 15.1166 16.9933L15 17H11Z" fill="#EDB24E"/>
+<path d="M11 13C10.4477 13 10 12.5523 10 12C10 11.4872 10.386 11.0645 10.8834 11.0067L11 11L21 11C21.5523 11 22 11.4477 22 12C22 12.5128 21.614 12.9355 21.1166 12.9933L21 13H11Z" fill="#EDB24E"/>
 </svg>
