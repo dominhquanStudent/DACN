@@ -32,6 +32,8 @@ const config: Config = {
         'clicked_filter': '#DA8359',
         'hover_filter': '#ECDFCC',
         'title_filter': '#A5B68D',
+        'form_bg': '#2C74B3',
+        'form_content': '#FEEE91'
       }
     },
   },

@@ -3,12 +3,11 @@ import React, { useState, useEffect } from "react";
 import Header from "../../Header/Header";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import p3 from "@/public/img/Blog/p3.jpg";
-import p4 from "@/public/img/Blog/p4.jpg";
-import p12 from "@/public/img/Blog/p12.png";
-import p111 from "@/public/img/Blog/p111.png";
-import blog_cover1 from "@/public/img/Blog/blog_cover1.png";
-import blog_cover2 from "@/public/img/Blog/blog_cover2.png";
+import xmast8 from "@/public/img/Blog/xmast8.jpg";
+import xmast6 from "@/public/img/Blog/xmast6.jpg";
+import xmast7 from "@/public/img/Blog/xmast7.jpg";
+import xmast4 from "@/public/img/Blog/xmast4.jpg";
+import xmast5 from "@/public/img/Blog/xmast5.jpg";
 import Footer from "@/app/Component/Footer/Footer";
 
 // import React, { useState } from 'react';
@@ -82,7 +81,6 @@ function NewsPage({ params }: { params: { Details: string } }) {
       try {
         const response = await axios.get(`/news/${newsID}`);
         console.log(response.data); // Log response để kiểm tra cấu trúc dữ liệu
-        
 
         setNews(response.data.news);
       } catch (error) {
@@ -108,40 +106,42 @@ function NewsPage({ params }: { params: { Details: string } }) {
     <div className="container mx-auto p-4">
       <Header />
       <div className="flex w-full h-full">
-
         <div className="container mx-auto p-4">
-        <div className="container mx-auto p-4">
-        <Carousel
-          showThumbs={false}
-          showStatus={false}
-          autoPlay
-          infiniteLoop
-          interval={1000}
-          transitionTime={500}
-        >
-          <div>
-            <img src={blog_cover1.src} className=" h-[350px]" alt="Poster 1" />
-          </div>
-          <div>
-            <img src={blog_cover2.src} className=" h-[350px]" alt="Poster 2" />
-          </div>
-          <div>
-            <img src={p12.src} className=" h-[350px]" alt="Poster 1" />
-          </div>
+          <div className="container mx-auto p-4">
+            <Carousel
+              showThumbs={false}
+              showStatus={false}
+              autoPlay
+              infiniteLoop
+              interval={1000}
+              transitionTime={500}
+            >
+              <div>
+                <img src={xmast6.src} className=" h-[350px]" alt="Poster 2" />
+              </div>
+              <div>
+                <img src={xmast7.src} className=" h-[350px]" alt="Poster 1" />
+              </div>
+              <div>
+                <img src={xmast8.src} className=" h-[350px]" alt="Poster 1" />
+              </div>
 
-          <div>
-            <img src={p3.src} className=" h-[350px]" alt="Poster 2" />
+              <div>
+                <img src={xmast4.src} className=" h-[350px]" alt="Poster 2" />
+              </div>
+            </Carousel>
           </div>
-          
-        </Carousel>
-      </div>
-          <div className="container mx-auto p-4 text-3xl font-bold text-center">
-            {news.title}
+          <div className="flex items-center justify-center min-h-screen bg-gray-100">
+            <div className="w-5/6 bg-white p-8 shadow-lg">
+              <div className="text-3xl font-bold text-center mb-4">
+                {news.title}
+              </div>
+              <div
+                className="text-sm text-gray-800"
+                dangerouslySetInnerHTML={{ __html: news.content }}
+              />
+            </div>
           </div>
-          <div
-            className="text-sm text-gray-800 container mx-auto p-4"
-            dangerouslySetInnerHTML={{ __html: news.content }}
-          />
         </div>
       </div>
 
