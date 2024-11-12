@@ -224,6 +224,8 @@ const ErrorModal = ({ error, setError, product }: any ) => {
               className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
               onClick={handleClose}
             >
+            {/* User Profile */}
+              {error == "EMPTY_EMAIL" && <p>Email không thể để trống!</p>}
               Hoàn tất
             </button>
           </div>
