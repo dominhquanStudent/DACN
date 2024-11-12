@@ -5,11 +5,16 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 import p3 from "@/public/img/Blog/p3.jpg";
-import p4 from "@/public/img/Blog/p4.jpg";
 import p12 from "@/public/img/Blog/p12.png";
-import p111 from "@/public/img/Blog/p111.png";
 import blog_cover1 from "@/public/img/Blog/blog_cover1.png";
 import blog_cover2 from "@/public/img/Blog/blog_cover2.png";
+import xmast8 from "@/public/img/Blog/xmast8.jpg";
+import xmast6 from "@/public/img/Blog/xmast6.jpg";
+import xmast7 from "@/public/img/Blog/xmast7.jpg";
+import xmast4 from "@/public/img/Blog/xmast4.jpg";
+import xmast5 from "@/public/img/Blog/xmast5.jpg";
+
+
 import Footer from "../../Component/Footer/Footer";
 import Link from "next/link";
 import axios from "@/api/axios";
@@ -142,18 +147,19 @@ function NewsPage() {
           interval={1000}
           transitionTime={500}
         >
+
           <div>
-            <img src={blog_cover1.src} className=" h-[350px]" alt="Poster 1" />
+            <img src={xmast6.src} className=" h-[350px]" alt="Poster 2" />
           </div>
           <div>
-            <img src={blog_cover2.src} className=" h-[350px]" alt="Poster 2" />
+            <img src={xmast7.src} className=" h-[350px]" alt="Poster 1" />
           </div>
           <div>
-            <img src={p12.src} className=" h-[350px]" alt="Poster 1" />
+            <img src={xmast8.src} className=" h-[350px]" alt="Poster 1" />
           </div>
 
           <div>
-            <img src={p3.src} className=" h-[350px]" alt="Poster 2" />
+            <img src={xmast4.src} className=" h-[350px]" alt="Poster 2" />
           </div>
           
         </Carousel>
@@ -207,7 +213,7 @@ function NewsPage() {
           {news.length === 0 ? (
             <p>No news posted yet.</p>
           ) : (
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {filteredNews.map((item, index) => (
                 <li
                   key={index}

@@ -28,7 +28,7 @@ function Product() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("/product/list");
+        const response = await axios.get("/product/admin/list");
         let fetchedProducts = response.data.products;
 
         // Apply stock filter first
@@ -238,7 +238,7 @@ function Product() {
                         loading="lazy"
                         src={product.image.url}
                         alt={product.name}
-                        className="h-16 rounded-full"
+                        className="h-12 w-12 rounded-full"
                       />
                     </td>
                     <td className="px-5 py-2 border-b border-gray-200  text-sm">

@@ -26,6 +26,7 @@ function Booking() {
   const [userName, setUserName] = useState("");
   const [phone, setPhone] = useState(""); // State for phone number
   const [address, setAddress] = useState(""); // State for address
+  const [userEmail, setUserEmail] = useState(""); // State
   const [petAge, setPetAge] = useState("");
   const [petGender, setPetGender] = useState("");
   const [weight, setWeight] = useState("");
@@ -67,6 +68,7 @@ function Booking() {
         userName: accountData?.userName || userName,
         phone: accountData?.phone || phone,
         address: accountData?.address || address,
+        userEmail: accountData?.email || userEmail,
         petAge,
         petGender,
         service,
@@ -219,6 +221,19 @@ function Booking() {
               placeholder="0123456789"
               className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] disabled:bg-gray-300"
               disabled={accountData?.userName ? true : false}
+            />
+          </div>
+          <div className="flex items-center space-x-8">
+            <label className="flex-1">
+              Email <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={accountData?.email || userEmail}
+              onChange={(e) => setUserEmail(e.target.value)}
+              placeholder="petcare@gmail.com"
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] disabled:bg-gray-300"
+              disabled={accountData?.email ? true : false}
             />
           </div>
           <div className="flex items-center space-x-8">

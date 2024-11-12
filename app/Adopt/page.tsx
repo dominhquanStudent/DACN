@@ -6,8 +6,15 @@ import Pet_Frame from "../Component/Adopt/Pet_Frame";
 import axios from "@/api/axios";
 import Paw from "@/public/img/Pet/paw.png";
 import NoticeModal from "./Notice";
+import LoadingModal from "@/app/Component/Loading";
 
 export default function Product_Main() {
+  //error and loading
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [loadWhat, setLoadWhat] = useState("");
+
   const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
@@ -90,8 +97,8 @@ export default function Product_Main() {
       }, 300);
     }
   };
-
-  return (
+  if (shownProducts.length===0) return  <LoadingModal isLoading={true} isComplete={false} setIsComplete={setIsComplete} loadWhat="LOADING_PET_INFO" />;
+  if (shownProducts.length!==0)return (
     <>
       <Header />
       <div className="flex flex-col font-montserrat">
@@ -264,4 +271,5 @@ export default function Product_Main() {
       <Footer />
     </>
   );
+  
 }

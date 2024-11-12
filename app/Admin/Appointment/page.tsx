@@ -107,7 +107,7 @@ function Appointment() {
   };
 
   const filteredAppointments = appointments.filter((appointment) => {
-    if (filter === "all") return !isPast(appointment.date);
+    if (filter === "all") return appointment.date;
     if (filter === "today") return isToday(appointment.date);
     if (filter === "week") return isThisWeek(appointment.date);
     if (filter === "month") return isThisMonth(appointment.date);

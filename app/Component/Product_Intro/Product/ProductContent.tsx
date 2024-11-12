@@ -1,3 +1,5 @@
+import Header from "@/app/Component/Header/Header";
+import Footer from "@/app/Component/Footer/Footer";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import axios from "@/api/axios";
@@ -6,9 +8,12 @@ import ErrorModal from "@/app/Component/Error";
 import "@/app/Component/CheckboxStyles.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faList, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-
+import LoadingModal from "@/app/Component/Loading";
 const ProductContent = () => {
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [loadWhat, setLoadWhat] = useState("");
   const searchParams = useSearchParams();
   const queryFilterMode = Number(searchParams.get("filterMode") ?? "0");
 
@@ -186,8 +191,9 @@ const ProductContent = () => {
     new Set(products.map((product) => product.category))
   ).sort((a, b) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b));
 
-  return (
+  if (products.length!==0)return (
     <>
+      <Header />
       <ErrorModal error={error} setError={setError} />
       <div className="flex mr-2">
         {/* FilterSide */}
@@ -320,8 +326,10 @@ const ProductContent = () => {
           )}
         </div>
       </div>
+      <Footer />
     </>
   );
+  if (products.length===0) return  <LoadingModal isLoading={true} isComplete={false} setIsComplete={setIsComplete} loadWhat="LOADING_PRODUCT" />;
 };
 
 export default ProductContent;

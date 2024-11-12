@@ -85,6 +85,7 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
         adoptDay: new Date(),
       };
       // Cái pet ko có user_id thì gửi cho ai
+      const response = await axios.put(`/pet/${petId}`, updatedData);
       // Revalidate the data
       mutate(`/pet/${petId}`);
       setIsLoading(false);
