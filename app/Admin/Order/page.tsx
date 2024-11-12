@@ -21,6 +21,8 @@ function formatDate(dateString: string): string {
 
 function Order() {
   const [orders, setOrders] = useState<any[]>([]);
+  const [filteredOrders, setFilteredOrders] = useState<any[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
   const Router = useRouter();
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
@@ -30,6 +32,7 @@ function Order() {
       try {
         const response = await axios.get("/order/list");
         setOrders(response.data.orders);
+        setFilteredOrders(response.data.orders);
       } catch (error) {
         console.error("Error fetching orders:", error);
       }
@@ -48,10 +51,10 @@ function Order() {
   // Calculate the orders to display on the current page
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
+  const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
 
   // Calculate total pages
-  const totalPages = Math.ceil(orders.length / ordersPerPage);
+  const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
 
   // Handle page change
   const handlePageChange = (pageNumber: any) => {
@@ -84,7 +87,17 @@ function Order() {
     }
     return pageNumbers;
   };
-  console.log(orders);
+
+  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const status = event.target.value;
+    setSelectedStatus(status);
+    if (status === "") {
+      setFilteredOrders(orders);
+    } else {
+      setFilteredOrders(orders.filter(order => order.order_status === status));
+    }
+    setCurrentPage(1); // Reset to first page after filtering
+  };
 
   return (
     <div className="flex flex-col w-full justify-center items-center">
@@ -98,6 +111,17 @@ function Order() {
             }
           >
             Quản lý đơn hàng
+          </div>
+          <div className="mb-4">
+            <label htmlFor="orderStatus" className="font-nunito text-lg font-bold">Lọc theo trạng thái: </label>
+            <select id="orderStatus" value={selectedStatus} onChange={handleStatusChange} className="ml-2">
+              <option value="">Tất cả</option>
+              <option value="Chờ thanh toán">Chờ thanh toán</option>
+              <option value="Chờ xử lý">Chờ xử lý</option>
+              <option value="Đã xử lý">Đã xử lý</option>
+              <option value="Đã hoàn thành">Đã hoàn thành</option>
+              <option value="Đã hủy">Đã hủy</option>
+            </select>
           </div>
           <table className="min-w-full leading-normal">
             <thead>
@@ -142,8 +166,8 @@ function Order() {
                       {formatDate(order.order_date)}
                     </td>
                     <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-  {new Intl.NumberFormat('vi-VN').format(order.total_price)}
-</td>
+                      {new Intl.NumberFormat('vi-VN').format(order.total_price)}
+                    </td>
                     <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                       {order.order_status}
                     </td>

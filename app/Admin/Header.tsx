@@ -35,14 +35,14 @@ function Header() {
     return (
         <div className='flex justify-between items-center w-full'>
             <Link href="/Admin/DashBoard" className='flex w-1/4'>
-                <img src="/img/Header/logo.png" alt="Logo" className="w-60 ml-8  " />
+                <img src="/img/Header/logo.png" alt="Logo" className="w-48 ml-8  " />
             </Link>
             <div className='flex w-1/4 justify-center'>
                 {/* Chưa làm avatar dynamic được */}
                 <img loading="lazy" src={avatar}
-                    alt="Avatar" className="w-12 h-12" />
-                <button onClick={handleLogout}>
-                    <img className="ml-4 w-7 h-7" src={Logout.src} alt="" />
+                    alt="Avatar" className="w-12 h-12 rounded-xl" />
+                <button onClick={handleLogout} >
+                    <img className="ml-4 w-7 h-7 " src={Logout.src} alt="" />
                 </button>
             </div>
         </div>
