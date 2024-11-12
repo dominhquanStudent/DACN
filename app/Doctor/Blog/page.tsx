@@ -4,8 +4,8 @@ import Header from "@/app/Admin/Header";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import {  faPlus } from "@fortawesome/free-solid-svg-icons";
-library.add(faPlus);
+import { faPlus, faFilter } from "@fortawesome/free-solid-svg-icons";
+library.add(faPlus, faFilter);
 
 import Footer from "../../Component/Footer/Footer";
 
@@ -95,61 +95,41 @@ function NewsPage() {
   return (
     <div className="container mx-auto p-4">
       <Header />
-      <div className="flex w-full h-full">
+      <div className="flex w-full h-full p-4">
         <Sidebar />
         <div className="container mx-auto">
-          <div className="flex w-full justify-start space-x-2 mt-4">
+          <div
+            className={
+              "flex font-nunito text-xl font-bold w-full justify-center mb-4"
+            }
+          >
+            Quản lý bài viết
+          </div>{" "}
+          <div className="flex w-full space-x-2 mt-4">
             <button
-              className="bg-blue-500 text-white font-bold py-2 px-4 rounded-full hover:bg-blue-700 transition duration-300 justify-self-start"
               onClick={handleAddButton}
+              className="bg-transparent border border-[#CCCCCC] text-black font-bold py-1 px-4 rounded-xl mb-2 hover:bg-blue-500 hover:border-blue-600 hover:text-white"
             >
-              <FontAwesomeIcon icon={faPlus} className="h-4 w-4" />
-              </button>
-          </div>
+              <FontAwesomeIcon icon={faPlus} className="" />
+            </button>
+            <div className="flex w-full mt-4 mb-4 justify-end">
+              <label className="text-lg font-nunito font-bold text-gray-400">
+                <FontAwesomeIcon icon={faFilter} className="" />
+              </label>
 
-          <div className="flex w-full justify-center space-x-2 mt-4">
-            <button
-              onClick={() => setFilter("all")}
-              className={`py-1 px-4 rounded-xl mb-2 font-bold ${
-                filter === "all"
-                  ? "bg-blue-500 text-white"
-                  : "bg-transparent border border-[#CCCCCC] text-black"
-              }`}
-            >
-              Tất cả
-            </button>
-            <button
-              onClick={() => setFilter("today")}
-              className={`py-1 px-4 rounded-xl mb-2 font-bold ${
-                filter === "today"
-                  ? "bg-blue-500 text-white"
-                  : "bg-transparent border border-[#CCCCCC] text-black"
-              }`}
-            >
-              Hôm nay
-            </button>
-            <button
-              onClick={() => setFilter("week")}
-              className={`py-1 px-4 rounded-xl mb-2 font-bold ${
-                filter === "week"
-                  ? "bg-blue-500 text-white"
-                  : "bg-transparent border border-[#CCCCCC] text-black"
-              }`}
-            >
-              Trong tuần
-            </button>
-            <button
-              onClick={() => setFilter("month")}
-              className={`py-1 px-4 rounded-xl mb-2 font-bold ${
-                filter === "month"
-                  ? "bg-blue-500 text-white"
-                  : "bg-transparent border border-[#CCCCCC] text-black"
-              }`}
-            >
-              Trong tháng
-            </button>
-          </div>
+              <select
+                className="border border-gray-300 rounded-md ml-2"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+              >
+                <option value="all">Tất cả</option>
+                <option value="today">Hôm nay</option>
 
+                <option value="week">Trong tuần</option>
+                <option value="month">Trong tháng</option>
+              </select>
+            </div>
+          </div>
           <div className="p-4 border rounded-md shadow-sm bg-white flex flex-row items-start space-x-4">
             <div className="flex w-full h-full justify-center">
               {news.length === 0 ? (

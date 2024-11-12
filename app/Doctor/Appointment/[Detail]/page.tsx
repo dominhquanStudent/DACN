@@ -6,7 +6,6 @@ import axios from "@/api/axios";
 import { useRouter } from "next/navigation";
 import Footer from "@/app/Component/Footer/Footer";
 
-
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, "0");
@@ -182,9 +181,11 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
                 <label className="text-sm font-bold mb-2" htmlFor="note">
                   Ghi chú
                 </label>
-                <div className="block w-full border border-gray-300 rounded-lg py-2 px-4 bg-gray-50">
-                  {data.note}
-                </div>
+                <textarea
+                  className="block w-full border border-gray-300 rounded-lg py-2 px-4 bg-gray-50 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="note"
+                  value={data.note}
+                />
               </div>
 
               <div className="w-full">
@@ -208,7 +209,10 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
                 Lời nhắn của bác sĩ
               </div>
               <div className="w-full px-3">
-                <label className="text-xs font-bold mb-2" htmlFor="doctorMessage">
+                <label
+                  className="text-xs font-bold mb-2"
+                  htmlFor="doctorMessage"
+                >
                   Lời nhắn
                 </label>
                 <textarea
@@ -222,7 +226,7 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
             </div>
           </form>
           <div className="flex items-center justify-center w-full space-x-4 mt-6">
-          <button
+            <button
               onClick={() => router.push("/Doctor/Appointment")}
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-3xl transition duration-300"
             >
@@ -244,9 +248,7 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
                 Lưu
               </button>
             )}
-
           </div>
-
         </div>
       </div>
       <Footer />
