@@ -31,7 +31,7 @@ function PetManagement() {
   useEffect(() => {
     const fetchPets = async () => {
       try {
-        const response = await axios.get("/pet/list");
+        const response = await axios.get("/pet/admin/list");
         setPets(response.data.pets);
       } catch (error) {
         console.error("Error fetching pets:", error);

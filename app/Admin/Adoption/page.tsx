@@ -31,7 +31,7 @@ function Adopt() {
   useEffect(() => {
     const fetchPets = async () => {
       try {
-        const response = await axios.get('/pet/list');
+        const response = await axios.get('/pet/admin/list');
         // Filter out pets with userName "anonymous"
         const filteredPets = response.data.pets.filter((pet: any) => (pet.userName !== 'anonymous' && pet.userName !== '' && pet.adoptStatus === 'Đang được yêu cầu'));
         setPets(filteredPets);

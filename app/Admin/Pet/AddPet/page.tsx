@@ -211,6 +211,7 @@ function PetAdd() {
                     <option value="">Select Species</option>
                     <option value="Chó">Chó</option>
                     <option value="Mèo">Mèo</option>
+                    <option value="Thỏ">Thỏ</option>
                   </select>
                 </div>
               </div>
