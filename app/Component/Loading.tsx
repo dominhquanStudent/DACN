@@ -64,8 +64,10 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             {loadWhat==""&& <p>Template loading!</p>}
             {loadWhat=="ORDERING"&& <p>Đang đặt hàng</p>}
             {loadWhat=="REBUY"&& <p>Đang add lại vào giỏ hàng</p>}
-           {loadWhat=="SEND_UPDATENEW_REQUEST"&& <p>Đã cập nhật thông tin bài viết!</p>}
-           {loadWhat=="SEND_RESCUE_REQUEST"&& <p>Đang gửi yêu cầu cứu hộ!</p>}
+            {loadWhat=="SEND_UPDATENEW_REQUEST"&& <p>Đã cập nhật thông tin bài viết!</p>}
+            {loadWhat=="SEND_RESCUE_REQUEST"&& <p>Đang gửi yêu cầu cứu hộ!</p>}
+            {loadWhat=="GET_ACCOUNT_DATA"&& <p>Đang tải thông tin của bạn</p>}
+
           </div>
         )}
         {isComplete && (

@@ -7,11 +7,11 @@ import ProductContent from "./ProductContent";
 export default function Product() {
   return (
     <>
-      <Header />
+      
       <Suspense fallback={<div>Loading...</div>}>
         <ProductContent />
       </Suspense>
-      <Footer />
+
     </>
   );
 }
