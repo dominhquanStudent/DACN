@@ -197,7 +197,7 @@ function PetManagement() {
                         loading="lazy"
                         src={pet.image.url}
                         alt={pet.name}
-                        className="h-16 rounded-full"
+                        className="h-16 w-16 rounded-full"
                       />
                     </td>
                     <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">

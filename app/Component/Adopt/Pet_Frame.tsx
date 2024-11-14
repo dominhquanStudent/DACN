@@ -15,7 +15,7 @@ export default function Pet_Frame({pet}:  {pet: any}){
 
             {/* Image */}
             {/* <img src={pet.image.url} alt="" className="mb-4"/> */}
-            <div className="w-[150px] h-[150px] bg-gray-300 rounded-md">
+            <div className="w-[200px] h-[200px] bg-gray-300 rounded-md">
                 <img src={pet.image.url} alt="" className="w-full h-full object-cover"/>
             </div>
 
@@ -40,9 +40,9 @@ export default function Pet_Frame({pet}:  {pet: any}){
                     </div>
                     <div className="flex space-x-4 justify-between">
                         <div className="font-bold">Nhận nuôi:</div> 
-                        <div className={
+                        <div className={ 
                             pet.adoptStatus === 'Chưa có chủ' 
-                                ? 'text-green-500' 
+                                ? 'text-green-500 ml-4' 
                                 : pet.adoptStatus === 'Đã có chủ' 
                                 ? 'text-red-500' 
                                 : 'text-yellow-500'
