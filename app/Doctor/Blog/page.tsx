@@ -93,14 +93,14 @@ function NewsPage() {
   };
   console.log(news);
   return (
-    <div className="container mx-auto p-4">
+    <div className="w-full container ">
       <Header />
-      <div className="flex w-full h-full p-4">
+      <div className="flex w-full h-full ">
         <Sidebar />
-        <div className="container mx-auto">
+        <div className="w-3/4 container mx-4">
           <div
             className={
-              "flex font-nunito text-xl font-bold w-full justify-center mb-4"
+              "flex font-nunito text-xl font-bold w-full justify-center"
             }
           >
             Quản lý bài viết

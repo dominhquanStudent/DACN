@@ -43,6 +43,9 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
     if(loadWhat=="SEND_UPDATE_PROFILE"){
       window.location.href = "/Admin/Profile";
     }
+    if(loadWhat=="SEND_UPDATE_PROFILE_DOCTOR"){
+      window.location.href = "/Doctor/Profile";
+    }
     
   };
 
@@ -88,7 +91,8 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             {loadWhat=="SEND_UPDATERESCUE_REQUEST"&& <p>Đã cập nhật thông tin yêu cầu cứu hộ!</p>}
             
             {loadWhat=="ACCEPT_ADOPTION_REQUEST"&& <p>Đã chấp nhận yêu cầu!</p>}
-            {loadWhat=="SEND_UPDATE_PROFILE"&& <p>Đã cập nhật thông tin thành công!</p>}
+            {loadWhat=="SEND_UPDATE_PROFILE"&& <p>Admin đã cập nhật thông tin thành công!</p>}
+            {loadWhat=="SEND_UPDATE_PROFILE_DOCTOR"&& <p>Bác sĩ đã cập nhật thông tin thành công!</p>}
             {loadWhat=="REBUY"&& <p>Đã add lại vào giỏ hàng</p>}
 
 
