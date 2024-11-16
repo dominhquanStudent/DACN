@@ -201,10 +201,8 @@ function SendRequest({ params }: { params: { Detail: string } }) {
       <ErrorModal error={error} setError={setError} />
       <LoadingModal isLoading={isLoading} isComplete={isComplete} setIsComplete={setIsComplete} loadWhat={loadWhat} />
       <div className="flex gap-4 p-4 bg-background-blue justify-center font-nunito">
-        <div className="relative left-28">
-          <div className="p-3">
-            <img src={logo.src} alt="Logo" className="w-60" />
-          </div>
+        <div className="relative left-28 p-6">
+
           <div className="p-3">
             <img src={logoname.src} alt="Logo" className="w-60" />
           </div>
@@ -268,6 +266,7 @@ function SendRequest({ params }: { params: { Detail: string } }) {
                   <div className="w-full px-3">
                     <label className="text-xs font-bold mb-2" htmlFor="method">
                       Chọn phương thực nhận thú cưng
+                      <span className="text-red-500"> *</span>
                     </label>
                     <select
                       id="method"
@@ -287,6 +286,8 @@ function SendRequest({ params }: { params: { Detail: string } }) {
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="arriveDay">
                   Chọn ngày nhận thú cưng
+                  <span className="text-red-500"> *</span>
+
                 </label>
                 <input
                   className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
@@ -301,6 +302,8 @@ function SendRequest({ params }: { params: { Detail: string } }) {
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="message">
                   Lời nhắn
+                  <span className="text-red-500"> *</span>
+
                 </label>
                 <textarea
                   className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
