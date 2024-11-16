@@ -150,11 +150,11 @@ export default function Product_Main() {
           <div className="text-center text-3xl font-semibold my-4 font-k2d">
             Tìm thú cưng
           </div>
-          <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 justify-center">
+          <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-8 justify-center ">
             <button
               onClick={() => setSpecies("")}
-              className={`transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full md:w-auto flex justify-center items-center p-2 space-x-3 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100 hover:bg-opacity-90 ${
-                species === "" ? "bg-indigo-500" : ""
+              className={`transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-yellow-500 duration-300 w-full md:w-auto flex justify-center items-center p-2 space-x-3 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100 hover:bg-opacity-90 ${
+                species === "" ? "bg-yellow-500" : ""
               }`}
             >
               <span className="font-montserrat">Tất cả</span>
@@ -162,8 +162,8 @@ export default function Product_Main() {
 
             <button
               onClick={() => setSpecies("Chó")}
-              className={`transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full md:w-auto flex justify-center items-center p-2 space-x-3 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100 hover:bg-opacity-90 ${
-                species === "Chó" ? "bg-indigo-500" : ""
+              className={`transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-yellow-500 duration-300 w-full md:w-auto flex justify-center items-center p-2 space-x-3 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100 hover:bg-opacity-90 ${
+                species === "Chó" ? "bg-yellow-500" : ""
               }`}
             >
               <span className="font-montserrat">Chó</span>
@@ -171,11 +171,19 @@ export default function Product_Main() {
 
             <button
               onClick={() => setSpecies("Mèo")}
-              className={`transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 w-full md:w-auto flex justify-center items-center p-2 space-x-3 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100 hover:bg-opacity-90 ${
-                species === "Mèo" ? "bg-indigo-500" : ""
+              className={`transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-yellow-500 duration-300 w-full md:w-auto flex justify-center items-center p-2 space-x-3 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100 hover:bg-opacity-90 ${
+                species === "Mèo" ? "bg-yellow-500" : ""
               }`}
             >
               <span className="font-montserrat">Mèo</span>
+            </button>
+            <button
+              onClick={() => setSpecies("Thỏ")}
+              className={`transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-yellow-500 duration-300 w-full md:w-auto flex justify-center items-center p-2 space-x-3 font-sans font-bold text-white rounded-full shadow-lg bg-cyan-700 shadow-cyan-100 hover:bg-opacity-90 ${
+                species === "Thỏ" ? "bg-yellow-500" : ""
+              }`}
+            >
+              <span className="font-montserrat">Thỏ</span>
             </button>
           </div>
 
