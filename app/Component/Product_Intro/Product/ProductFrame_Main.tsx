@@ -2,7 +2,7 @@ import { FaStar } from "react-icons/fa";
 import Foto from "@/public/img/Product_Main/foto.png";
 import { useRouter } from "next/navigation";
 import RenderStars from "@/app/Product_Info/[product_id]/renderStars";
-
+import OutOfStock from "@/public/img/Out-Of-Stock.png";
 const ProductCard = (props: any) => {
   const Router = useRouter();
   const handleChangeClick = (productId: any) => {
@@ -25,13 +25,18 @@ const ProductCard = (props: any) => {
       onClick={() => handleChangeClick(props.product._id)}
     >
       {/* Product Image */}
-      <div className="w-full h-36 flex justify-center items-center">
-        <img
-          src={props.product.image.url || Foto}
-          alt={props.product.name}
-          className="w-full h-full object-cover"
-        />
-      </div>
+      <div className="w-full h-36 flex justify-center items-start">
+          <img
+            src={props.product.image.url}
+            alt={props.product.name}
+            className={`w-full h-full object-cover ${props.product.stock === 0 ? 'grayscale' : ''}`}
+          />
+          {props.product.stock === 0 && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white font-bold">
+              <img src={OutOfStock.src} alt="Out of stock" />
+            </div>
+          )}
+        </div>
 
       {/* Product Info */}
       <div className="p-2 flex flex-col justify-between flex-grow">

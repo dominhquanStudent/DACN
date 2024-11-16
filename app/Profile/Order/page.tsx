@@ -67,8 +67,12 @@ function Page() {
     };
     const handleCancel = async (order: Order) => {
         const id = order._id;
+        setLoadWhat("CANCEL_ORDER");
         try {
+            setIsLoading(true);
             const response = await axios.put(`/order/${id}/cancel`);
+            setIsComplete(true);
+            setIsLoading(false);
         } catch (error) {
             console.error("Error rebuy orders:", error);
         }
@@ -144,7 +148,10 @@ function Page() {
         }
         return pageNumbers;
     };
-    return (
+    if(data.length===0) return (
+        <LoadingModal isLoading={true} isComplete={false} setIsComplete={setIsComplete} loadWhat="LOADING_ORDER" />
+    )
+   if(data.length!==0) return (
         <div className="flex flex-col w-full ">
             <LoadingModal
                 isLoading={isLoading}
@@ -201,24 +208,32 @@ function Page() {
                                     <div className='border border-[#C5C5CF] w-full '></div>
                                     <div className="flex justify-between py-2 w-full">
                                         <div className="flex items-center justify-center w-8/12">
-                                            {order.order_status === 'Đã hoàn thành' &&
+                                            {/* {order.order_status === 'Đã hoàn thành' &&
                                                 <div className="w-1/2 flex justify-center">
                                                     <button className="bg-[#FC0E0E] text-white font-nunito p-2 rounded-md w-1/2"
                                                         onClick={() => handleRefund(order)}>Trả hàng</button>
                                                 </div>
-                                            }
+                                            } */}
                                             {order.order_status === 'Chờ thanh toán' &&
                                                 <div className="w-1/2 flex justify-center">
-                                                    <button className="bg-[#FC0E0E] text-white font-nunito p-2 rounded-md w-1/2"
+                                                    <button className="bg-[#EDB24E] text-white font-nunito p-2 rounded-md w-1/2"
                                                         onClick={() => handlePayment(order)}>Thanh toán</button>
 
                                                 </div>
                                             }
+                                            {order.order_status !== 'Chờ thanh toán' &&
                                             <div className="w-1/2 flex justify-center">
                                                 <button className="bg-[#EDB24E] text-white font-nunito p-2 rounded-md w-1/2"
                                                     onClick={() => handleReBuy(order._id)}>Mua lại</button>
                                             </div>
+                                            }
                                             {order.order_status === 'Chờ xử lý' &&
+                                                <div className="w-1/2 flex justify-center">
+                                                    <button className="bg-[#FC0E0E] text-white font-nunito p-2 rounded-md w-1/2"
+                                                        onClick={() => handleCancel(order)}>Hủy đơn hàng</button>
+                                                </div>
+                                            }
+                                            {order.order_status === 'Chờ thanh toán' &&
                                                 <div className="w-1/2 flex justify-center">
                                                     <button className="bg-[#FC0E0E] text-white font-nunito p-2 rounded-md w-1/2"
                                                         onClick={() => handleCancel(order)}>Hủy đơn hàng</button>
