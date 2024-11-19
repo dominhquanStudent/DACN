@@ -5,6 +5,7 @@ import Header from "@/app/Admin/Header";
 import axios from "@/api/axios";
 import { useRouter } from "next/navigation";
 import Footer from "@/app/Component/Footer/Footer";
+import Select from 'react-select';
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -19,7 +20,11 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
   const [data, setData] = useState<any>({});
   const [isEditable, setIsEditable] = useState(false);
   const [showButton, setShowButton] = useState(false);
+  const [newServiceId, setNewServiceId] = useState('');
+  const [serviceOptions, setServiceOptions] = useState([]);
+  const [serviceDetails, setServiceDetails] = useState<any[]>([]);
   const router = useRouter();
+
   useEffect(() => {
     const fetchAppointmentData = async (id: any) => {
       try {
@@ -35,6 +40,42 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
     }
   }, [appointmentId]);
 
+  useEffect(() => {
+    const fetchServiceOptions = async () => {
+      try {
+        const response = await axios.get('/service/admin/list');
+        console.log(response.data);
+        const services = response.data.services.map((service: any) => ({
+          value: service._id,
+          label: service.name,
+        }));
+        setServiceOptions(services);
+      } catch (error) {
+        console.error("Error fetching service options:", error);
+      }
+    };
+    fetchServiceOptions();
+  }, []);
+
+  useEffect(() => {
+    const fetchServiceDetails = async () => {
+      try {
+        const serviceIds = data.service || [];
+        const serviceDetailsPromises = serviceIds.map((id: string) =>
+          axios.get(`/service/${id}`)
+        );
+        const serviceDetailsResponses = await Promise.all(serviceDetailsPromises);
+        const serviceDetailsData = serviceDetailsResponses.map(response => response.data.service);
+        setServiceDetails(serviceDetailsData);
+      } catch (error) {
+        console.error("Error fetching service details:", error);
+      }
+    };
+    if (data.service && data.service.length > 0) {
+      fetchServiceDetails();
+    }
+  }, [data.service]);
+
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -45,6 +86,21 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
       ...prevData,
       [id]: value,
     }));
+  };
+
+  const handleServiceChange = (selectedOption: any) => {
+    setNewServiceId(selectedOption.value);
+  };
+
+  const handleAddService = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (newServiceId.trim() !== '' && !data.service.includes(newServiceId)) {
+      setData((prevData: any) => ({
+        ...prevData,
+        service: [...prevData.service, newServiceId]
+      }));
+      setNewServiceId('');
+    }
   };
 
   const handleImage = (e: any) => {
@@ -77,6 +133,10 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
   const handleChangeClick = async () => {
     setIsEditable(true);
     setShowButton(true);
+  };
+
+  const calculateTotalPrice = () => {
+    return serviceDetails.reduce((total, service) => total + service.price, 0);
   };
 
   if (!data) {
@@ -151,14 +211,6 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
                   </div>
                 </div>
               </div>
-              <div className="w-full">
-                <label className="text-sm font-bold mb-2" htmlFor="service">
-                  Dịch vụ
-                </label>
-                <div className="block w-full border border-gray-300 rounded-lg py-2 px-4 bg-gray-50">
-                  {data.service}
-                </div>
-              </div>
               <div className="flex w-full space-x-4">
                 <div className="w-1/2">
                   <label className="text-sm font-bold mb-2" htmlFor="date">
@@ -185,6 +237,8 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
                   className="block w-full border border-gray-300 rounded-lg py-2 px-4 bg-gray-50 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="note"
                   value={data.note}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
                 />
               </div>
 
@@ -206,9 +260,51 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
                 </select>
               </div>
               <div className="font-nunito text-xl font-bold w-full">
-                Lời nhắn của bác sĩ
+                Dịch vụ khám bệnh
               </div>
               <div className="w-full px-3">
+                <label
+                  className="text-xs font-bold mb-2"
+                  htmlFor="doctorMessage"
+                >
+                  Dịch vụ
+                </label>
+                <Select
+                  options={serviceOptions}
+                  placeholder="Chọn dịch vụ"
+                  onChange={handleServiceChange}
+                  isDisabled={!isEditable}
+                  className="mt-2"
+                />
+                <button
+                  className="my-2 px-4 py-2 bg-blue-500 text-white rounded-lg"
+                  onClick={handleAddService}
+                  disabled={!isEditable}
+                >
+                  Thêm dịch vụ
+                </button>
+                {/* Chi tiết dịch vụ */}
+                <div className="flex flex-col space-y-4">
+                  {serviceDetails.map((service) => (
+                  <div
+                  key={service._id}
+                  className="flex flex-row justify-between items-center w-full p-4 border border-gray-200 rounded-lg shadow-sm bg-white hover:shadow-md transition-shadow"
+                  >
+                  <div className="font-semibold text-lg text-blue-600">{service.name}</div>
+                  <div className="text-gray-600">
+                    <span className="font-medium">Danh mục:</span> {service.category}
+                  </div>
+                  <div className="text-gray-600">
+                    <span className="font-medium">Giá:</span> {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(service.price)}
+                  </div>
+                  </div>
+                  ))}
+                </div>
+                <div className="mt-4 font-bold text-lg text-right">
+                  Tổng giá: {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(calculateTotalPrice())}
+                </div>
+              </div>
+              <div className="w-full">
                 <label
                   className="text-xs font-bold mb-2"
                   htmlFor="doctorMessage"
