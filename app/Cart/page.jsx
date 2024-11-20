@@ -12,6 +12,7 @@ import ErrorModal from "@/app/Component/Error";
 import { useRouter } from "next/navigation";
 import { sendNotifications } from "@/ultis/notificationUtils";
 import { mutate } from "swr";
+import getInfo from "@/hooks/getInfo";
 export default function Cart() {
   //Handle loading and complete
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function Cart() {
   const [error, setError] = useState(null);
   // Get account data
   const [accountData, setAccountData] = useState("");
+  const [order_address, setOrderAddress] = useState("");
   // Get account data upon access
   const jwt = getCookie("jwt");
 
@@ -43,8 +45,16 @@ export default function Cart() {
     const response = await axios.get(`/cart`);
     setCartData(response.data);
   };
+  const fetchOrderAddress = async () => {
+    const response = await getInfo();
+    if (response.address){
+      setOrderAddress(response.address)
+    }
+ ;
+  };
   useEffect(() => {
     fetchCartData();
+    fetchOrderAddress();
   }, []);
 
 
@@ -179,7 +189,8 @@ export default function Cart() {
       product_list: cartData.cart.product_list.filter(product => product.selected),
       payment_method: paymentMethod,
       voucher_id: voucherInfo._id,
-      total_price: totalPriceafterDiscount
+      total_price: totalPriceafterDiscount,
+      order_address: order_address,
     }
     //if order.product_list has product that its quantity is higher than stock then return
     for (let i = 0; i < order.product_list.length; i++) {
@@ -317,7 +328,7 @@ export default function Cart() {
   return (
     <>
       <Header />
-      <ErrorModal error={error} setError={setError} product={failedProducts}/>
+      <ErrorModal error={error} setError={setError} product={failedProducts} />
       <LoadingModal isLoading={isLoading} isComplete={isComplete} setIsComplete={setIsComplete} loadWhat={loadWhat} />
       <section className="relative z-10 after:contents-[''] after:absolute after:z-0 after:h-full xl:after:w-1/3 after:top-0 after:right-0 after:bg-gray-50 font-nunito">
         {/* Whole cart */}
@@ -374,7 +385,7 @@ export default function Cart() {
                 <p className="font-normal text-lg leading-8 text-black">
                   Hình thức thanh toán
                 </p>
-                <div className="mt-4">
+                <div className="mt-2">
                   <label className="block">
                     <input
                       type="radio"
@@ -386,7 +397,7 @@ export default function Cart() {
                     />
                     <span className="text-base">Thanh toán khi nhận hàng</span>
                   </label>
-                  <label className="mt-2 flex items-center">
+                  <label className="w-full mt-2 flex items-center">
                     <input
                       type="radio"
                       name="payment"
@@ -396,6 +407,19 @@ export default function Cart() {
                     />
                     <img src={ZaloPay.src} alt="ZaloPay" className="text-base w-12 h-12" />
                   </label>
+                </div>
+                <div className="w-full">
+                <p className="mt-2 font-normal text-lg leading-8 text-black">
+                  Địa chỉ giao hàng
+                </p>
+                <input
+                    type="text"
+                    name="order_address"
+                    className="w-full mt-2 mr-2 border border-gray-300 p-2 rounded-md"
+                    placeholder="Nhập địa chỉ giao hàng"
+                    value={order_address}
+                    onChange={(e) => setOrderAddress(e.target.value)}
+                  />
                 </div>
               </div>
               {/* Discount Coupon */}

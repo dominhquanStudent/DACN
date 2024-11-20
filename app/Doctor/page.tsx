@@ -5,7 +5,7 @@ function DashBoard() {
     const router = useRouter();
     useEffect(() => {
       router.replace('/Doctor/DashBoard');
-    }, []);
+    }, [router]);
     return <></>
 }
 
