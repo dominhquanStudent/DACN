@@ -1,46 +1,101 @@
 import axios from 'axios';
-import { getCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 
-// Create an Axios instance
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-  //baseURL:'https://petcare-be-lilac.vercel.app',
-  withCredentials: true, // Ensure all requests include credentials
+  withCredentials: true,
 });
 
-// Add a request interceptor to include the JWT token in the Authorization header
+// Flag to prevent multiple refresh token requests
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
+const refreshToken = async () => {
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh`, {}, {
+      withCredentials: true
+    });
+    const newToken = response.data.jwt;
+    if (newToken) {
+      deleteCookie("jwt");
+      setCookie("jwt", response.data.jwt, { maxAge: 60 * 60 * 24 });
+    }
+    return newToken;
+  } catch (error) {
+    return null;
+  }
+};
+
 axiosInstance.interceptors.request.use(
   (config) => {
-    // Get the JWT token from cookies
     const token = getCookie('jwt');
     if (token) {
-      // Set the Authorization header with the JWT token
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
   (error) => {
-    // Handle the error
     return Promise.reject(error);
   }
 );
 
-// Add a response interceptor
 axiosInstance.interceptors.response.use(
-  (response) => {
-    // If the response is successful, just return the response
-    return response;
-  },
-  (error) => {
-    // If the response has an error
-    if (error.response && error.response.status === 401 ) {
-      // Redirect to the login page
-      if (typeof window !== 'undefined') {
-        axiosInstance.post('/auth/logout');
-        window.location.href = '/Login';
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        // Queue the request if refresh is in progress
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then(token => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            return axiosInstance(originalRequest);
+          })
+          .catch(err => Promise.reject(err));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        const newToken = await refreshToken();
+        if (newToken) {
+          processQueue(null, newToken);
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          return axiosInstance(originalRequest);
+        } else {
+          processQueue(new Error('Failed to refresh token'));
+          if (typeof window !== 'undefined') {
+            await axiosInstance.post('/auth/logout');
+            window.location.href = '/Login';
+          }
+          return Promise.reject(error);
+        }
+      } catch (refreshError) {
+        processQueue(refreshError);
+        if (typeof window !== 'undefined') {
+          await axiosInstance.post('/auth/logout');
+          window.location.href = '/Login';
+        }
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
-    // Return the error to be handled by the calling function
     return Promise.reject(error);
   }
 );

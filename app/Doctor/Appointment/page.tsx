@@ -81,8 +81,10 @@ function Appointment() {
       <Header />
       <div className="flex w-full h-full">
         <Sidebar />
-        <div className="w-full h-full relative">
-
+        <div className="w-3/4 h-full relative mt-4 mb-4">
+          <div className="flex font-nunito text-xl font-bold w-full justify-center">
+            Lịch hẹn khám bệnh
+          </div>
  
           <Calendar
             localizer={localizer}

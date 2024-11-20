@@ -6,6 +6,7 @@ import React, { useState, useEffect } from 'react';
 import axios from '@/api/axios';
 import { sendNotifications } from "@/ultis/notificationUtils";
 import LoadingModal from "@/app/Component/Loading";
+
 interface Product {
     product_id: number;
     product_name: string;
@@ -37,10 +38,12 @@ function Page() {
     const [isComplete, setIsComplete] = useState(false);
     const [loadWhat, setLoadWhat] = useState("");
     const [error, setError] = useState<string | null>(null);
-    const [sort, setSort] = useState('Tất cả')
+    const [sort, setSort] = useState('Tất cả');
+    const [fromDate, setFromDate] = useState('');
+    const [toDate, setToDate] = useState('');
     const handleSort = (e: any) => {
-        setSort(e)
-    }
+        setSort(e);
+    };
     const [data, setData] = useState<Order[]>([]);
     useEffect(() => {
         const fetchOrderData = async () => {
@@ -52,9 +55,8 @@ function Page() {
             }
         };
         fetchOrderData();
-    },);
+    }, []);
     const handleReBuy = async (id: string) => {
-            
         setLoadWhat("REBUY");
         try {
             setIsLoading(true);
@@ -67,15 +69,19 @@ function Page() {
     };
     const handleCancel = async (order: Order) => {
         const id = order._id;
+        setLoadWhat("CANCEL_ORDER");
         try {
+            setIsLoading(true);
             const response = await axios.put(`/order/${id}/cancel`);
+            setIsComplete(true);
+            setIsLoading(false);
         } catch (error) {
             console.error("Error rebuy orders:", error);
         }
     };
     const handleRefund = async (order: Order) => {
         try {
-
+            // Add refund logic here
         } catch (error) {
             console.error("Error refund orders:", error);
         }
@@ -86,7 +92,7 @@ function Page() {
                 order_id: order._id,
                 total_price: order.total_price,
                 payment_id: order.payment_id,
-            }
+            };
             console.log(order.payment_id);
             const payment = await axios.post("payment/ZALO", payment_data);
             if (payment.data.return_code === 1) {
@@ -116,10 +122,20 @@ function Page() {
     // Calculate the orders to display on the current page
     const indexOfLastOrder = currentPage * ordersPerPage;
     const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-    const currentOrders = data.filter(order => sort === 'Tất cả' || order.order_status === sort).slice(indexOfFirstOrder, indexOfLastOrder);
+    const filteredOrders = data.filter(order => {
+        const orderDate = new Date(order.order_date);
+        const from = fromDate ? new Date(fromDate) : null;
+        const to = toDate ? new Date(toDate) : null;
+        return (
+            (sort === 'Tất cả' || order.order_status === sort) &&
+            (!from || orderDate >= from) &&
+            (!to || orderDate <= to)
+        );
+    });
+    const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
 
     // Calculate total pages
-    const totalPages = Math.ceil(data.filter(order => sort === 'Tất cả' || order.order_status === sort).length / ordersPerPage);
+    const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
 
     // Handle page change
     const handlePageChange = (pageNumber: number) => {
@@ -144,7 +160,11 @@ function Page() {
         }
         return pageNumbers;
     };
-    return (
+
+    if (data.length === 0) return (
+        <LoadingModal isLoading={true} isComplete={false} setIsComplete={setIsComplete} loadWhat="LOADING_ORDER" />
+    );
+    if (data.length !== 0) return (
         <div className="flex flex-col w-full ">
             <LoadingModal
                 isLoading={isLoading}
@@ -156,9 +176,34 @@ function Page() {
             <div className="flex bg-[#DFF3FF] w-full " style={{ minHeight: '80vh' }}>
                 <ProfileNav />
                 {/* Right */}
+                
                 <div className="flex flex-col w-full bg-white py-4 px-12 my-8 mr-12 rounded-lg shadow-lg">
-                    <div className="mb-4 font-nunito font-bold text-2xl">Lịch sử đơn hàng</div>
-                    <div className="flex w-full items-center justify-around border border-slate-200 rounded-md shadow-xl font-k2d text-lg">
+                    
+                    <div className="font-nunito font-bold text-2xl">Lịch sử đơn hàng</div>
+                    <div className="flex w-full items-center justify-around mt-2">
+                        <div className="flex ">
+                            <label className="text-sm font-bold mb-2" htmlFor="fromDate">Từ ngày</label>
+                            <input
+                                type="date"
+                                id="fromDate"
+                                value={fromDate}
+                                onChange={(e) => setFromDate(e.target.value)}
+                                className="block w-full border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                            />
+                        </div>
+                        <div className="flex">
+                            <label className="text-sm font-bold mb-2" htmlFor="toDate">Tới ngày</label>
+                            <input
+                                type="date"
+                                id="toDate"
+                                value={toDate}
+                                onChange={(e) => setToDate(e.target.value)}
+                                className="block w-full border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="mt-2 flex w-full items-center justify-around border border-slate-200 rounded-md shadow-xl font-k2d text-lg">
                         <button className={`px-4 py-2 rounded w-full ${sort == "Tất cả" ? "text-[#EDB24E] font-bold" : ""}`}
                             onClick={() => handleSort("Tất cả")}>Tất cả</button>
                         <button className={`px-4 py-2 rounded w-full ${sort == "Chờ thanh toán" ? "text-[#EDB24E] font-bold" : ""}`}
@@ -172,9 +217,9 @@ function Page() {
                         <button className={`px-4 py-2 rounded w-full ${sort == "Đã hủy" ? "text-[#EDB24E] font-bold" : ""}`}
                             onClick={() => handleSort("Đã hủy")}>Đã hủy</button>
                     </div>
+
                     {
                         currentOrders
-                            .filter(order => sort === 'Tất cả' || order.order_status === sort)
                             .map((order, index) => (
                                 <div key={index} className="flex flex-col mt-4 py-2 border border-[#969090] rounded-md shadow-xl font-nunito w-full">
                                     <div className="flex justify-between items-center py-2 mx-16">
@@ -201,24 +246,25 @@ function Page() {
                                     <div className='border border-[#C5C5CF] w-full '></div>
                                     <div className="flex justify-between py-2 w-full">
                                         <div className="flex items-center justify-center w-8/12">
-                                            {order.order_status === 'Đã hoàn thành' &&
+                                            {order.order_status === 'Chờ thanh toán' &&
+                                                <div className="w-1/2 flex justify-center">
+                                                    <button className="bg-[#EDB24E] text-white font-nunito p-2 rounded-md w-1/2"
+                                                        onClick={() => handlePayment(order)}>Thanh toán</button>
+                                                </div>
+                                            }
+                                            {order.order_status !== 'Chờ thanh toán' &&
+                                                <div className="w-1/2 flex justify-center">
+                                                    <button className="bg-[#EDB24E] text-white font-nunito p-2 rounded-md w-1/2"
+                                                        onClick={() => handleReBuy(order._id)}>Mua lại</button>
+                                                </div>
+                                            }
+                                            {order.order_status === 'Chờ xử lý' &&
                                                 <div className="w-1/2 flex justify-center">
                                                     <button className="bg-[#FC0E0E] text-white font-nunito p-2 rounded-md w-1/2"
-                                                        onClick={() => handleRefund(order)}>Trả hàng</button>
+                                                        onClick={() => handleCancel(order)}>Hủy đơn hàng</button>
                                                 </div>
                                             }
                                             {order.order_status === 'Chờ thanh toán' &&
-                                                <div className="w-1/2 flex justify-center">
-                                                    <button className="bg-[#FC0E0E] text-white font-nunito p-2 rounded-md w-1/2"
-                                                        onClick={() => handlePayment(order)}>Thanh toán</button>
-
-                                                </div>
-                                            }
-                                            <div className="w-1/2 flex justify-center">
-                                                <button className="bg-[#EDB24E] text-white font-nunito p-2 rounded-md w-1/2"
-                                                    onClick={() => handleReBuy(order._id)}>Mua lại</button>
-                                            </div>
-                                            {order.order_status === 'Chờ xử lý' &&
                                                 <div className="w-1/2 flex justify-center">
                                                     <button className="bg-[#FC0E0E] text-white font-nunito p-2 rounded-md w-1/2"
                                                         onClick={() => handleCancel(order)}>Hủy đơn hàng</button>

@@ -4,11 +4,11 @@ import Link from "next/link";
 // Footer for large screens
 function FooterLarge() {
     return (
-        <div className="pl-32 grid grid-cols-4 gap-x-2 border-black mt-10 bg-footer-yellow">
-            <div className="col-span-1 w-[130%] flex justify-center items-center">
+        <div className="pl-16 grid grid-cols-4 gap-x-2 border-black mt-10 bg-footer-yellow">
+            <div className="col-span-1 w-[110%] flex justify-center items-center">
                 <img src={logo.src} alt="Logo" className="p-8" />
             </div>
-            <div className="pl-24 col-span-3 flex justify-around font-montserrat">
+            <div className="pl-8 col-span-3 flex justify-around font-montserrat">
                 <div className="flex flex-col mt-8">
                     <div className="font-bold mb-3">Về chúng tôi</div>
                     <Link href="/Product"><div className="hover:text-yellow-500">Sản phẩm</div></Link>
@@ -22,7 +22,7 @@ function FooterLarge() {
                     <div>Thứ 7: 8:00 - 18:00</div>
                     <div>Chủ Nhật: 8:00 - 12:00</div>
                 </div>
-                <div className="flex flex-col mt-8 mr-40 items-start">
+                <div className="flex flex-col mt-8 mr-16 items-start">
                     <div className="font-bold mb-3 text-center">Liên Hệ</div>
                     <div>bkpetcare@gmail.com</div>
                     <div>268 Lý Thường Kiệt, Phường 14, Quận 10, TP. HCM</div>
@@ -42,7 +42,7 @@ function FooterSmall() {
     return (
         <div className="p-5 flex flex-col gap-4 bg-footer-yellow">
             <div className="w-full flex justify-center">
-                <img src={logo.src} alt="Logo" className="w-96" />
+                <img src={logo.src} alt="Logo" className="w-72" />
             </div>
             <div className="font-montserrat">
                 <div className="font-bold mb-2">Về chúng tôi</div>
