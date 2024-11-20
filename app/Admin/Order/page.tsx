@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan, faFilter } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 
-library.add(faTrashCan, faPenToSquare);
+library.add(faTrashCan, faPenToSquare, faFilter);
 import Sidebar from "@/app/Admin/sidebar";
 import Header from "@/app/Admin/Header";
 import { useRouter } from "next/navigation";
@@ -113,7 +113,11 @@ function Order() {
             Quản lý đơn hàng
           </div>
           <div className="mb-4">
-            <label htmlFor="orderStatus" className="font-nunito text-lg font-bold">Lọc theo trạng thái: </label>
+          <label className='text-lg font-nunito font-bold text-gray-400'>
+              <FontAwesomeIcon icon={faFilter} className="h-5 w-5" />
+
+              </label>
+
             <select id="orderStatus" value={selectedStatus} onChange={handleStatusChange} className="ml-2">
               <option value="">Tất cả</option>
               <option value="Chờ thanh toán">Chờ thanh toán</option>

@@ -1,13 +1,13 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import Sidebar from '@/app/Admin/sidebar';
-import Header from '@/app/Admin/Header';
-import { useRouter } from 'next/navigation';
-import axios from '@/api/axios';
-import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.snow.css';
+"use client";
+import React, { useEffect, useState } from "react";
+import Sidebar from "@/app/Admin/sidebar";
+import Header from "@/app/Admin/Header";
+import { useRouter } from "next/navigation";
+import axios from "@/api/axios";
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
 
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 interface Notification {
   _id: string;
@@ -28,18 +28,18 @@ function NotificationPage() {
   const router = useRouter();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [users, setUsers] = useState<User[]>([]);
-  const [selectedUserId, setSelectedUserId] = useState('');
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [category, setCategory] = useState('');
-  const [mode, setMode] = useState<'input' | 'watch'>('input');
+  const [selectedUserId, setSelectedUserId] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [category, setCategory] = useState("");
+  const [mode, setMode] = useState<"input" | "watch">("input");
 
   const fetchNotifications = async (id: string) => {
     try {
       const response = await axios.get(`/notification/list/${id}`);
       setNotifications(response.data);
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      console.error("Error fetching notifications:", error);
     }
   };
 
@@ -47,11 +47,11 @@ function NotificationPage() {
     // Fetch user accounts from the API
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('/account/listUser');
+        const response = await axios.get("/account/listUser");
         console.log(response.data);
         setUsers(response.data);
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error("Error fetching users:", error);
       }
     };
 
@@ -61,7 +61,7 @@ function NotificationPage() {
   const handleSendNotification = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/notification/add', {
+      const response = await axios.post("/notification/add", {
         user_id: selectedUserId,
         Title: title,
         content: content,
@@ -69,54 +69,67 @@ function NotificationPage() {
         status: "Chưa đọc",
       });
       setNotifications([...notifications, response.data]);
-      setSelectedUserId('');
-      setTitle('');
-      setContent('');
-      setCategory('');
+      setSelectedUserId("");
+      setTitle("");
+      setContent("");
+      setCategory("");
     } catch (error) {
-      console.error('Error sending notification:', error);
+      console.error("Error sending notification:", error);
     }
   };
 
   const handleDeleteClick = async (id: string) => {
     try {
       await axios.delete(`/notification/${id}`);
-      setNotifications(notifications.filter(notification => notification._id !== id));
+      setNotifications(
+        notifications.filter((notification) => notification._id !== id)
+      );
     } catch (error) {
-      console.error('Error deleting notification:', error);
+      console.error("Error deleting notification:", error);
     }
   };
 
   return (
-    <div className='flex flex-col w-full justify-center items-center'>
+    <div className="flex flex-col w-full justify-center items-center">
       <Header />
-      <div className='flex w-full'>
+      <div className="flex w-full">
         <Sidebar />
-        <div className='w-3/4 border-l-2 border-gray-200 px-4'>
-          <div className={'flex font-nunito text-xl font-bold w-full justify-center mb-4'}>
+        <div className="w-3/4 border-l-2 border-gray-200 px-4">
+          <div
+            className={
+              "flex font-nunito text-xl font-bold w-full justify-center mb-4"
+            }
+          >
             Thông báo người dùng
           </div>
           <div className="flex justify-center mb-4">
             <button
-              onClick={() => setMode('input')}
-              className={`mr-2 p-2 rounded ${mode === 'input' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+              onClick={() => setMode("input")}
+              className={`mr-2 p-2 rounded ${
+                mode === "input" ? "bg-blue-500 text-white" : "bg-gray-200"
+              }`}
             >
               Gửi thông báo
             </button>
             <button
-              onClick={() => setMode('watch')}
-              className={`p-2 rounded ${mode === 'watch' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+              onClick={() => setMode("watch")}
+              className={`p-2 rounded ${
+                mode === "watch" ? "bg-blue-500 text-white" : "bg-gray-200"
+              }`}
             >
               Xem thông báo
             </button>
           </div>
-          {mode === 'input' ? (
+          {mode === "input" ? (
             <form onSubmit={handleSendNotification} className="mb-4">
               <div className="mb-2">
                 <label className="block text-gray-700">Người dùng</label>
                 <select
                   value={selectedUserId}
-                  onChange={(e) => { setSelectedUserId(e.target.value); fetchNotifications(e.target.value); }}
+                  onChange={(e) => {
+                    setSelectedUserId(e.target.value);
+                    fetchNotifications(e.target.value);
+                  }}
                   className="w-full p-2 border border-gray-300 rounded"
                   required
                 >
@@ -154,17 +167,25 @@ function NotificationPage() {
               </div>
               <div className="mb-2">
                 <label className="block text-gray-700">Nội dung</label>
-                <div style={{ height: '300px' }} className="w-full p-2 border border-gray-300 rounded">
+                <div
+                  style={{ height: "300px" }}
+                  className="w-full p-2 border border-gray-300 rounded"
+                >
                   <ReactQuill
                     value={content}
                     onChange={setContent}
-                    style={{ height: '85%' }}
+                    style={{ height: "85%" }}
                   />
                 </div>
               </div>
-              <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-                Gửi thông báo
-              </button>
+              <div className="flex justify-center">
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white p-2 rounded"
+                >
+                  Gửi thông báo
+                </button>
+              </div>
             </form>
           ) : (
             <div className="w-full">
@@ -172,7 +193,10 @@ function NotificationPage() {
                 <label className="block text-gray-700">Người dùng</label>
                 <select
                   value={selectedUserId}
-                  onChange={(e) => { setSelectedUserId(e.target.value); fetchNotifications(e.target.value); }}
+                  onChange={(e) => {
+                    setSelectedUserId(e.target.value);
+                    fetchNotifications(e.target.value);
+                  }}
                   className="w-full p-2 border border-gray-300 rounded"
                   required
                 >
@@ -185,10 +209,20 @@ function NotificationPage() {
                 </select>
               </div>
               {notifications.map((notification) => (
-                <div key={notification._id} className="border border-gray-300 p-4 mb-2 rounded">
-                  <h2 className="text-xl font-semibold mb-2">{notification.Title}</h2>
-                  <div className="text-gray-700" dangerouslySetInnerHTML={{ __html: notification.content }} />
-                  <p className="text-sm text-gray-500 mt-2">Phân loại {notification.category}</p>
+                <div
+                  key={notification._id}
+                  className="border border-gray-300 p-4 mb-2 rounded"
+                >
+                  <h2 className="text-xl font-semibold mb-2">
+                    {notification.Title}
+                  </h2>
+                  <div
+                    className="text-gray-700"
+                    dangerouslySetInnerHTML={{ __html: notification.content }}
+                  />
+                  <p className="text-sm text-gray-500 mt-2">
+                    Phân loại {notification.category}
+                  </p>
                   <button
                     onClick={() => handleDeleteClick(notification._id)}
                     className="bg-red-500 text-white p-2 rounded mt-2"
