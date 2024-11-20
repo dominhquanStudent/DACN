@@ -27,7 +27,7 @@ function ServiceAdd() {
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("active");
   const [image, setImage] = useState({ public_id: "", url: "" });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -50,6 +50,7 @@ function ServiceAdd() {
       const response = await axios.post("/service/add", data);
       setIsLoading(false);
       setIsComplete(true);
+      router.push("/Admin/Service");
     } catch (error) {
       toast.error("Error saving service!");
       console.error("Error saving service:", error);
@@ -116,14 +117,16 @@ function ServiceAdd() {
                 <label className="text-xs font-bold mb-2" htmlFor="Category">
                   Phân loại
                 </label>
-                <input
+                <select
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="Category"
-                  type="text"
-                  placeholder="Nhập phân loại dịch vụ"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                />
+                >
+                  <option value="">Chọn phân loại dịch vụ</option>
+                  <option value="Sức khỏe">Kiểm tra sức khỏe</option>
+                  <option value="Spa">Spa và Glooming</option>
+                </select>
               </div>
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="ImageUpload">
@@ -160,14 +163,16 @@ function ServiceAdd() {
                 <label className="text-xs font-bold mb-2" htmlFor="Status">
                   Trạng thái
                 </label>
-                <input
+                <select
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="Status"
-                  type="text"
-                  placeholder="Nhập trạng thái dịch vụ"
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
-                />
+                >
+                  <option value="">Chọn trạng thái dịch vụ</option>
+                  <option value="active">Hoạt động</option>
+                  <option value="inactive">Không hoạt động</option>
+                </select>
               </div>
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="Description">

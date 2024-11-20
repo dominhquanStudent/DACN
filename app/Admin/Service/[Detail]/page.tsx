@@ -188,15 +188,20 @@ function ServiceDetail({ params }: { params: { Detail: string } }) {
                 <label className="text-xs font-bold mb-2" htmlFor="category">
                   Phân loại
                 </label>
-                <input
+
+                <select
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="category"
-                  type="text"
                   value={data.category}
                   onChange={handleInputChange}
                   disabled={!isEditable}
-                />
+                >
+                  <option value="">Chọn phân loại dịch vụ</option>
+                  <option value="Sức khỏe">Kiểm tra sức khỏe</option>
+                  <option value="Spa">Spa và Glooming</option>
+                </select>
               </div>
+
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="image">
                   Hình ảnh

@@ -98,7 +98,7 @@ function Service() {
   };
 
   const [currentPage, setCurrentPage] = useState(1);
-  const servicesPerPage = 6;
+  const servicesPerPage = 10;
 
   // Calculate the services to display on the current page
   const indexOfLastService = currentPage * servicesPerPage;
@@ -176,13 +176,8 @@ function Service() {
               >
                 <option value="all">Phân loại</option>
                 <option value="all">Tất cả</option>
-                <option value="Thức ăn thú cưng">Thức ăn thú cưng</option>
-                <option value="Quần áo & Phụ kiện">Quần áo & Phụ kiện</option>
-                <option value="Đồ chơi cho thú cưng">Đồ chơi cho thú cưng</option>
-                <option value="Đồ dùng tắm gội">Đồ dùng tắm gội</option>
-                <option value="Đồ dùng vệ sinh">Đồ dùng vệ sinh</option>
-                <option value="Nhà thú cưng">Nhà thú cưng</option>
-                <option value="Đồ dùng thú y">Đồ dùng thú y</option>
+                <option value="active">Đang hoạt động</option>
+                <option value="inactive">Không hoạt động</option>
               </select>
               <select
                 className="border border-gray-300 rounded-md ml-2"
@@ -191,17 +186,17 @@ function Service() {
               >
                 <option value="all">Trạng thái</option>
                 <option value="all">Tất cả</option>
-                <option value="available">Đang còn hàng</option>
-                <option value="out_of_stock">Đã hết hàng</option>
+                <option value="available">Hoạt động</option>
+                <option value="out_of_stock">Không có</option>
               </select>
             </div>
           </div>
           <table className="min-w-full leading-normal">
             <thead>
               <tr>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                {/* <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Hình ảnh
-                </th>
+                </th> */}
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Tên
                 </th>
@@ -223,14 +218,14 @@ function Service() {
               {Array.isArray(currentServices) &&
                 currentServices.map((service: any) => (
                   <tr key={service._id} className={"bg-white"}>
-                    <td className="px-5 py-2 border-b border-gray-200  text-sm">
+                    {/* <td className="px-5 py-2 border-b border-gray-200  text-sm">
                       <img
                         loading="lazy"
                         src={service.image.url}
                         alt={service.name}
                         className="h-12 w-12 rounded-full"
                       />
-                    </td>
+                    </td> */}
                     <td className="px-5 py-2 border-b border-gray-200  text-sm">
                       {service.name}
                     </td>
@@ -243,8 +238,8 @@ function Service() {
                       }`}
                     >
                       {service.status === "active"
-                        ? "Đang còn hàng"
-                        : "Đã hết hàng"}
+                        ? "Hoạt động"
+                        : "Không có"}
                     </td>
                     <td className="px-5 py-2 border-b border-gray-200  text-sm">
                       <button
