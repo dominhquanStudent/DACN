@@ -58,7 +58,7 @@ function AdoptDetail({ params }: { params: { Detail: string } }) {
     if (jtw) {
       fetchData();
     }
-  }, [petId]);
+  }, [petId, jtw]);
 
 
   const handleImage = (e: any) => {

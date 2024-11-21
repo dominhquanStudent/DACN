@@ -17,87 +17,99 @@ import Header from "@/app/Admin/Header";
 import { useRouter } from "next/navigation";
 import axios from "@/api/axios";
 
-function Product() {
-  const [products, setProducts] = useState<any[]>([]);
+interface Service {
+  name: String;
+  category: String;
+  price: Number;
+  description: String;
+  status: String;
+  image: {
+    public_id: [String];
+    url: [String];
+  };
+}
+
+function Service() {
+  const [services, setServices] = useState<any[]>([]);
   const [filter, setFilter] = useState("all");
-  const [stockFilter, setStockFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const Router = useRouter();
-  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
+  const [selectedService, setSelectedService] = useState<any | null>(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchServices = async () => {
       try {
         const response = await axios.get("/service/admin/list");
-        let fetchedProducts = response.data.products;
+        let fetchedServices = response.data.services;
 
-        // Apply stock filter first
-        if (stockFilter !== "all") {
-          fetchedProducts = fetchedProducts.filter((product: any) =>
-            stockFilter === "available"
-              ? product.status === "active"
-              : product.status !== "active"
+        // Apply status filter first
+        if (statusFilter !== "all") {
+          fetchedServices = fetchedServices.filter((service: any) =>
+            statusFilter === "available"
+              ? service.status === "active"
+              : service.status !== "active"
           );
         }
 
         // Apply category filter next
         if (filter !== "all") {
-          fetchedProducts = fetchedProducts.filter(
-            (product: any) => product.category === filter
+          fetchedServices = fetchedServices.filter(
+            (service: any) => service.category === filter
           );
         }
 
-        setProducts(fetchedProducts);
+        setServices(fetchedServices);
       } catch (error) {
         console.error("Error fetching services:", error);
       }
     };
-    fetchProducts();
-  }, [filter, stockFilter]);
+    fetchServices();
+  }, [filter, statusFilter]);
 
   const handleChangeClick = (serviceId: any) => {
-    console.log(`Details for product ${serviceId}`);
+    console.log(`Details for service ${serviceId}`);
     Router.push(`/Admin/Service/${serviceId}`);
   };
 
-  const handleDeleteClick = (product: any) => {
-    setSelectedProduct(product);
+  const handleDeleteClick = (service: any) => {
+    setSelectedService(service);
     setIsConfirmModalOpen(true);
   };
 
   const handleConfirmDelete = async () => {
-    if (selectedProduct) {
+    if (selectedService) {
       try {
-        await axios.delete(`/product/${selectedProduct._id}`);
-        const newProducts = products.filter(
-          (product) => product._id !== selectedProduct._id
+        await axios.delete(`/service/${selectedService._id}`);
+        const newServices = services.filter(
+          (service) => service._id !== selectedService._id
         );
-        setProducts(newProducts);
+        setServices(newServices);
         setIsConfirmModalOpen(false);
       } catch (error) {
-        console.error("Error deleting product:", error);
+        console.error("Error deleting service:", error);
       }
     }
   };
 
   const handleAddClick = () => {
-    console.log(`Add for order`);
+    console.log(`Add for service`);
     Router.push("/Admin/Service/AddService");
   };
 
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 6;
+  const servicesPerPage = 10;
 
-  // Calculate the products to display on the current page
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
+  // Calculate the services to display on the current page
+  const indexOfLastService = currentPage * servicesPerPage;
+  const indexOfFirstService = indexOfLastService - servicesPerPage;
+  const currentServices = services.slice(
+    indexOfFirstService,
+    indexOfLastService
   );
 
   // Calculate total pages
-  const totalPages = Math.ceil(products.length / productsPerPage);
+  const totalPages = Math.ceil(services.length / servicesPerPage);
 
   // Handle page change
   const handlePageChange = (pageNumber: any) => {
@@ -142,7 +154,7 @@ function Product() {
               "flex font-nunito text-xl font-bold w-full justify-center mb-4"
             }
           >
-            Quản lý sản phẩm
+            Quản lý dịch vụ
           </div>
           {/* Table */}
           <div className="flex w-full space-x-2 mt-4">
@@ -164,41 +176,30 @@ function Product() {
               >
                 <option value="all">Phân loại</option>
                 <option value="all">Tất cả</option>
-
-
-                <option value="Thức ăn thú cưng">Thức ăn thú cưng</option>
-                <option value="Quần áo & Phụ kiện">Quần áo & Phụ kiện</option>
-                <option value="Đồ chơi cho thú cưng">
-                  Đồ chơi cho thú cưng
-                </option>
-                <option value="Đồ dùng tắm gội">Đồ dùng tắm gội</option>
-                <option value="Đồ dùng vệ sinh">Đồ dùng vệ sinh</option>
-                <option value="Nhà thú cưng">Nhà thú cưng</option>
-                <option value="Đồ dùng thú y">Đồ dùng thú y</option>
+                <option value="active">Đang hoạt động</option>
+                <option value="inactive">Không hoạt động</option>
               </select>
               <select
                 className="border border-gray-300 rounded-md ml-2"
-                value={stockFilter}
-                onChange={(e) => setStockFilter(e.target.value)}
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
               >
                 <option value="all">Trạng thái</option>
                 <option value="all">Tất cả</option>
-                <option value="available">Đang còn hàng</option>
-                <option value="out_of_stock">Đã hết hàng</option>
+                <option value="available">Hoạt động</option>
+                <option value="out_of_stock">Không có</option>
               </select>
-
             </div>
           </div>
           <table className="min-w-full leading-normal">
             <thead>
               <tr>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                {/* <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Hình ảnh
-                </th>
+                </th> */}
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Tên
                 </th>
-                
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Giá tiền (VNĐ)
                 </th>
@@ -208,58 +209,41 @@ function Product() {
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Chi tiết
                 </th>
-                <th
-                  className="px-5 
-                
-                
-                py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
-                >
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Xóa
                 </th>
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(currentProducts) &&
-                currentProducts.map((product: any) => (
-                  <tr key={product._id} className={"bg-white"}>
-                    <td className="px-5 py-2 border-b border-gray-200  text-sm">
+              {Array.isArray(currentServices) &&
+                currentServices.map((service: any) => (
+                  <tr key={service._id} className={"bg-white"}>
+                    {/* <td className="px-5 py-2 border-b border-gray-200  text-sm">
                       <img
                         loading="lazy"
-                        src={product.image.url}
-                        alt={product.name}
+                        src={service.image.url}
+                        alt={service.name}
                         className="h-12 w-12 rounded-full"
                       />
+                    </td> */}
+                    <td className="px-5 py-2 border-b border-gray-200  text-sm">
+                      {service.name}
                     </td>
                     <td className="px-5 py-2 border-b border-gray-200  text-sm">
-                      {product.name}
-                    </td>
-                    <td className="px-5 py-2 border-b border-gray-200  text-sm">
-                      {product.brand}
-                    </td>
-                    <td className={`px-5 py-2 border-b border-gray-200  text-sm ${product.stock===0 ? "text-red-500" : ""}`}>
-                      {product.stock}
-                    </td>
-                    <td className="px-5 py-2 border-b border-gray-200  text-sm">
-                      {product.category}
-                    </td>
-                    <td className="px-5 py-2 border-b border-gray-200  text-sm">
-                      {new Intl.NumberFormat("vi-VN").format(product.price)}
-                    </td>
-                    <td className="px-5 py-2 border-b border-gray-200  text-sm">
-                      {product.discount}%
+                      {new Intl.NumberFormat("vi-VN").format(service.price)}
                     </td>
                     <td
                       className={`px-5 py-2 border-b border-gray-200 text-sm ${
-                        product.status !== "active" ? "text-red-500" : ""
+                        service.status !== "active" ? "text-red-500" : ""
                       }`}
                     >
-                      {product.status === "active"
-                        ? "Đang còn hàng"
-                        : "Đã hết hàng"}
+                      {service.status === "active"
+                        ? "Hoạt động"
+                        : "Không có"}
                     </td>
                     <td className="px-5 py-2 border-b border-gray-200  text-sm">
                       <button
-                        onClick={() => handleChangeClick(product._id)}
+                        onClick={() => handleChangeClick(service._id)}
                         className="text-blue-500 hover:text-blue-700"
                       >
                         <FontAwesomeIcon icon={faPenToSquare} />
@@ -267,7 +251,7 @@ function Product() {
                     </td>
                     <td className="px-5 py-2 border-b border-gray-200  text-sm">
                       <button
-                        onClick={() => handleDeleteClick(product)}
+                        onClick={() => handleDeleteClick(service)}
                         className="text-red-500 hover:text-red-700"
                       >
                         <FontAwesomeIcon icon={faTrashCan} />
@@ -281,7 +265,7 @@ function Product() {
             isOpen={isConfirmModalOpen}
             onClose={() => setIsConfirmModalOpen(false)}
             onConfirm={handleConfirmDelete}
-            message={`Bạn có muốn xóa sản phẩm ${selectedProduct?.name} không?`}
+            message={`Bạn có muốn xóa dịch vụ ${selectedService?.name} không?`}
           />
           <div className="pagination flex justify-center">
             <button
@@ -335,4 +319,4 @@ function Product() {
   );
 }
 
-export default Product;
+export default Service;

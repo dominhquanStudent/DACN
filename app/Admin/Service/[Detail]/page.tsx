@@ -9,9 +9,28 @@ import { useRouter } from "next/navigation";
 import ErrorModal from "@/app/Component/Error";
 import LoadingModal from "@/app/Component/Loading";
 
-function ProductDetail({ params }: { params: { Detail: string } }) {
-  const productId = params.Detail;
-  const [data, setData] = useState<any>({});
+interface Service {
+  name: string;
+  category: string;
+  price: number;
+  description: string;
+  status: string;
+  image: {
+    public_id: [string];
+    url: [string];
+  };
+}
+
+function ServiceDetail({ params }: { params: { Detail: string } }) {
+  const serviceId = params.Detail;
+  const [data, setData] = useState<Service>({
+    name: "",
+    category: "",
+    price: 0,
+    description: "",
+    status: "",
+    image: { public_id: [""], url: [""] },
+  });
   const [price, setPrice] = useState("");
   const [isEditable, setIsEditable] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,20 +41,20 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchProductData = async (id: any) => {
+    const fetchServiceData = async (id: any) => {
       try {
-        const response = await axios.get(`/product/${productId}`);
-        const productData = response.data;
-        setData(productData.product);
-        setPrice(productData.product.price.toString());
+        const response = await axios.get(`/service/${serviceId}`);
+        const serviceData = response.data;
+        setData(serviceData.service);
+        setPrice(serviceData.service.price.toString());
       } catch (error) {
-        console.error("Error fetching product data:", error);
+        console.error("Error fetching service data:", error);
       }
     };
-    if (productId) {
-      fetchProductData(productId);
+    if (serviceId) {
+      fetchServiceData(serviceId);
     }
-  }, [productId]);
+  }, [serviceId]);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -43,7 +62,7 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
     >
   ) => {
     const { id, value } = e.target;
-    setData((prevData: any) => ({
+    setData((prevData) => ({
       ...prevData,
       [id]: value,
     }));
@@ -65,9 +84,9 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
     const { value } = e.target;
     const numberValue = value.replace(/\D/g, ""); // Remove non-numeric characters
     setPrice(numberValue);
-    setData((prevData: any) => ({
+    setData((prevData) => ({
       ...prevData,
-      price: numberValue,
+      price: Number(numberValue),
     }));
   };
 
@@ -75,65 +94,50 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      setData({
-        ...data,
-        image: { public_id: "null", url: reader.result as string },
-      });
+      setData((prevData) => ({
+        ...prevData,
+        image: { public_id: ["null"], url: [reader.result as string] },
+      }));
     };
   };
 
   const handleSaveClick = async (e: any) => {
     e.preventDefault();
     if (!data.name) {
-      setError("LACK_PRODUCTNAME");
-      return;
-    }
-    if (!data.brand) {
-      setError("LACK_PRODUCTBRAND");
-      return;
-    }
-    if (!data.stock) {
-      setError("LACK_PRODUCTSTOCK");
+      setError("LACK_SERVICENAME");
       return;
     }
     if (!data.category) {
-      setError("LACK_PRODUCTCATEGORY");
+      setError("LACK_SERVICECATEGORY");
       return;
     }
     if (!data.price) {
-      setError("LACK_PRODUCTPRICE");
+      setError("LACK_SERVICEPRICE");
       return;
     }
     if (!data.status) {
-      setError("LACK_PRODUCTSTATUS");
-      return;
-    }
-    if (!data.discount) {
-      setError("LACK_PRODUCTDISCOUNT");
-      return;
-    }
-    if(Number(data.discount) < 0 || Number(data.discount) > 100){
-      setError("INVALID_PRODUCTDISCOUNT");
+      setError("LACK_SERVICESTATUS");
       return;
     }
     if (!data.description) {
-      setError("LACK_PRODUCTDESCRIPTION");
+      setError("LACK_SERVICEDESCRIPTION");
       return;
     }
-    if (!data.image.url) {
-      setError("LACK_PRODUCTIMAGE");
+    if (!data.image.url[0]) {
+      setError("LACK_SERVICEIMAGE");
       return;
     }
-    setLoadWhat("SEND_UPDATEPRODUCT_REQUEST");
+    setLoadWhat("SEND_UPDATESERVICE_REQUEST");
     setIsLoading(true);
 
     try {
-      const response = await axios.put(`/product/${productId}`, data);
-      mutate(`/product/${productId}`);
+      const response = await axios.put(`/service/${serviceId}`, data);
+      mutate(`/service/${serviceId}`);
       setIsLoading(false);
       setIsComplete(true);
-      // router.push("/Admin/Product");
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error updating service:", error);
+    }
   };
 
   const handleChangeClick = async () => {
@@ -144,7 +148,6 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
   if (!data) {
     return <div>Loading...</div>;
   }
-  console.log(data);
 
   return (
     <div className="flex flex-col w-full justify-center items-center">
@@ -164,13 +167,13 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
               "flex font-nunito text-xl font-bold w-full justify-center"
             }
           >
-            Chi tiết sản phẩm
+            Chi tiết dịch vụ
           </div>
-          <form className="w-full mx-4" key={data._id}>
+          <form className="w-full mx-4" key={serviceId}>
             <div className="flex flex-wrap -mx-3 mb-6 space-y-2">
               <div className="w-full px-3 mb-6 md:mb-0">
                 <label className="text-xs font-bold mb-2" htmlFor="name">
-                  Tên sản phẩm
+                  Tên dịch vụ
                 </label>
                 <input
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
@@ -182,31 +185,23 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
                 />
               </div>
               <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="brand">
-                  Nhãn hiệu
+                <label className="text-xs font-bold mb-2" htmlFor="category">
+                  Phân loại
                 </label>
-                <input
+
+                <select
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="brand"
-                  type="text"
-                  value={data.brand}
+                  id="category"
+                  value={data.category}
                   onChange={handleInputChange}
                   disabled={!isEditable}
-                />
+                >
+                  <option value="">Chọn phân loại dịch vụ</option>
+                  <option value="Sức khỏe">Kiểm tra sức khỏe</option>
+                  <option value="Spa">Spa và Glooming</option>
+                </select>
               </div>
-              <div className="w-full px-3 mb-6 md:mb-0">
-                <label className="text-xs font-bold mb-2" htmlFor="discount">
-                  Giảm giá (%)
-                </label>
-                <input
-                  className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="discount"
-                  type="text"
-                  value={data.discount}
-                  onChange={handleInputChange}
-                  disabled={!isEditable}
-                />
-              </div>
+
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="image">
                   Hình ảnh
@@ -221,72 +216,34 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
                   disabled={!isEditable}
                 />
               </div>
-              <div className="flex w-full">
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="price">
-                    Giá sản phẩm (đ)
-                  </label>
-                  <input
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="price"
-                    type="text"
-                    value={formatCurrency(price)}
-                    onChange={handlePriceChange}
-                    disabled={!isEditable}
-                  />
-                </div>
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="quantity">
-                    Số lượng
-                  </label>
-                  <input
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="stock"
-                    type="text"
-                    value={data.stock}
-                    onChange={handleInputChange}
-                    disabled={!isEditable}
-                  />
-                </div>
+              <div className="w-full px-3">
+                <label className="text-xs font-bold mb-2" htmlFor="price">
+                  Giá dịch vụ (đ)
+                </label>
+                <input
+                  className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="price"
+                  type="text"
+                  value={formatCurrency(price)}
+                  onChange={handlePriceChange}
+                  disabled={!isEditable}
+                />
               </div>
-              <div className="flex w-full">
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="category">
-                    Phân loại
-                  </label>
-                  <select
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="category"
-                    value={data.category}
-                    onChange={handleInputChange}
-                    disabled={!isEditable}
-                  >
-                    <option value="">Chọn</option>
-                    <option value="Thức ăn thú cưng">Thức ăn thú cưng</option>
-                    <option value="Quần áo & Phụ kiện"> Quần áo & Phụ kiện</option>
-                    <option value="Đồ chơi cho thú cưng">Đồ chơi cho thú cưng</option>
-                    <option value="Đồ dùng tắm gội">Đồ dùng tắm gội</option>
-                    <option value="Đồ dùng vệ sinh">Đồ dùng vệ sinh</option>
-                    <option value="Nhà thú cưng">Nhà thú cưng</option>
-                    <option value="Đồ dùng thú y">Đồ dùng thú y</option>
-                  </select>
-                </div>
-                <div className="w-full px-3">
-                  <label className="text-xs font-bold mb-2" htmlFor="status">
-                    Trạng thái
-                  </label>
-                  <select
-                    className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
-                    id="status"
-                    value={data.status}
-                    onChange={handleInputChange}
-                    disabled={!isEditable}
-                  >
-                    <option value="">Chọn trạng thái</option>
-                    <option value="active">Đang còn hàng</option>
-                    <option value="inactive">Đã hết hàng</option>
-                  </select>
-                </div>
+              <div className="w-full px-3">
+                <label className="text-xs font-bold mb-2" htmlFor="status">
+                  Trạng thái
+                </label>
+                <select
+                  className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="status"
+                  value={data.status}
+                  onChange={handleInputChange}
+                  disabled={!isEditable}
+                >
+                  <option value="">Chọn trạng thái</option>
+                  <option value="active">Đang hoạt động</option>
+                  <option value="inactive">Không hoạt động</option>
+                </select>
               </div>
               <div className="w-full px-3">
                 <label className="text-xs font-bold mb-2" htmlFor="description">
@@ -295,7 +252,7 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
                 <textarea
                   className="block w-full h-24 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="description"
-                  placeholder="Nhập mô tả sản phẩm"
+                  placeholder="Nhập mô tả dịch vụ"
                   value={data.description}
                   onChange={handleInputChange}
                   disabled={!isEditable}
@@ -305,7 +262,7 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
           </form>
           <div className="flex items-center justify-center w-full space-x-4 mb-4">
             <button
-              onClick={() => router.push("/Admin/Product")}
+              onClick={() => router.push("/Admin/Service")}
               className="bg-red-500 hover:bg-red-300 text-white font-bold py-2 px-4 rounded-3xl"
             >
               Quay lại
@@ -333,4 +290,4 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
   );
 }
 
-export default ProductDetail;
+export default ServiceDetail;

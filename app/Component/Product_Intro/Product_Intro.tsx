@@ -35,7 +35,15 @@ export default function Product_Main() {
   const topRatedProducts = products
     .sort((a, b) => b.rating - a.rating)
     .slice(0, 5);
-
+  const topHouseProducts = products.filter((item) => item.category === 'Nhà thú cưng').
+  sort((a, b) => b.rating - a.rating)
+  .slice(0, 5);;
+  const topToyProducts = products.filter((item) => item.category === 'Đồ chơi cho thú cưng').
+  sort((a, b) => b.rating - a.rating)
+  .slice(0, 5);;
+  const topFoodProducts = products.filter((item) => item.category === 'Thức ăn thú cưng').
+  sort((a, b) => b.rating - a.rating)
+  .slice(0, 5);;
   return (
     <>
       <Header />
@@ -43,9 +51,63 @@ export default function Product_Main() {
         <img src={Welcome.src} alt="" className='border-b-[1px]' />
         {/* Featured Product */}
         <div className='mx-40'>
-          <div className='font-montserrat text-2xl font-semibold my-10'>Sản phẩm nổi bật</div>
+          <div className='font-montserrat text-2xl font-semibold my-4'>Sản phẩm nổi bật</div>
           <div className='flex space-x-4'>
             {topRatedProducts.map((item) => (
+              <Product_Frame
+                name={item.name}
+                brand={item.brand}
+                category={item.category}
+                price={item.price}
+                discount_price={item.discount_price}
+                image={item.image.url}
+                star={item.rating}
+                id={item._id}
+                key={item._id}
+              />
+            ))}
+          </div>
+        </div>
+        <div className='mx-40'>
+          <div className='font-montserrat text-2xl font-semibold my-4'>Nhà thú cưng hot</div>
+          <div className='flex space-x-4'>
+            {topHouseProducts.map((item) => (
+              <Product_Frame
+                name={item.name}
+                brand={item.brand}
+                category={item.category}
+                price={item.price}
+                discount_price={item.discount_price}
+                image={item.image.url}
+                star={item.rating}
+                id={item._id}
+                key={item._id}
+              />
+            ))}
+          </div>
+        </div>
+        <div className='mx-40'>
+          <div className='font-montserrat text-2xl font-semibold my-4'>Đồ chơi các bé khoái !</div>
+          <div className='flex space-x-4'>
+            {topToyProducts.map((item) => (
+              <Product_Frame
+                name={item.name}
+                brand={item.brand}
+                category={item.category}
+                price={item.price}
+                discount_price={item.discount_price}
+                image={item.image.url}
+                star={item.rating}
+                id={item._id}
+                key={item._id}
+              />
+            ))}
+          </div>
+        </div>
+        <div className='mx-40'>
+          <div className='font-montserrat text-2xl font-semibold my-4'>Đồ ăn bé khen ngon !</div>
+          <div className='flex space-x-4'>
+            {topFoodProducts.map((item) => (
               <Product_Frame
                 name={item.name}
                 brand={item.brand}
@@ -63,7 +125,7 @@ export default function Product_Main() {
 
         {/* Brand Available */}
         <div className='mx-40'>
-          <div className='font-montserrat text-2xl font-semibold my-10'>Nhãn hiệu hiện có</div>
+          <div className='font-montserrat text-2xl font-semibold my-4'>Nhãn hiệu chúng tôi có </div>
           <div className='flex space-x-4'>
             <img src={Brand1.src} alt="" />
             <img src={Brand2.src} alt="" />
