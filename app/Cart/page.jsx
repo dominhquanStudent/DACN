@@ -488,9 +488,9 @@ export default function Cart() {
                 {/* Purchase button */}
                 <div className="mt-4 border-t border-gray-300 pt-4">
                   <button
-                    className={`w-full p-2 rounded-md ${cartData.cart.product_list.length === 0 ? 'bg-gray-500' : 'bg-blue-500 text-white'}`}
+                    className={`w-full p-2 rounded-md ${totalPriceafterDiscount == 0 ? 'bg-gray-500' : 'bg-blue-500 text-white'}`}
                     onClick={handleOrder}
-                    disabled={cartData.cart.product_list.length === 0}
+                    disabled={totalPriceafterDiscount == 0}
                   >
                     Đặt hàng
                   </button>
