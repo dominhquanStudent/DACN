@@ -44,6 +44,10 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "USER_ALREADY_RATED" && (
               <p>Bạn đã đánh giá trước đó rồi</p>
             )}
+              {error == "ADDRESS_TOO_SHORT" && (
+              <p>Hãy nhập địa chỉ chi tiết hơn</p>
+            )}
+            
             {/* Product Filter Error */}
             {error == "INVALID_PRICE_RANGE" && (
               <p>Giá tối thiểu không thể lớn hơn giá tối đa</p>

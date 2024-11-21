@@ -118,7 +118,7 @@ function Page() {
                                     <input type="text" defaultValue={data.email ? data.email : ""} className="p-2 pl-4 font-nunito 
                                     rounded border border-gray-300 w-full text-lg"
                                         // onChange={e => setData({ ...data, email: e.target.value })} 
-                                        placeholder="Chưa có" />
+                                        placeholder="Chưa có" disabled />
                                 </div>
                                 <div className="flex items-center my-4">
                                     <div className="font-nunito w-1/4">Address</div>

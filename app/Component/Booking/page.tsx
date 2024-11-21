@@ -4,7 +4,7 @@ import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import Calendar from "react-calendar";
 import logo from "../../../public/img/Booking/petcare.png";
-import logoname from "../../../public/img/Booking/pc.jpg";
+import logoname from "../../../public/img/Logo2.svg";
 import Doggo1 from "../../../public/img/Greet page/Doggo1.png";
 import ErrorModal from "@/app/Component/Error";
 import LoadingModal from "@/app/Component/Loading";
@@ -178,23 +178,14 @@ function Booking() {
         loadWhat={loadWhat}
       />
 
-      <div className="flex gap-4 p-4 bg-background-blue">
-        <div className="relative left-28">
-          <div className="p-3">
-            <img src={logo.src} alt="Logo" className="w-60" />
+      <div className="flex gap-4 p-4 font-nunito bg-gradient-to-br from-[#3c8ce7] to-[#00eaff]">
+        <form className="bg-white rounded-lg shadow-md px-8 py-4 w-1/2 mx-auto">
+        <div className="flex flex-col items-center space-y-4">
+            <img src={logoname.src} alt="Logo" className="w-40 lg:w-60" />
+            <h2 className="text-xl lg:text-3xl text-center text-gray-800 font-bold">
+              Đặt lịch hẹn chăm sóc thú cưng
+            </h2>
           </div>
-          <div className="p-3">
-            <img src={logoname.src} alt="Logo" className="w-60" />
-          </div>
-          <h2 className="text-4xl text-center text-white font">Đặt lịch hẹn</h2>
-          <div className="p-3 mt-7 ">
-            <img src={Doggo1.src} alt="Doggo1" className="w-60" />
-          </div>
-        </div>
-        <form className="bg-white rounded-lg shadow-md p-8 w-1/2 mx-auto">
-          <h2 className="text-2xl font-bold mb-4 text-center">
-            Dịch vụ chăm sóc thú cưng
-          </h2>
           <h2 className="text-lg font-semibold mt-4 mb-4 ">Thông tin khách hàng</h2>
           <div className="flex items-center space-x-8">
             <label className="flex-1">
@@ -205,7 +196,7 @@ function Booking() {
               value={accountData?.userName || userName}
               onChange={(e) => setUserName(e.target.value)}
               placeholder="Nguyễn Văn A"
-              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] disabled:bg-gray-300"
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] "
               disabled={accountData?.userName ? true : false}
             />
           </div>
@@ -219,7 +210,7 @@ function Booking() {
               value={accountData?.phone || phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="0123456789"
-              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] disabled:bg-gray-300"
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] "
               disabled={accountData?.userName ? true : false}
             />
           </div>
@@ -232,7 +223,7 @@ function Booking() {
               value={accountData?.email || userEmail}
               onChange={(e) => setUserEmail(e.target.value)}
               placeholder="petcare@gmail.com"
-              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] disabled:bg-gray-300"
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] "
               disabled={accountData?.email ? true : false}
             />
           </div>
@@ -245,7 +236,7 @@ function Booking() {
               value={accountData?.address || address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder="247 Lý Thường Kiệt, Quận 10, TP.HCM"
-              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] disabled:bg-gray-300"
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] "
               disabled={accountData?.userName ? true : false}
             />
           </div>
@@ -267,7 +258,7 @@ function Booking() {
           <div className="flex items-center mt-4 space-x-8">
             <label className="flex-1">Giới tính <span className="text-red-500">*</span></label>
             <div className="flex flex-[4]">
-              <div className="">
+              <div className="space-x-2">
                 <input
                   type="radio"
                   id="male"
@@ -277,7 +268,7 @@ function Booking() {
                 />
                 <label htmlFor="male">Đực</label>
               </div>
-              <div className="ml-4">
+              <div className="ml-4 space-x-2">
                 <input
                   type="radio"
                   id="female"

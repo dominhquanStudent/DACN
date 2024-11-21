@@ -115,7 +115,7 @@ export default function Booking() {
         loadWhat={loadWhat}
       />
 
-      <div className="flex flex-col items-center gap-4  py-4 justify-center font-nunito bg-gradient-to-br from-[#3c8ce7] to-[#00eaff] min-h-screen">
+      <div className="flex flex-col items-center gap-4 py-4 justify-center font-nunito bg-gradient-to-br from-[#3c8ce7] to-[#00eaff] min-h-screen">
         <div className="bg-white rounded-lg shadow-md px-8 py-4 w-full lg:w-1/2 mx-auto">
           <div className="flex flex-col items-center space-y-4">
             <img src={logoname.src} alt="Logo" className="w-40 lg:w-60" />
