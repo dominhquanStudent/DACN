@@ -205,9 +205,9 @@ function Appointment() {
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Giờ hẹn
                 </th>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                {/* <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Dịch vụ
-                </th>
+                </th> */}
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Bác sĩ chỉ định
                 </th>
@@ -227,7 +227,7 @@ function Appointment() {
                       key={appointment._id}
                       className={
                         isToday(appointment.date)
-                          ? "bg-blue-50"
+                          ? "text-gray-900 bg-yellow-100 text-sm"
                           : "bg-white text-sm"
                       }
                     >
@@ -246,9 +246,9 @@ function Appointment() {
                       <td className="px-5 py-2 border-b border-gray-200 ">
                         {appointment.time}
                       </td>
-                      <td className="px-5 py-2 border-b border-gray-200 ">
+                      {/* <td className="px-5 py-2 border-b border-gray-200 ">
                         {appointment.service}
-                      </td>
+                      </td> */}
                       <td className="px-5 py-2 border-b border-gray-200 ">
                         {appointment.doctorName}
                       </td>

@@ -44,7 +44,6 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
     const fetchServiceOptions = async () => {
       try {
         const response = await axios.get('/service/admin/list');
-        console.log(response.data);
         const services = response.data.services.map((service: any) => ({
           value: service._id,
           label: service.name,
@@ -60,10 +59,12 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
   useEffect(() => {
     const fetchServiceDetails = async () => {
       try {
+        console.log(data);
         const serviceIds = data.service || [];
         const serviceDetailsPromises = serviceIds.map((id: string) =>
           axios.get(`/service/${id}`)
         );
+        console.log(serviceDetailsPromises);
         const serviceDetailsResponses = await Promise.all(serviceDetailsPromises);
         const serviceDetailsData = serviceDetailsResponses.map(response => response.data.service);
         setServiceDetails(serviceDetailsData);
@@ -101,6 +102,14 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
       }));
       setNewServiceId('');
     }
+  };
+
+  const handleDeleteService = (serviceId: string) => {
+    setData((prevData: any) => ({
+      ...prevData,
+      service: prevData.service.filter((id: string) => id !== serviceId)
+    }));
+    setServiceDetails((prevDetails) => prevDetails.filter((service) => service._id !== serviceId));
   };
 
   const handleImage = (e: any) => {
@@ -286,18 +295,25 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
                 {/* Chi tiết dịch vụ */}
                 <div className="flex flex-col space-y-4">
                   {serviceDetails.map((service) => (
-                  <div
-                  key={service._id}
-                  className="flex flex-row justify-between items-center w-full p-4 border border-gray-200 rounded-lg shadow-sm bg-white hover:shadow-md transition-shadow"
-                  >
-                  <div className="font-semibold text-lg text-blue-600">{service.name}</div>
-                  <div className="text-gray-600">
-                    <span className="font-medium">Danh mục:</span> {service.category}
-                  </div>
-                  <div className="text-gray-600">
-                    <span className="font-medium">Giá:</span> {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(service.price)}
-                  </div>
-                  </div>
+                    <div
+                      key={service._id}
+                      className="flex flex-row justify-between items-center w-full p-4 border border-gray-200 rounded-lg shadow-sm bg-white hover:shadow-md transition-shadow"
+                    >
+                      <div className="font-semibold text-lg text-blue-600">{service.name}</div>
+                      <div className="text-gray-600">
+                        <span className="font-medium">Danh mục:</span> {service.category}
+                      </div>
+                      <div className="text-gray-600">
+                        <span className="font-medium">Giá:</span> {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(service.price)}
+                      </div>
+                      <button
+                        className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg"
+                        onClick={() => handleDeleteService(service._id)}
+                        disabled={!isEditable}
+                      >
+                        Xóa
+                      </button>
+                    </div>
                   ))}
                 </div>
                 <div className="mt-4 font-bold text-lg text-right">
