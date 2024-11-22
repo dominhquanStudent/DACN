@@ -218,6 +218,10 @@ export default function Cart() {
       setError("ADDRESS_TOO_SHORT");
       return;
     }
+    if (voucherInfo && voucherInfo.quantity <= 0) {
+      setError("VOUCHER_OUT_OF_STOCK");
+      return;
+    }
     const order = {
       user_id: cartData.cart.user_id,
       product_list: cartData.cart.product_list.filter(product => product.selected),
@@ -476,7 +480,7 @@ export default function Cart() {
                                 <span>Code: {voucher.code}</span>
                                 <button
                                   className="ml-2 p-1 bg-blue-500 hover:bg-blue-600 text-white rounded"
-                                  onClick={() => applyVoucher(voucher.code)}
+                                  onClick={() => {setVoucher(voucher.code);applyVoucher(voucher.code)}}
                                 >
                                   Áp dụng
                                 </button>
@@ -487,7 +491,7 @@ export default function Cart() {
                             className="mt-4 w-full p-2 bg-gray-300 hover:bg-gray-400 text-black rounded"
                             onClick={closeModal}
                           >
-                            Close
+                            Đóng
                           </button>
                         </div>
                       </div>

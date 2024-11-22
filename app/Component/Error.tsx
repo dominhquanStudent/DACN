@@ -214,7 +214,9 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "LACK_VOUCHERUSETIME" && (
               <p>Vui lòng nhập số lần sử dụng của voucher!</p>
             )}
-
+            {error == "VOUCHER_OUT_OF_STOCK" && (
+              <p>Voucher này đã hết, xin hãy chọn Voucher khác !</p>
+            )}
 
             {/* RESCUE */}
             {error == "LACK_EMPLOYEE" && <p>Vui lòng nhập tên nhân viên xử lý!</p>}
