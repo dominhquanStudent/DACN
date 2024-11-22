@@ -100,6 +100,10 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
       setError("INVALID_PRODUCTSTOCK");
       return;
     }
+    if (!Number.isInteger(Number(data.stock))) {
+      setError("INVALID_PRODUCTSTOCK");
+      return;
+    }
     if (!data.category) {
       setError("LACK_PRODUCTCATEGORY");
       return;

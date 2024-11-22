@@ -119,6 +119,10 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
       setError("INVALID_VOUCHERQUANTITY");
       return;
     }
+    if (!Number.isInteger(Number(data.quantity))) {
+      setError("INVALID_VOUCHERQUANTITY");
+      return;
+    }
     if (!data.beginDate) {
       setError("LACK_VOUCHERBEGINDATE");
       return;
@@ -137,6 +141,10 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
     }
     if (!data.discount_value.value) {
       setError("LACK_VOUCHERDISCOUNTVALUE");
+      return;
+    }
+    if (data.discount_type === "Giảm theo phần trăm" && (Number(data.discount_value.value) < 0 || Number(data.discount_value.value) > 100)) {
+      setError("INVALID_VOUCHERDISCOUNTVALUE");
       return;
     }
     if (!data.discount_value.min_require) {
@@ -346,7 +354,7 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="value"
-                    type="number"
+                    type="text"
                     value={formatCurrency(data.discount_value.value.toString())}
                     onChange={(e) => handleCurrencyChange(e, 'value')}
                     disabled={!isEditable}
