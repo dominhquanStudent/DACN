@@ -69,7 +69,7 @@ export default function Product_Main() {
           </div>
         </div>
         <div className='mx-40'>
-          <div className='font-montserrat text-2xl font-semibold my-4'>Nhà thú cưng hot</div>
+          <div className='font-montserrat text-2xl font-semibold my-4'>Bộ sưu tập Balo bán chạy nhất</div>
           <div className='flex space-x-4'>
             {topHouseProducts.map((item) => (
               <Product_Frame
@@ -87,7 +87,7 @@ export default function Product_Main() {
           </div>
         </div>
         <div className='mx-40'>
-          <div className='font-montserrat text-2xl font-semibold my-4'>Đồ chơi các bé khoái !</div>
+          <div className='font-montserrat text-2xl font-semibold my-4'>Bộ sưu tập đồ chơi hot nhất</div>
           <div className='flex space-x-4'>
             {topToyProducts.map((item) => (
               <Product_Frame
@@ -105,7 +105,7 @@ export default function Product_Main() {
           </div>
         </div>
         <div className='mx-40'>
-          <div className='font-montserrat text-2xl font-semibold my-4'>Đồ ăn bé khen ngon !</div>
+          <div className='font-montserrat text-2xl font-semibold my-4'>Thức ăn Best Seller</div>
           <div className='flex space-x-4'>
             {topFoodProducts.map((item) => (
               <Product_Frame

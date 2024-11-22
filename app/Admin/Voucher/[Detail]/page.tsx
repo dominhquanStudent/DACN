@@ -8,6 +8,7 @@ import axios from "@/api/axios";
 import { useRouter } from "next/navigation";
 import ErrorModal from "@/app/Component/Error";
 import LoadingModal from "@/app/Component/Loading";
+
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, "0");
@@ -47,9 +48,8 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
     const fetchVoucherData = async (id: any) => {
       try {
         const response = await axios.get(`/voucher/${voucherId}`);
-        const vouherData = response.data;
-        setData(vouherData.voucher);
-        const log = await axios.post(`/test`, vouherData.voucher);
+        const voucherData = response.data;
+        setData(voucherData.voucher);
       } catch (error) {
         console.error("Error fetching product data:", error);
       }
@@ -58,6 +58,12 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
       fetchVoucherData(voucherId);
     }
   }, [voucherId]);
+
+  const formatCurrency = (value: string) => {
+    if (!value) return "";
+    const numberValue = value.replace(/\D/g, ""); // Remove non-numeric characters
+    return new Intl.NumberFormat("vi-VN").format(Number(numberValue));
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -68,10 +74,24 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
     setData((prevData: any) => ({
       ...prevData,
       [id]: value,
-      //
       discount_value: {
         ...prevData.discount_value,
         [id]: value,
+      },
+    }));
+  };
+
+  const handleCurrencyChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: string
+  ) => {
+    const { value } = e.target;
+    const numberValue = value.replace(/\D/g, ""); // Remove non-numeric characters
+    setData((prevData: any) => ({
+      ...prevData,
+      discount_value: {
+        ...prevData.discount_value,
+        [field]: numberValue,
       },
     }));
   };
@@ -87,8 +107,16 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
       setError("LACK_VOUCHERUSETIME");
       return;
     }
+    if(data.UsedTime <0) {
+      setError("INVALID_VOUCHERUSETIME");
+      return;
+    }
     if (!data.quantity) {
       setError("LACK_VOUCHERQUANTITY");
+      return;
+    }
+    if(data.quantity <0) {
+      setError("INVALID_VOUCHERQUANTITY");
       return;
     }
     if (!data.beginDate) {
@@ -196,7 +224,7 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="quantity"
-                    type="text"
+                    type="number"
                     value={data.quantity}
                     onChange={handleInputChange}
                     disabled={!isEditable}
@@ -209,10 +237,9 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="UsedTime"
-                    type="text"
+                    type="number"
                     value={data.UsedTime}
                     onChange={handleInputChange}
-                    
                     disabled={!isEditable}
                   />
                 </div>
@@ -227,7 +254,6 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                     id="beginDate"
                     type="date"
                     value={formatDate(data.beginDate)}
-                    // min={new Date().toISOString().split("T")[0]}
                     onChange={handleInputChange}
                     disabled={!isEditable}
                   />
@@ -273,6 +299,7 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                     id="discount_type"
                     value={data.discount_type}
                     onChange={handleInputChange}
+                    disabled={!isEditable}
                   >
                     <option value="">Chọn trạng thái</option>
                     <option value="Giảm theo phần trăm">Phần trăm</option>
@@ -282,44 +309,35 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
               </div>
               <div className="flex w-full">
                 <div className="w-full px-3">
-                  <label
-                    className="text-xs font-bold mb-2"
-                    htmlFor="min_require"
-                  >
+                  <label className="text-xs font-bold mb-2" htmlFor="min_require">
                     Yêu cầu tối thiểu
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="min_require"
                     type="text"
-                    value={data.discount_value.min_require}
-                    onChange={handleInputChange}
+                    value={formatCurrency(data.discount_value.min_require.toString())}
+                    onChange={(e) => handleCurrencyChange(e, 'min_require')}
                     disabled={!isEditable}
                   />
                 </div>
                 <div className="w-full px-3">
-                  <label
-                    className="text-xs font-bold mb-2"
-                    htmlFor="max_discount"
-                  >
+                  <label className="text-xs font-bold mb-2" htmlFor="max_discount">
                     Giá trị giảm tối đa
                   </label>
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="max_discount"
                     type="text"
-                    value={data.discount_value.max_discount}
-                    onChange={handleInputChange}
+                    value={formatCurrency(data.discount_value.max_discount.toString())}
+                    onChange={(e) => handleCurrencyChange(e, 'max_discount')}
                     disabled={!isEditable}
                   />
                 </div>
               </div>
               <div className="flex w-full">
                 <div className="w-full px-3">
-                  <label
-                    className="text-xs font-bold mb-2"
-                    htmlFor="value"
-                  >
+                  <label className="text-xs font-bold mb-2" htmlFor="value">
                     Giá trị giảm giá{" "}
                     {data.discount_type === "Giảm theo phần trăm"
                       ? "(%)"
@@ -328,9 +346,9 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="value"
-                    type="text"
-                    value={data.discount_value.value}
-                    onChange={handleInputChange}
+                    type="number"
+                    value={formatCurrency(data.discount_value.value.toString())}
+                    onChange={(e) => handleCurrencyChange(e, 'value')}
                     disabled={!isEditable}
                   />
                 </div>
@@ -372,22 +390,25 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
             >
               Quay lại
             </button>
-            {!showButton && (<button
-              onClick={handleChangeClick}
-              className="bg-yellow-500 hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-3xl"
-            >
-              Sửa
-            </button>)}
-            {showButton &&(<button
-              onClick={handleSaveClick}
-              className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl"
-            >
-              Lưu
-            </button>)}
+            {!showButton && (
+              <button
+                onClick={handleChangeClick}
+                className="bg-yellow-500 hover:bg-yellow-300 text-white font-bold py-2 px-4 rounded-3xl"
+              >
+                Sửa
+              </button>
+            )}
+            {showButton && (
+              <button
+                onClick={handleSaveClick}
+                className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl"
+              >
+                Lưu
+              </button>
+            )}
           </div>
         </div>
       </div>
-      {/* <ToastContainer /> */}
     </div>
   );
 }

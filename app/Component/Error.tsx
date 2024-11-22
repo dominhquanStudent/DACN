@@ -83,6 +83,9 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "NO_BOOKING_PETAGE" && (
               <p>Vui lòng nhập tuổi bé!</p>
             )}
+            {error == "INVALID_AGE" && (
+              <p>Số tuổi không hợp lệ!</p>
+            )}
             {error == "NO_BOOKING_PETGENDER" && (
               <p>Vui lòng chọn giới tính bé!</p>
             )}
@@ -129,6 +132,7 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "LACK_IMAGE" && <p>Vui lòng chọn ảnh bìa!</p>}
 
             {/* PRODUCT */}
+            {error == "INVALID_PRODUCTQUANTITY" && <p>Số lượng sản phẩm không hợp lệ</p>}
             {error == "PRODUCT_NOT_FOUND" && <p>Sản phẩm không tồn tại</p>}
             {error == "LACK_PRODUCTNAME" && <p>Vui lòng nhập tên sản phẩm!</p>}
             {error == "LACK_PRODUCTBRAND" && <p>Vui lòng nhập thương hiệu!</p>}
@@ -171,6 +175,12 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "LACK_VOUCHERNAME" && <p>Vui lòng nhập tên voucher!</p>}
             {error == "LACK_VOUCHERQUANTITY" && (
               <p>Vui lòng nhập số lượng voucher!</p>
+            )}
+            {error == "INVALID_VOUCHERUSETIME" && (
+              <p>Số lần sử dụng voucher không hợp lệ!</p>
+            )}
+            {error == "LACK_VOUCHERQUANTITY" && (
+              <p>Số lượng voucher không hợp lệ!</p>
             )}
 
             {error == "LACK_VOUCHERBEGINDATE" && (

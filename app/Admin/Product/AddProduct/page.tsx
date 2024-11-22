@@ -53,6 +53,10 @@ function ProductAdd() {
         setError("LACK_PRODUCTQUANTITY");
         return;
       }
+      if (Number(stock) <= 0) {
+        setError("INVALID_PRODUCTQUANTITY");
+        return;
+      }
       if (!category) {
         setError("LACK_PRODUCTCATEGORY");
         return;
@@ -203,10 +207,11 @@ function ProductAdd() {
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="Quantity"
-                    type="text"
+                    type="number"
                     placeholder="Nhập số lượng sản phẩm"
                     value={stock}
                     onChange={(e) => setStock(e.target.value)}
+                    min="0"
                   />
                 </div>
               </div>
@@ -217,7 +222,7 @@ function ProductAdd() {
                 <input
                   className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="discount"
-                  type="text"
+                  type="number"
                   placeholder="0"
                   value={discount}
                   onChange={(e) => setDiscount(e.target.value)}
