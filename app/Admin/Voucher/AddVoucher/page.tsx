@@ -76,6 +76,10 @@ function VoucherAdd() {
         setError("INVALID_VOUCHERQUANTITY");
         return;
       }
+      if (!Number.isInteger(Number(quantity))) {
+        setError("INVALID_VOUCHERQUANTITY");
+        return;
+      }
       if (!beginDate) {
         setError("LACK_VOUCHERBEGINDATE");
         return;
@@ -94,6 +98,13 @@ function VoucherAdd() {
       }
       if (!discountValue) {
         setError("LACK_VOUCHERDISCOUNTVALUE");
+        return;
+      }
+      if (
+        discountType === "Giảm theo phần trăm" &&
+        (Number(discountValue) < 0 || Number(discountValue) > 100)
+      ) {
+        setError("INVALID_VOUCHERDISCOUNTVALUE");
         return;
       }
       if (!minRequire) {
@@ -172,6 +183,8 @@ function VoucherAdd() {
                     placeholder="Nhập số lượng"
                     value={quantity}
                     onChange={(e) => setQuantity(e.target.value)}
+                    step="1"
+                    min="0"
                   />
                 </div>
               </div>

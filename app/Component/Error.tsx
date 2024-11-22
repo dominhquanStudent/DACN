@@ -59,6 +59,9 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "NOT_ENOUGH_STOCK" && (
                 <p>Sản phẩm <span className="text-red-500">{product}</span> hiện không đủ hàng</p>
             )}
+            {error == "INVALID_PRODUCTSTOCK" && (
+              <p>Số lượng sản phẩm không hợp lệ</p>
+              )}
             {error == "MAX_QUANTITY_ALLOWED" && (
               <p>Hiện tại giỏ hàng đã có tối đa sản phẩm này</p>
             )}
@@ -179,8 +182,12 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "INVALID_VOUCHERUSETIME" && (
               <p>Số lần sử dụng voucher không hợp lệ!</p>
             )}
-            {error == "LACK_VOUCHERQUANTITY" && (
+           
+                        {error == "INVALID_VOUCHERQUANTITY" && (
               <p>Số lượng voucher không hợp lệ!</p>
+            )}
+            {error == "INVALID_VOUCHERDISCOUNTVALUE" && (
+              <p>Giá trị giảm giá không hợp lệ!</p>
             )}
 
             {error == "LACK_VOUCHERBEGINDATE" && (

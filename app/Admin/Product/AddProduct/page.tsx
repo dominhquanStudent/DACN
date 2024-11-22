@@ -53,8 +53,13 @@ function ProductAdd() {
         setError("LACK_PRODUCTQUANTITY");
         return;
       }
+
       if (Number(stock) <= 0) {
         setError("INVALID_PRODUCTQUANTITY");
+        return;
+      }
+      if (!Number.isInteger(Number(stock))) {
+        setError("INVALID_PRODUCTSTOCK");
         return;
       }
       if (!category) {
