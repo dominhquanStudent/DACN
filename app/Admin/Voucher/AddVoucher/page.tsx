@@ -23,12 +23,28 @@ function VoucherAdd() {
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("");
   const [employee_id, setEmployeeId] = useState("66e5800a52098d8bd1397010");
-  //////
+  ///////
   const [isLoading, setIsLoading] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [loadWhat, setLoadWhat] = useState("");
   const [error, setError] = useState<string | null>(null);
   /////
+
+  const formatCurrency = (value: string) => {
+    if (!value) return "";
+    const numberValue = value.replace(/\D/g, ""); // Remove non-numeric characters
+    return new Intl.NumberFormat("vi-VN").format(Number(numberValue));
+  };
+
+  const handleCurrencyChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setValue: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    const { value } = e.target;
+    const numberValue = value.replace(/\D/g, ""); // Remove non-numeric characters
+    setValue(numberValue);
+  };
+
   const handleSaveClick = async () => {
     try {
       const data = {
@@ -54,6 +70,10 @@ function VoucherAdd() {
       }
       if (!quantity) {
         setError("LACK_VOUCHERQUANTITY");
+        return;
+      }
+      if (Number(quantity) < 0) {
+        setError("INVALID_VOUCHERQUANTITY");
         return;
       }
       if (!beginDate) {
@@ -93,13 +113,11 @@ function VoucherAdd() {
         return;
       }
 
-
       setLoadWhat("SEND_ADDPET_REQUEST");
       setIsLoading(true);
       const response = await axios.post("/voucher/add", data);
       setIsLoading(false);
       setIsComplete(true);
-      // const response = await axios.post("/voucher/add", data);
       router.push("/Admin/Voucher");
     } catch (error) {
       toast.error("Error saving voucher!");
@@ -150,7 +168,7 @@ function VoucherAdd() {
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="Quantity"
-                    type="text"
+                    type="number"
                     placeholder="Nhập số lượng"
                     value={quantity}
                     onChange={(e) => setQuantity(e.target.value)}
@@ -231,8 +249,8 @@ function VoucherAdd() {
                     id="MinRequire"
                     type="text"
                     placeholder="Nhập yêu cầu tối thiểu"
-                    value={minRequire}
-                    onChange={(e) => setMinRequire(e.target.value)}
+                    value={formatCurrency(minRequire)}
+                    onChange={(e) => handleCurrencyChange(e, setMinRequire)}
                   />
                 </div>
                 <div className="w-full px-3">
@@ -247,8 +265,8 @@ function VoucherAdd() {
                     id="MaxDiscount"
                     type="text"
                     placeholder="Nhập giá trị giảm tối đa"
-                    value={maxDiscount}
-                    onChange={(e) => setMaxDiscount(e.target.value)}
+                    value={formatCurrency(maxDiscount)}
+                    onChange={(e) => handleCurrencyChange(e, setMaxDiscount)}
                   />
                 </div>
               </div>
@@ -266,8 +284,8 @@ function VoucherAdd() {
                     id="DiscountValue"
                     type="text"
                     placeholder="Nhập giá trị giảm giá"
-                    value={discountValue}
-                    onChange={(e) => setDiscountValue(e.target.value)}
+                    value={formatCurrency(discountValue)}
+                    onChange={(e) => handleCurrencyChange(e, setDiscountValue)}
                   />
                 </div>
                 <div className="w-full px-3">

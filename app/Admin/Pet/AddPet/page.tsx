@@ -53,6 +53,10 @@ function PetAdd() {
         setError("LACK_PETAGE");
         return;
       }
+      if(Number(age) < 0){
+        setError("INVALID_AGE");
+        return;
+      }
       if (!data.race) {
         setError("LACK_PETRACE");
         return;
@@ -177,7 +181,7 @@ function PetAdd() {
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="Age"
-                    type="text"
+                    type="number"
                     placeholder="Enter Age"
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
