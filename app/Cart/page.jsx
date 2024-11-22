@@ -166,24 +166,21 @@ export default function Cart() {
       const response = await axios.get(`/voucher/code/${voucherCode}`);
       const voucherData = response.data.voucher;
       setVoucherInfo(voucherData);
-
-
       if (voucherData.discount_type === "Giảm theo phần trăm") {
         if (total >= voucherData.discount_value.min_require) {
           let discountValue = Math.floor(total * voucherData.discount_value.value / 100);
           if (discountValue > voucherData.discount_value.max_discount) {
             discountValue = voucherData.discount_value.max_discount;
           }
-
-
           setDiscount(discountValue);
           setTotalPriceafterDiscount(total - discountValue);
         } else {
           setVoucherError("MIN_REQUIRE_NOT_MET");
           return;
         }
-      } else if (voucherData.discount_type === "value") {
+      } else if (voucherData.discount_type === "Giảm theo giá trị") {
         if (total >= voucherData.discount_value.min_require) {
+          console.log(2);
           let discountValue = voucherData.discount_value.value;
           setDiscount(discountValue);
           setTotalPriceafterDiscount(total - discountValue);
@@ -327,13 +324,9 @@ export default function Cart() {
       if (voucherInfo.discount_type === "Giảm theo phần trăm") {
         if (totalPrice >= voucherInfo.discount_value.min_require) {
           let discountValue = Math.floor(totalPrice * voucherInfo.discount_value.value / 100);
-
-
           if (discountValue > voucherInfo.discount_value.max_discount) {
             discountValue = voucherInfo.discount_value.max_discount;
           }
-
-
           setDiscount(discountValue);
           setTotalPriceafterDiscount(totalPrice - discountValue);
           setVoucherError("None");
@@ -341,10 +334,9 @@ export default function Cart() {
           setVoucherError("MIN_REQUIRE_NOT_MET");
           setDiscount(0);
         }
-      } else if (voucherInfo.discount_type === "value") {
+      } else if (voucherInfo.discount_type === "Giảm theo giá trị") {
         if (totalPrice >= voucherInfo.discount_value.min_require) {
           let discountValue = voucherInfo.discount_value.value;
-
 
           if (discountValue > voucherInfo.discount_value.max_discount) {
             discountValue = voucherInfo.discount_value.max_discount;
