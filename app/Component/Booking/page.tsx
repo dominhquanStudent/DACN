@@ -78,7 +78,7 @@ function Booking() {
         weight,
       };
       const phoneRegex = /^[0-9]{10}$/;
-
+      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
       if (!userName && !jwt) {
         setError("NO_BOOKING_NAME");
         return;
@@ -118,6 +118,10 @@ function Booking() {
 
       if (!phoneRegex.test(accountData?.phone || phone)) {
         setError("INVALID_PHONENUMBER");
+        return;
+      }
+      if (!emailRegex.test(accountData?.email || userEmail)) {
+        setError("INVALID_EMAIL");
         return;
       }
       const selectedDate = new Date(date);

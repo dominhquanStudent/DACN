@@ -35,6 +35,10 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             <img src={Cat_Error.src} className="text-red-500 text-6xl mb-4 h-40 w-40" />
             {/* Page not found */}
             {error == "PAGE_NOT_FOUND" && <p>Trang bạn tìm hiện không tồn tại</p>}
+            {/*Account */}
+            {error == "WRONG_ACCOUNT_OR_PASSWORD" && <p>Tài khoản hoặc mật khẩu không đúng</p>}
+            {error == "WRONG_PASSWORD" && <p>Mật khẩu hiện tại không đúng</p>}
+            {error == "CONFIRM_PASSWORD_NOT_MATCH" && <p className="text-center">Mật khẩu mới và mật khẩu nhập lại không khớp</p>}
             {/* Comment Errors */}
             {error == "EMPTY COMMENT" && <p>Nội dung không được phép rỗng</p>}
             {error == "EMPTY RATING" && <p>Đánh giá không được phép rỗng</p>}
@@ -100,7 +104,7 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             )}
             {error == "NO_BOOKING_DATE" && <p>Vui lòng chọn ngày hẹn!</p>}
             {error == "NO_BOOKING_TIME" && <p>Vui lòng chọn giờ hẹn!</p>}
-
+            {error == "INVALID_EMAIL" && <p>Địa chỉ Email không hợp lệ</p>}
 
 
 
