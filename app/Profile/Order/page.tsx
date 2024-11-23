@@ -40,7 +40,7 @@ function Page() {
     const [error, setError] = useState<string | null>(null);
     const [sort, setSort] = useState('Tất cả');
     const [fromDate, setFromDate] = useState('');
-    const [toDate, setToDate] = useState('');
+    const [toDate, setToDate] = useState(new Date().toISOString().split('T')[0]);
     const handleSort = (e: any) => {
         setSort(e);
     };

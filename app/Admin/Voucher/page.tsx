@@ -147,12 +147,11 @@ function VoucherList() {
             Quản lý voucher
           </div>
           <div className="flex w-full space-x-2 mt-4 ">
-            
             <button
               onClick={handleAddClick}
               className="bg-transparent border border-[#CCCCCC] text-black font-bold py-1 px-4 rounded-xl mb-2 hover:bg-blue-500 hover:border-blue-600 hover:text-white"
             >
-              <FontAwesomeIcon icon={faPlus}  />
+              <FontAwesomeIcon icon={faPlus} />
             </button>
           </div>
           <table className="min-w-full leading-normal">
@@ -204,10 +203,12 @@ function VoucherList() {
                       {voucher.discount_type}
                     </td>
                     <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
-                      {voucher.discount_value.value}{" "}
                       {voucher.discount_type === "Giảm theo phần trăm"
-                        ? "%"
-                        : "đồng"}
+                        ? `${voucher.discount_value.value}%`
+                        : `${new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          }).format(voucher.discount_value.value)}`}
                     </td>
                     <td className="px-5 py-2 border-b border-gray-200 bg-white text-sm">
                       {formatDate(voucher.beginDate)}

@@ -96,6 +96,14 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
       setError("LACK_PRODUCTSTOCK");
       return;
     }
+    if(Number(data.stock) <= 0){
+      setError("INVALID_PRODUCTSTOCK");
+      return;
+    }
+    if (!Number.isInteger(Number(data.stock))) {
+      setError("INVALID_PRODUCTSTOCK");
+      return;
+    }
     if (!data.category) {
       setError("LACK_PRODUCTCATEGORY");
       return;
@@ -110,6 +118,10 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
     }
     if (!data.discount) {
       setError("LACK_PRODUCTDISCOUNT");
+      return;
+    }
+    if (Number(data.discount) < 0 || Number(data.discount) > 100) {
+      setError("INVALID_PRODUCTDISCOUNT");
       return;
     }
     if(Number(data.discount) < 0 || Number(data.discount) > 100){
@@ -201,10 +213,11 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
                 <input
                   className="block w-1/2 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                   id="discount"
-                  type="text"
+                  type="number"
                   value={data.discount}
                   onChange={handleInputChange}
                   disabled={!isEditable}
+                  min="0"
                 />
               </div>
               <div className="w-full px-3">
@@ -242,7 +255,7 @@ function ProductDetail({ params }: { params: { Detail: string } }) {
                   <input
                     className="block w-6/12 border border-gray-200 rounded-lg py-2 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
                     id="stock"
-                    type="text"
+                    type="number"
                     value={data.stock}
                     onChange={handleInputChange}
                     disabled={!isEditable}

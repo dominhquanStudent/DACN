@@ -5,7 +5,7 @@ import Product_Frame from "./Product_Frame";
 import ZaloPay from "@/public/img/ZaloPay.png";
 import axios from "@/api/axios";
 import { getCookie } from "cookies-next";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import _ from 'lodash'; // Import lodash for debouncing
 import LoadingModal from "@/app/Component/Loading";
 import ErrorModal from "@/app/Component/Error";
@@ -20,15 +20,38 @@ export default function Cart() {
   const [isComplete, setIsComplete] = useState(false);
   const [loadWhat, setLoadWhat] = useState("");
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   // Get account data
   const [accountData, setAccountData] = useState("");
   const [order_address, setOrderAddress] = useState("");
+  const modalRef = useRef(null);
   // Get account data upon access
   const jwt = getCookie("jwt");
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-US', { style: 'decimal' }).format(price);
   };
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleClickOutside = (event) => {
+    if (modalRef.current && !modalRef.current.contains(event.target)) {
+      closeModal();
+    }
+  };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isModalOpen]);
 
   // Get cart data
   const [cartData, setCartData] = useState({
@@ -47,10 +70,10 @@ export default function Cart() {
   };
   const fetchOrderAddress = async () => {
     const response = await getInfo();
-    if (response.address){
+    if (response.address) {
       setOrderAddress(response.address)
     }
- ;
+    ;
   };
   useEffect(() => {
     fetchCartData();
@@ -124,33 +147,40 @@ export default function Cart() {
   // Apply voucher
   const [voucher, setVoucher] = useState("");
   const [voucherInfo, setVoucherInfo] = useState("");
+  const [voucherData, setVoucherData] = useState([]);
   const [discount, setDiscount] = useState(0);
   const [alreadyApplied, setAlreadyApplied] = useState(false);
   const [voucherError, setVoucherError] = useState("");
   const [totalPriceafterDiscount, setTotalPriceafterDiscount] = useState(0);
+  const fetchVouchers = async () => {
+    try {
+      const response = await axios.get(`/voucher/user/list`);
+      setVoucherData(response.data);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Error fetching vouchers:', error);
+    }
+  };
   const applyVoucher = async (voucherCode, total) => {
     try {
       const response = await axios.get(`/voucher/code/${voucherCode}`);
       const voucherData = response.data.voucher;
       setVoucherInfo(voucherData);
-
-
       if (voucherData.discount_type === "Giảm theo phần trăm") {
         if (total >= voucherData.discount_value.min_require) {
           let discountValue = Math.floor(total * voucherData.discount_value.value / 100);
           if (discountValue > voucherData.discount_value.max_discount) {
             discountValue = voucherData.discount_value.max_discount;
           }
-
-
           setDiscount(discountValue);
           setTotalPriceafterDiscount(total - discountValue);
         } else {
           setVoucherError("MIN_REQUIRE_NOT_MET");
           return;
         }
-      } else if (voucherData.discount_type === "value") {
+      } else if (voucherData.discount_type === "Giảm theo giá trị") {
         if (total >= voucherData.discount_value.min_require) {
+          console.log(2);
           let discountValue = voucherData.discount_value.value;
           setDiscount(discountValue);
           setTotalPriceafterDiscount(total - discountValue);
@@ -184,6 +214,14 @@ export default function Cart() {
   const [paymentMethod, setPaymentMethod] = useState("Trực tiếp");
   const [failedProducts, setFailedProducts] = useState("45545");
   const handleOrder = async () => {
+    if (order_address.length < 10) {
+      setError("ADDRESS_TOO_SHORT");
+      return;
+    }
+    if (voucherInfo && voucherInfo.quantity <= 0) {
+      setError("VOUCHER_OUT_OF_STOCK");
+      return;
+    }
     const order = {
       user_id: cartData.cart.user_id,
       product_list: cartData.cart.product_list.filter(product => product.selected),
@@ -290,13 +328,9 @@ export default function Cart() {
       if (voucherInfo.discount_type === "Giảm theo phần trăm") {
         if (totalPrice >= voucherInfo.discount_value.min_require) {
           let discountValue = Math.floor(totalPrice * voucherInfo.discount_value.value / 100);
-
-
           if (discountValue > voucherInfo.discount_value.max_discount) {
             discountValue = voucherInfo.discount_value.max_discount;
           }
-
-
           setDiscount(discountValue);
           setTotalPriceafterDiscount(totalPrice - discountValue);
           setVoucherError("None");
@@ -304,10 +338,9 @@ export default function Cart() {
           setVoucherError("MIN_REQUIRE_NOT_MET");
           setDiscount(0);
         }
-      } else if (voucherInfo.discount_type === "value") {
+      } else if (voucherInfo.discount_type === "Giảm theo giá trị") {
         if (totalPrice >= voucherInfo.discount_value.min_require) {
           let discountValue = voucherInfo.discount_value.value;
-
 
           if (discountValue > voucherInfo.discount_value.max_discount) {
             discountValue = voucherInfo.discount_value.max_discount;
@@ -381,7 +414,7 @@ export default function Cart() {
               </h2>
 
               {/* Payment method */}
-              <div className="mt-4 mb-4">
+              <div className="mt-4 mb-1">
                 <p className="font-normal text-lg leading-8 text-black">
                   Hình thức thanh toán
                 </p>
@@ -409,10 +442,10 @@ export default function Cart() {
                   </label>
                 </div>
                 <div className="w-full">
-                <p className="mt-2 font-normal text-lg leading-8 text-black">
-                  Địa chỉ giao hàng
-                </p>
-                <input
+                  <p className="mt-2 font-normal text-lg leading-8 text-black">
+                    Địa chỉ giao hàng
+                  </p>
+                  <input
                     type="text"
                     name="order_address"
                     className="w-full mt-2 mr-2 border border-gray-300 p-2 rounded-md"
@@ -420,18 +453,57 @@ export default function Cart() {
                     value={order_address}
                     onChange={(e) => setOrderAddress(e.target.value)}
                   />
+                  {order_address.length < 10 && <p className="text-center text-red-500 mt-1">Địa chỉ quá ngắn</p>}
                 </div>
               </div>
               {/* Discount Coupon */}
               <div className="border-gray-300 border-t-2">
-                <p className="font-normal text-lg leading-8 text-black">
-                  Mã giảm giá
-                </p>
+                <div className="flex mt-2 justify-between">
+                  <p className="font-normal text-lg leading-8 text-black">
+                    Mã giảm giá
+                  </p>
+                  <div>
+                    <button
+                      className="middle none center ml-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 py-2 px-4 font-sans text-xs font-bold text-white"
+                      onClick={fetchVouchers}
+                    >
+                      Lấy mã giảm giá
+                    </button>
+
+                    {isModalOpen && (
+                      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md" ref={modalRef}>
+                          <h2 className="text-xl font-bold mb-4">Danh sách mã giảm giá</h2>
+                          <ul className="space-y-2">
+                            {voucherData.map((voucher, index) => (
+                              <li key={index} className="flex justify-between items-center p-2 border-b">
+                                <span>Code: {voucher.code}</span>
+                                <button
+                                  className="ml-2 p-1 bg-blue-500 hover:bg-blue-600 text-white rounded"
+                                  onClick={() => {setVoucher(voucher.code);applyVoucher(voucher.code)}}
+                                >
+                                  Áp dụng
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                          <button
+                            className="mt-4 w-full p-2 bg-gray-300 hover:bg-gray-400 text-black rounded"
+                            onClick={closeModal}
+                          >
+                            Đóng
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 <div className="mt-2 flex">
                   <input
                     type="text"
                     name="redemption_code"
-                    className="mr-2 flex-grow border-gray-300 p-2 rounded-md"
+                    className="mr-2 flex-grow border border-gray-300 p-2 rounded-md"
                     placeholder="Nhập mã"
                     value={voucher}
                     onChange={(e) => setVoucher(e.target.value)}

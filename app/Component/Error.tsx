@@ -44,6 +44,10 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "USER_ALREADY_RATED" && (
               <p>Bạn đã đánh giá trước đó rồi</p>
             )}
+              {error == "ADDRESS_TOO_SHORT" && (
+              <p>Hãy nhập địa chỉ chi tiết hơn</p>
+            )}
+            
             {/* Product Filter Error */}
             {error == "INVALID_PRICE_RANGE" && (
               <p>Giá tối thiểu không thể lớn hơn giá tối đa</p>
@@ -55,6 +59,9 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "NOT_ENOUGH_STOCK" && (
                 <p>Sản phẩm <span className="text-red-500">{product}</span> hiện không đủ hàng</p>
             )}
+            {error == "INVALID_PRODUCTSTOCK" && (
+              <p>Số lượng sản phẩm không hợp lệ</p>
+              )}
             {error == "MAX_QUANTITY_ALLOWED" && (
               <p>Hiện tại giỏ hàng đã có tối đa sản phẩm này</p>
             )}
@@ -78,6 +85,9 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             )}
             {error == "NO_BOOKING_PETAGE" && (
               <p>Vui lòng nhập tuổi bé!</p>
+            )}
+            {error == "INVALID_AGE" && (
+              <p>Số tuổi không hợp lệ!</p>
             )}
             {error == "NO_BOOKING_PETGENDER" && (
               <p>Vui lòng chọn giới tính bé!</p>
@@ -125,6 +135,7 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "LACK_IMAGE" && <p>Vui lòng chọn ảnh bìa!</p>}
 
             {/* PRODUCT */}
+            {error == "INVALID_PRODUCTQUANTITY" && <p>Số lượng sản phẩm không hợp lệ</p>}
             {error == "PRODUCT_NOT_FOUND" && <p>Sản phẩm không tồn tại</p>}
             {error == "LACK_PRODUCTNAME" && <p>Vui lòng nhập tên sản phẩm!</p>}
             {error == "LACK_PRODUCTBRAND" && <p>Vui lòng nhập thương hiệu!</p>}
@@ -168,6 +179,16 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "LACK_VOUCHERQUANTITY" && (
               <p>Vui lòng nhập số lượng voucher!</p>
             )}
+            {error == "INVALID_VOUCHERUSETIME" && (
+              <p>Số lần sử dụng voucher không hợp lệ!</p>
+            )}
+           
+                        {error == "INVALID_VOUCHERQUANTITY" && (
+              <p>Số lượng voucher không hợp lệ!</p>
+            )}
+            {error == "INVALID_VOUCHERDISCOUNTVALUE" && (
+              <p>Giá trị giảm giá không hợp lệ!</p>
+            )}
 
             {error == "LACK_VOUCHERBEGINDATE" && (
               <p>Vui lòng nhập ngày bắt đầu!</p>
@@ -200,7 +221,9 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "LACK_VOUCHERUSETIME" && (
               <p>Vui lòng nhập số lần sử dụng của voucher!</p>
             )}
-
+            {error == "VOUCHER_OUT_OF_STOCK" && (
+              <p>Voucher này đã hết, xin hãy chọn Voucher khác !</p>
+            )}
 
             {/* RESCUE */}
             {error == "LACK_EMPLOYEE" && <p>Vui lòng nhập tên nhân viên xử lý!</p>}

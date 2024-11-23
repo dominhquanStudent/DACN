@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import React, { useEffect, useState } from 'react';
 import Sidebar from '@/app/Admin/sidebar';
 import Header from '@/app/Admin/Header';
@@ -39,6 +39,7 @@ function DashBoard() {
         appointmentsPreview: []
     })
     const [selectedOption, setSelectedOption] = useState('ordersAll');
+    const [selectedButton, setSelectedButton] = useState('revenue');
 
     const sections = [
         { icon: '/img/icon/order.svg', title: 'Số đơn hàng', value: dashboard.pendingOrders, route: '/Admin/Order' },
@@ -122,6 +123,7 @@ function DashBoard() {
 
     const handleGraphChange = (graph: string) => {
         setcurrentgraph(graph);
+        setSelectedButton(graph);
     };
 
     const getData = () => {
@@ -214,11 +216,11 @@ function DashBoard() {
                             Thống kê đơn hàng
                         </div>
                         <div className='mb-4 flex space-x-2'>
-                            <button onClick={() => handleGraphChange('orders')} className='p-2 bg-blue-500 text-white rounded-2xl'>Đơn hàng</button>
-                            <button onClick={() => handleGraphChange('revenue')} className='p-2 bg-blue-500 text-white rounded-2xl'>Doanh thu</button>
-                            <button onClick={() => {handleGraphChange('pets'),setSelectedOption("Thống kê")}} className='p-2 bg-blue-500 text-white rounded-2xl'>Thú cưng</button>
-                            <button onClick={() => handleGraphChange('rescue')} className='p-2 bg-blue-500 text-white rounded-2xl'>Cứu hộ</button>
-                            <button onClick={() => handleGraphChange('appointments')} className='p-2 bg-blue-500 text-white rounded-2xl'>Lịch hẹn</button>
+                        <button onClick={() => handleGraphChange('revenue')} className={`p-2 rounded-2xl ${selectedButton === 'revenue' ? 'bg-[#EDB24E] text-white' : 'bg-blue-500 text-white'}`}>Doanh thu</button>
+                            <button onClick={() => handleGraphChange('orders')} className={`p-2 rounded-2xl ${selectedButton === 'orders' ? 'bg-[#EDB24E] text-white' : 'bg-blue-500 text-white'}`}>Đơn hàng</button>
+                            <button onClick={() => { handleGraphChange('pets'); setSelectedOption("Thống kê"); }} className={`p-2 rounded-2xl ${selectedButton === 'pets' ? 'bg-[#EDB24E] text-white' : 'bg-blue-500 text-white'}`}>Thú cưng</button>
+                            <button onClick={() => handleGraphChange('rescue')} className={`p-2 rounded-2xl ${selectedButton === 'rescue' ? 'bg-[#EDB24E] text-white' : 'bg-blue-500 text-white'}`}>Cứu hộ</button>
+                            <button onClick={() => handleGraphChange('appointments')} className={`p-2 rounded-2xl ${selectedButton === 'appointments' ? 'bg-[#EDB24E] text-white' : 'bg-blue-500 text-white'}`}>Lịch hẹn</button>
                         </div>
                         {currentgraph === 'orders' &&
                             <>
