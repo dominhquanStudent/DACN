@@ -131,6 +131,10 @@ function VoucherDetail({ params }: { params: { Detail: string } }) {
       setError("LACK_VOUCHERENDDATE");
       return;
     }
+    if (new Date(data.endDate) < new Date(data.beginDate)) {
+      setError("INVALID_VOUCHERENDDATE");
+      return;
+    }
     if (!data.code) {
       setError("LACK_VOUCHERCODE");
       return;

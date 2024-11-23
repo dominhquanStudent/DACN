@@ -9,7 +9,7 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
   const orderId = params.Detail;
   const [data, setData] = useState<any>({ product_list: [] });
   const [isEditable, setIsEditable] = useState(false);
-  const [buttonLabel, setButtonLabel] = useState('Sửa đơn hàng');
+  // const [buttonLabel, setButtonLabel] = useState('Sửa đơn hàng');
   const router = useRouter();
 
   useEffect(() => {
@@ -39,7 +39,7 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
     try {
       await axios.put(`/order/${orderId}`, data);
       setIsEditable(false);
-      setButtonLabel('Sửa đơn hàng');
+      // setButtonLabel('Sửa đơn hàng');
       router.push('/Admin/Order');
     } catch (error) {
       console.error('Error updating order data:', error);
@@ -48,7 +48,7 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
 
   const handleChangeClick = () => {
     setIsEditable(true);
-    setButtonLabel('Lưu đơn hàng');
+    // setButtonLabel('Lưu đơn hàng');
   };
 
   const handleButtonClick = () => {
@@ -246,9 +246,9 @@ function OrderDetail({ params }: { params: { Detail: string } }) {
             <button onClick={() => router.push('/Admin/Order')} className="bg-[#1286CE] hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
               Quay lại
             </button>
-            <button onClick={handleButtonClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              {buttonLabel}
-            </button>
+            {/* <button onClick={handleButtonClick} className="bg-[#1286CE] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"> */}
+              {/* {buttonLabel} */}
+            {/* </button> */}
             {
               data.order_status === 'Chờ xử lý' && (
                 <button onClick={handleProductClick} className="bg-[#1286CE] hover:bg-red-700 text-white font-bold py-2 px-4 rounded">

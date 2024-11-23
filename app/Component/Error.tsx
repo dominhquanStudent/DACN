@@ -182,6 +182,10 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "INVALID_VOUCHERUSETIME" && (
               <p>Số lần sử dụng voucher không hợp lệ!</p>
             )}
+            {error == "INVALID_VOUCHERENDDATE" && (
+              
+              <p>Ngày không hợp lệ!</p>
+            )}
            
                         {error == "INVALID_VOUCHERQUANTITY" && (
               <p>Số lượng voucher không hợp lệ!</p>
