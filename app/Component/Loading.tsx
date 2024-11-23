@@ -59,6 +59,7 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
         {isLoading && (
           <div className="flex flex-col items-center justify-center h-64 w-80">
             <img src={LoadingGif.src} alt="Loading..." className="h-40 w-40 mb-4" />
+            {loadWhat=="LOGIN"&& <p>Đang đăng nhập vào </p>}
             {loadWhat=="ADD_TO_CART"&& <p>Đang thêm vào giỏ hàng!</p>}
             {loadWhat=="ADD_COMMENT"&& <p>Đang thêm đánh giá của bạn!</p>}
             {loadWhat=="SEND_ADOPT_REQUEST"&& <p>Đang gửi yêu cầu nhận thú cưng!</p>}
@@ -96,7 +97,7 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             {loadWhat=="SEND_UPDATE_PROFILE_DOCTOR"&& <p>Bác sĩ đã cập nhật thông tin thành công!</p>}
             {loadWhat=="REBUY"&& <p>Đã add lại vào giỏ hàng</p>}
             {loadWhat=="CANCEL_ORDER"&& <p>Đã hủy đơn của bạn</p>}
-
+            {loadWhat=="CHANGE_PASSWORD"&& <p>Đã đổi mật khẩu thành công</p>}
 
           {/* // Doctor */}
           {loadWhat=="SEND_ADDNEW_REQUEST"&& <p>Đã thêm bài viết thành công!</p>}

@@ -98,29 +98,7 @@ function Page() {
             >
               Đăng ký
             </button>
-            <div className="mt-6 text-[16px] font-bold flex flex-row items-center justify-center">
-              <div className="border border-[#C5C5CF] w-36 mr-5"></div>
-              <div className="text-[#C5C5CF]">Hoặc </div>
-              <div className="border border-[#C5C5CF] w-36 ml-5"></div>
-            </div>
-            <div className="flex justify-center mt-6 w-full">
-              <button className="flex items-center justify-center border-2 border-blue-600 text-blue-600 rounded-md p-2 mr-4 w-1/2">
-                <img
-                  src="./img/facebook.png"
-                  alt="Facebook logo"
-                  className="mr-2"
-                />
-                Facebook
-              </button>
-              <button className="flex items-center justify-center border-2 border-red-600 text-red-600 rounded-md p-2 ml-4 w-1/2">
-                <img
-                  src="./img/google.png"
-                  alt="Google logo"
-                  className="mr-2"
-                />
-                Google
-              </button>
-            </div>
+       
             <div className="mt-6 font-k2d text-lg text-center">
               Đã có tài khoản,
               <Link href="/Login">

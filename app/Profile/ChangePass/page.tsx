@@ -5,7 +5,14 @@ import ProfileNav from "@/app/Component/ProfileNav/ProfileNav";
 import React, { useState, useEffect } from 'react';
 import axios from '@/api/axios';
 import { useRouter } from "next/navigation";
+import ErrorModal from "@/app/Component/Error";
+import LoadingModal from "@/app/Component/Loading";
 function Page() {
+    //Handle loading and complete
+    const [isLoading, setIsLoading] = useState(false);
+    const [isComplete, setIsComplete] = useState(false);
+    const [loadWhat, setLoadWhat] = useState("");
+    const [error, setError] = useState<string | null>(null);
     const router = useRouter();
     const [passwords, setPasswords] = useState(["", "", ""]);
     const [hidepass, setHidepass] = useState([false, false, false]);
@@ -27,23 +34,39 @@ function Page() {
         newHidepass[index] = !newHidepass[index];
         setHidepass(newHidepass);
     };
-    const handleSave = async () => {
-        console.log("savePass");
+    const handleSave = async (e: React.FormEvent) => {
+        e.preventDefault(); // Prevent default form submission behavior
+      
         const updatePassword = async () => {
-            try {
-                const response = await axios.post(`/account/changepass`, { oldpassword: passwords[0], newpassword: passwords[1] });
-                alert("Đổi mật khẩu thành công");
-                router.push('/login');
-            } catch (error) {
-                console.error('Error update password:', error);
+          if (passwords[1] !== passwords[2]) {
+            setError("CONFIRM_PASSWORD_NOT_MATCH");
+            return;
+          }
+          try {
+            const response = await axios.post(`/account/changepass`, { oldpassword: passwords[0], newpassword: passwords[1] });
+            setIsLoading(false);
+            setIsComplete(true);
+            setLoadWhat("CHANGE_PASSWORD");
+          } catch (error: any) {
+            console.error('Error update password:', error);
+            if (error.response.data.message === "WRONG_PASSWORD") {
+              setError("WRONG_PASSWORD");
             }
+          }
         };
+      
         updatePassword();
-
-    }
+      };
     return (
         <div className="flex flex-col w-full ">
             <Header />
+            <ErrorModal error={error} setError={setError} />
+            <LoadingModal
+                isLoading={isLoading}
+                isComplete={isComplete}
+                setIsComplete={setIsComplete}
+                loadWhat={loadWhat}
+            />
             <div className="flex bg-[#DFF3FF] w-full ">
                 <ProfileNav />
                 {/* Right */}
