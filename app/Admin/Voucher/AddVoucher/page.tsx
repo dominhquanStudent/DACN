@@ -88,6 +88,10 @@ function VoucherAdd() {
         setError("LACK_VOUCHERENDDATE");
         return;
       }
+      if (new Date(endDate) < new Date(beginDate)) {
+        setError("INVALID_VOUCHERENDDATE");
+        return;
+      }
       if (!code) {
         setError("LACK_VOUCHERCODE");
         return;

@@ -114,8 +114,8 @@ function Page() {
                                     rounded border border-gray-300 w-full text-lg" onChange={e => setData({ ...data, userName: e.target.value })} placeholder="Chưa có" />
                                 </div>
                                 <div className="flex items-center my-4">
-                                    <div className="font-nunito w-1/4">Email <span className="text-red-500">*</span></div>
-                                    <input type="text" defaultValue={data.email ? data.email : ""} className="p-2 pl-4 font-nunito 
+                                    <div className="font-nunito w-1/4 ">Email <span className="text-red-500">*</span></div>
+                                    <input type="text" defaultValue={data.email ? data.email : ""} className="p-2 pl-4 font-nunito disabled:bg-gray-300
                                     rounded border border-gray-300 w-full text-lg"
                                         // onChange={e => setData({ ...data, email: e.target.value })} 
                                         placeholder="Chưa có" disabled />

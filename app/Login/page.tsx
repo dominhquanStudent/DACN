@@ -5,29 +5,54 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import React, { useState } from "react";
 import useAuth from '@/hooks/useAuth';
-
+import ErrorModal from "@/app/Component/Error";
+import LoadingModal from "@/app/Component/Loading";
 function Page() {
   const router = useRouter();
   const { auth, login, isAuthenticated } = useAuth();
   const [hidepass, sethidepass] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  //Handle loading and complete
+  const [isLoading, setIsLoading] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
+  const [loadWhat, setLoadWhat] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await login(email, password);
-    console.log(response);
-    if (response.role === "admin") {
-      router.push("/Admin");
-    } else if (response.role === "doctor") {
-      router.push("/Doctor");
-    } else {
-      router.back();
+    try {
+      setLoadWhat("LOGIN");
+      setIsLoading(true);
+      const response = await login(email, password);
+  
+      if (response.error) {
+        throw new Error(response.error);
+      }
+      if (response.role === "admin") {
+        router.push("/Admin");
+      } else if (response.role === "doctor") {
+        router.push("/Doctor");
+      } else if (response.role === "user") {
+        router.push("/Main");
+      } else {
+        throw new Error("Invalid role");
+      }
+    } catch (error) {
+      setIsLoading(false);
+      setError("WRONG_ACCOUNT_OR_PASSWORD");
     }
   };
 
   return (
     <div className="flex flex-col w-full">
+      <ErrorModal error={error} setError={setError} />
+      <LoadingModal
+        isLoading={isLoading}
+        isComplete={isComplete}
+        setIsComplete={setIsComplete}
+        loadWhat={loadWhat}
+      />
       {/* Header Section */}
       <div className="flex flex-wrap items-center p-4 md:p-0">
         <img loading="lazy" src={"./img/logo.png"} alt="Logo" className="w-16 md:w-20 md:ml-8" />
