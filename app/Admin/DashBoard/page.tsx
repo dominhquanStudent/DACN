@@ -7,6 +7,14 @@ import { useRouter } from 'next/navigation';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 
 function DashBoard() {
+    const formatRevenue = (value: number) => {
+        if (value >= 1000000) {
+          return `${(value / 1000000).toFixed(1)}M`;
+        } else if (value >= 1000) {
+          return `${(value / 1000).toFixed(1)}K`;
+        }
+        return value.toString();
+      };
     const router = useRouter();
     const [dashboard, setdashboard] = useState<any>({
         "pendingOrders": 0,
@@ -23,7 +31,9 @@ function DashBoard() {
         handledOrders: [],
     });
     const [revenueData, setRevenueData] = useState<any>({
-        revenue: []
+        revenue: [],
+        revenueLast7Days: []
+
     })
     const [petData, setPetData] = useState<any>({
         petsChuaCoChu: [],
@@ -68,7 +78,6 @@ function DashBoard() {
             try {
                 const response = await axios.get('/dashboard/graph/order');
                 setOrderData(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching graph data:', error);
             }
@@ -77,7 +86,6 @@ function DashBoard() {
             try {
                 const response = await axios.get('/dashboard/graph/appointment');
                 setAppoinmentData(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching graph data:', error);
             }
@@ -86,7 +94,6 @@ function DashBoard() {
             try {
                 const response = await axios.get('/dashboard/graph/adopt');
                 setPetData(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching graph data:', error);
             }
@@ -95,7 +102,6 @@ function DashBoard() {
             try {
                 const response = await axios.get('/dashboard/graph/rescue');
                 setRescueData(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching graph data:', error);
             }
@@ -144,6 +150,10 @@ function DashBoard() {
             }
         } else if (currentgraph === 'revenue') {
             switch (selectedOption) {
+                case 'revenue':
+                    return revenueData.revenue;
+                case 'revenueLast7Days':
+                    return revenueData.revenueLast7Days;
                 default:
                     return revenueData.revenue;
             }
@@ -187,6 +197,7 @@ function DashBoard() {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         return `${day}-${month}`;
     }
+    
     return (
         <div className='flex flex-col w-full justify-center items-center'>
             {/* //Header */}
@@ -196,7 +207,7 @@ function DashBoard() {
                 <div className='w-3/4 border-l-2 border-gray-200'>
                     <div className='flex flex-col ml-8'>
                         <div className={'flex font-nunito text-xl font-bold w-full justify-center'}>
-                            Dash Board
+                            Dashboard
                         </div>
                         <div className='font-nunito text-lg font-bold'>
                             Việc cần xử lý
@@ -259,38 +270,39 @@ function DashBoard() {
                                 </div>
                             </>
                         }
-                        {currentgraph === 'revenue' &&
+                        {currentgraph === 'revenue' && (
                             <>
-                                <div className='mb-4'>
-                                    <label htmlFor="orderType" className='font-nunito text-lg font-bold'>Chọn loại doanh thu </label>
-                                    <select id="revenueType" value={selectedOption} onChange={handleChange} className='ml-2'>
-                                        <option value="revenue">Doanh thu tháng</option>
-                                    </select>
-                                </div>
-                                <div className='w-full h-96'>
-                                    <ResponsiveContainer>
-                                        <LineChart
-                                            data={chartData}
-                                            margin={{
-                                                top: 5, right: 30, left: 20, bottom: 20, // Increased bottom margin
-                                            }}
-                                        >
-                                            <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis
-                                                dataKey="_id"
-                                                label={{ value: 'Date', position: 'insideBottomRight', offset: -5 }}
-                                                tick={{ textAnchor: 'end' }} // Rotated labels
-                                                tickFormatter={MonthDayFormat} // Formatted date
-                                            />
-                                            <YAxis />
-                                            <Tooltip />
-                                            <Legend />
-                                            <Line type="monotone" dataKey="totalRevenue" name='Tổng doanh thu' stroke="#8884d8" activeDot={{ r: 8 }} />
-                                        </LineChart>
-                                    </ResponsiveContainer>
-                                </div>
+                            <div className='mb-4'>
+                                <label htmlFor="orderType" className='font-nunito text-lg font-bold'>Chọn loại doanh thu </label>
+                                <select id="revenueType" value={selectedOption} onChange={handleChange} className='ml-2'>
+                                <option value="revenue">Doanh thu tích lũy tháng</option>
+                                <option value="revenueLast7Days">Doanh thu qua 7 ngày</option>
+                                </select>
+                            </div>
+                            <div className='w-full h-96'>
+                                <ResponsiveContainer>
+                                <LineChart
+                                    data={chartData}
+                                    margin={{
+                                    top: 5, right: 30, left: 20, bottom: 20, // Increased bottom margin
+                                    }}
+                                >
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis
+                                    dataKey="_id"
+                                    label={{ value: 'Date', position: 'insideBottomRight', offset: -5 }}
+                                    tick={{ textAnchor: 'end' }} // Rotated labels
+                                    tickFormatter={MonthDayFormat} // Formatted date
+                                    />
+                                    <YAxis tickFormatter={formatRevenue} />
+                                    <Tooltip formatter={formatRevenue} />
+                                    <Legend />
+                                    <Line type="monotone" dataKey="totalRevenue" name='Tổng doanh thu' stroke="#8884d8" activeDot={{ r: 8 }} />
+                                </LineChart>
+                                </ResponsiveContainer>
+                            </div>
                             </>
-                        }
+                        )}
                         {currentgraph === 'pets' &&
                             <>
                                 <div className='mb-4'>

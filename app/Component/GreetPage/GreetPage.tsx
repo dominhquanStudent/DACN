@@ -54,7 +54,7 @@ export default function GreetPage() {
             />
             {/*word container*/}
             <div className="text-center px-2 md:px-0 md:ml-4">
-              <div className="text-2xl md:text-4xl font-bold font-nunito">
+              <div className="mt-5 text-2xl md:text-4xl font-bold font-nunito">
                 Gâu Gâu
               </div>
               <div className="text-2xl md:text-4xl font-bold font-nunito">

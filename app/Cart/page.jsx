@@ -71,10 +71,11 @@ export default function Cart() {
   const fetchOrderAddress = async () => {
     const response = await getInfo();
     if (response.address) {
-      setOrderAddress(response.address)
+        setOrderAddress(response.address);
+    } else {
+        setOrderAddress("");
     }
-    ;
-  };
+};
   useEffect(() => {
     fetchCartData();
     fetchOrderAddress();
@@ -222,6 +223,15 @@ export default function Cart() {
       setError("VOUCHER_OUT_OF_STOCK");
       return;
     }
+    if (totalPriceafterDiscount <= 0) {
+      setError("TOTAL_PRICE_INVALID");
+      return;
+    }
+    const info = await getInfo();
+    if (!info.phone) {
+      setError("PHONE_NOT_FOUND");
+      return;
+    }
     const order = {
       user_id: cartData.cart.user_id,
       product_list: cartData.cart.product_list.filter(product => product.selected),
@@ -348,7 +358,7 @@ export default function Cart() {
 
 
           setDiscount(discountValue);
-          setTotalPriceafterDiscount(totalPrice - discountValue);
+          setTotalPriceafterDiscount(totalPrice - discountValue>=0?totalPrice - discountValue:0);
           setVoucherError("None");
         } else {
           setVoucherError("MIN_REQUIRE_NOT_MET");

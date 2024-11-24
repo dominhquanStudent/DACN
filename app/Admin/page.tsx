@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 function DashBoard() {
     const router = useRouter();
     useEffect(() => {
-      router.replace('/Admin/DashBoard');
+      router.replace('/Admin/Dashboard');
     }, []);
     return <></>
 }

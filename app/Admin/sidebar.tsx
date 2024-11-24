@@ -2,7 +2,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
 const menuItems = [
-    { name: 'Dash Board', path: '/Admin/DashBoard', icon: '/img/icon/dashboard_hl.svg', iconhl: '/img/icon/dashboard.svg' },
+    { name: 'DashBoard', path: '/Admin/Dashboard', icon: '/img/icon/dashboard_hl.svg', iconhl: '/img/icon/dashboard.svg' },
     { name: 'Quản lý đơn hàng', path: '/Admin/Order', icon: '/img/icon/order.svg', iconhl: '/img/icon/order_hl.svg' },
     { name: 'Quản lý sản phẩm', path: '/Admin/Product', icon: '/img/icon/product.svg', iconhl: '/img/icon/product_hl.svg' },
     { name: 'Quản lý dịch vụ', path: '/Admin/Service', icon: '/img/icon/service.svg', iconhl: '/img/icon/service_hl.svg' },

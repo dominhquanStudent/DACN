@@ -5,7 +5,6 @@ const login = async (email, password) => {
   try {
     const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const response = await axios.post(`${baseURL}/auth/login`, { email, password }, { withCredentials: true });
-    console.log('Response Headers:', response.headers);
     if (response.data.jwt) {
       deleteCookie("jwt");
       setCookie("jwt", response.data.jwt, { maxAge: 60 * 60 * 24 });
