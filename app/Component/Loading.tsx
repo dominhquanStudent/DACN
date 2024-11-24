@@ -63,8 +63,8 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             {loadWhat=="ADD_TO_CART"&& <p>Đang thêm vào giỏ hàng!</p>}
             {loadWhat=="ADD_COMMENT"&& <p>Đang thêm đánh giá của bạn!</p>}
             {loadWhat=="SEND_ADOPT_REQUEST"&& <p>Đang gửi yêu cầu nhận thú cưng!</p>}
-            {loadWhat=="LOADING_PRODUCT"&& <p>Vui lòng chờ giây lát</p>}
-            {loadWhat=="LOADING_PET_INFO"&& <p>Vui lòng chờ giây lát</p>}
+            {loadWhat=="LOADING_PRODUCT"&& <p>Đang tải thông tin sản phẩm</p>}
+            {loadWhat=="LOADING_PET_INFO"&& <p>Đang tải thông tin thú cưng</p>}
             {loadWhat==""&& <p>Template loading!</p>}
             {loadWhat=="ORDERING"&& <p>Đang đặt hàng</p>}
             {loadWhat=="REBUY"&& <p>Đang thêm lại vào giỏ hàng</p>}

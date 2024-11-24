@@ -25,13 +25,6 @@ export default function SearchBar() {
     }
   };
 
-  const handleMouseEnter = () => {
-    setIsDropdownVisible(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsDropdownVisible(false);
-  };
     return (
       <div className="flex">
         <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
@@ -70,8 +63,6 @@ export default function SearchBar() {
         {isDropdownVisible && searchResults.length > 0 && (
         <div
           className="absolute top-14 left-[570px] z-10 w-[25rem] bg-white border border-gray-300 rounded-lg shadow-lg mt-1"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
         >
           {searchResults.map((item: any) => (
             <a href={`/Product_Info/${item._id}`} key={item._id} className="p-2 flex justify-between no-underline text-black">

@@ -348,7 +348,7 @@ export default function Cart() {
 
 
           setDiscount(discountValue);
-          setTotalPriceafterDiscount(totalPrice - discountValue);
+          setTotalPriceafterDiscount(totalPrice - discountValue>=0?totalPrice - discountValue:0);
           setVoucherError("None");
         } else {
           setVoucherError("MIN_REQUIRE_NOT_MET");
