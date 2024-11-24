@@ -77,9 +77,7 @@ const ProductContent = () => {
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category === selectedCategory ? null : category);
     setSelectedBrands([]); // Reset selected brands when category changes
-    setMinPrice(""); // Reset min price when category changes
-    setMaxPrice(""); // Reset max price when category changes
-
+  
     // Reset checkboxes
     const checkboxes = document.querySelectorAll('.custom-checkbox');
     checkboxes.forEach((checkbox: any) => {
@@ -112,6 +110,17 @@ const ProductContent = () => {
     if (selectedCategory) {
       filtered = filtered.filter(
         (product: any) => product.category === selectedCategory
+      );
+    }
+    // Apply price filter
+    if (minPrice !== "") {
+      filtered = filtered.filter(
+        (product: any) => product.discount_price >= parseFloat(minPrice)
+      );
+    }
+    if (maxPrice !== "") {
+      filtered = filtered.filter(
+        (product: any) => product.discount_price <= parseFloat(maxPrice)
       );
     }
     if (selectedBrands.length > 0) {
@@ -246,8 +255,11 @@ const ProductContent = () => {
                     </div>
                   ))}
                 </div>
-                {/* Min and max price searching */}
-                <div className="space-y-4 border-b-[1px] pb-4 mt-4 bg-background-filter">
+                
+              </>
+            )}
+            {/* Min and max price searching */}
+            <div className="space-y-4 border-b-[1px] pb-4 mt-4 bg-background-filter">
                   <div className="flex justify-between items-center p-2 text-center font-bold bg-title_filter text-orange-700">
                     <FontAwesomeIcon icon={faList} />
                     <span className="flex-grow text-center">Theo giá</span>
@@ -290,8 +302,6 @@ const ProductContent = () => {
                 >
                   Áp dụng
                 </button>
-              </>
-            )}
           </div>
         </div>
         {/* Product side */}
