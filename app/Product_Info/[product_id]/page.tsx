@@ -385,7 +385,7 @@ export default function ProductDetailPage({
                   Còn lại: {data.stock} sản phẩm
                 </div>
 
-                <p className="mt-6 text-gray-500">
+                <p className="mt-6 text-gray-500 text-justify">
                   {data.description}</p>
               </div>
             </div>

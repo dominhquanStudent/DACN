@@ -20,6 +20,12 @@ function Page() {
         if (validateEmail(email)) {
             setEmailError(''); 
             setStep(2);
+            try {
+                const response = axios.post('/account/forgotpass', { email: email });
+                console.log(response);
+            } catch (error) {
+                console.error('Error sending email:', error);
+            }
         } else {
             setEmailError('Email không hợp lệ');
         }

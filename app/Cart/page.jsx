@@ -71,10 +71,11 @@ export default function Cart() {
   const fetchOrderAddress = async () => {
     const response = await getInfo();
     if (response.address) {
-      setOrderAddress(response.address)
+        setOrderAddress(response.address);
+    } else {
+        setOrderAddress("");
     }
-    ;
-  };
+};
   useEffect(() => {
     fetchCartData();
     fetchOrderAddress();
@@ -220,6 +221,15 @@ export default function Cart() {
     }
     if (voucherInfo && voucherInfo.quantity <= 0) {
       setError("VOUCHER_OUT_OF_STOCK");
+      return;
+    }
+    if (totalPriceafterDiscount <= 0) {
+      setError("TOTAL_PRICE_INVALID");
+      return;
+    }
+    const info = await getInfo();
+    if (!info.phone) {
+      setError("PHONE_NOT_FOUND");
       return;
     }
     const order = {

@@ -31,6 +31,21 @@ function Page({
         setCombinedOtp(otpString);
     };
 
+    const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+        const pasteData = event.clipboardData.getData('text');
+        if (pasteData.length === otp.length) {
+            const newOtp = pasteData.split('');
+            setOtp(newOtp);
+            newOtp.forEach((value, index) => {
+                if (inputRefs.current[index]) {
+                    inputRefs.current[index]!.value = value;
+                }
+            });
+            setCombinedOtp(newOtp.join(''));
+            inputRefs.current[otp.length - 1]?.focus();
+        }
+    };
+
     const handleVerify = async () => {
         try {
             const response = await axios.post('/otp/verify', {
@@ -96,31 +111,33 @@ function Page({
                 {step === 1 && (
                     <div className='bg-white w-2/6 rounded-xl ml-16 px-12 pt-8 flex flex-col' style={{ height: '70vh' }}>
                         <div className='text-2xl font-bold mb-6'>Đăng ký </div>
-
                         <div className='text-lg text-[#969090] mb-6 text-center font-bold'>
                             Nhập mã xác nhận
                             <div className='font-normal'>
                                 Mã xác nhận sẽ được gửi qua Email <br /> {searchParams.email}
                             </div>
                         </div>
-                        <div className="flex justify-center">
-                            {otp.map((value, index) => (
-                                <input
-                                    key={index}
-                                    type="tel"
-                                    className="p-2 mx-4 font-nunito rounded border border-gray-300 w-12 text-lg text-center"
-                                    value={value}
-                                    onChange={handleChange(index)}
-                                    maxLength={1}
-                                    pattern="[0-9]*"
-                                    ref={(el) => { inputRefs.current[index] = el; }}
-                                />
-                            ))}
-                        </div>
-                        <div className='mt-6 font-k2d text-lg text-center'>Chưa nhận được,
-                            <button className=' text-[#FC0E0E] rounded-md p-2 font-bold' onClick={() => router.push('/Sigup')}>Gửi lại</button>
-                        </div>
-                        <button type="submit" className="bg-[#296EB6] text-white font-nunito p-2 text-xl rounded w-full" ref={buttonRef} onClick={handleVerify}>Kế tiếp</button>
+                        <form onSubmit={(e) => { e.preventDefault(); handleVerify(); }}>
+                            <div className="flex justify-center">
+                                {otp.map((value, index) => (
+                                    <input
+                                        key={index}
+                                        type="tel"
+                                        className="p-2 mx-4 font-nunito rounded border border-gray-300 w-12 text-lg text-center"
+                                        value={value}
+                                        onChange={handleChange(index)}
+                                        onPaste={index === 0 ? handlePaste : undefined}
+                                        maxLength={1}
+                                        pattern="[0-9]*"
+                                        ref={(el) => { inputRefs.current[index] = el; }}
+                                    />
+                                ))}
+                            </div>
+                            <div className='mt-6 font-k2d text-lg text-center'>Chưa nhận được,
+                                <button className=' text-[#FC0E0E] rounded-md p-2 font-bold' onClick={() => router.push('/Sigup')}>Gửi lại</button>
+                            </div>
+                            <button type="submit" className="bg-[#296EB6] text-white font-nunito p-2 text-xl rounded w-full" ref={buttonRef}>Kế tiếp</button>
+                        </form>
                     </div>
                 )}
                 {step === 2 && (
@@ -132,11 +149,13 @@ function Page({
                                 Cuối cùng hãy tạo mật khẩu <br /> cho tài khoản của bạn
                             </div>
                         </div>
-                        <div>
-                            <input type="password" className="p-2 pl-4 mb-12 w-full font-nunito text-lg rounded border border-gray-300" placeholder="Mật khẩu"
-                                value={password} onChange={handlePasswordChange} />
-                        </div>
-                        <button type="submit" className="bg-[#296EB6] text-white font-nunito p-2 text-xl rounded w-full" ref={buttonRef} onClick={handleCreateAccount}>Hoàn thành</button>
+                        <form onSubmit={(e) => { e.preventDefault(); handleCreateAccount(); }}>
+                            <div>
+                                <input type="password" className="p-2 pl-4 mb-12 w-full font-nunito text-lg rounded border border-gray-300" placeholder="Mật khẩu"
+                                    value={password} onChange={handlePasswordChange} />
+                            </div>
+                            <button type="submit" className="bg-[#296EB6] text-white font-nunito p-2 text-xl rounded w-full" ref={buttonRef}>Hoàn thành</button>
+                        </form>
                     </div>
                 )}
                 {step === 3 && (
@@ -145,12 +164,10 @@ function Page({
                         <div className='text-3xl text-[#F29A2E] mb-12 mt-12 text-center font-bold'>
                             Chúc mừng, bạn đã <br /> đăng ký thành công
                         </div>
-
                         <button type="submit" className="bg-[#296EB6] text-white font-nunito p-2 text-xl rounded w-full mt-12" ref={buttonRef} onClick={() => router.push("/Login")}>Đăng nhập ngay</button>
                     </div>
                 )}
             </div>
-
             <Footer />
         </div>
 
