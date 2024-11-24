@@ -1,3 +1,4 @@
+'use client';
 import { FaExclamationCircle } from "react-icons/fa";
 import Cat_Error from "@/public/img/Cat_Error.jpg";
 const ErrorModal = ({ error, setError, product }: any ) => {
@@ -5,7 +6,7 @@ const ErrorModal = ({ error, setError, product }: any ) => {
     if (error === "NOT_LOGGED_IN" || error === "ADOPT_NOT_LOGIN") {
       window.location.href = "/Login";
     }
-    if (error === "PAGE_NOT_FOUND") {
+    if (error === "PAGE_NOT_FOUND" || error === "PAGE_UNAUTHORIZED") {
       window.location.href = "/Main";
     }
     if (error === "PRODUCT_NOT_FOUND") {
@@ -35,10 +36,12 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             <img src={Cat_Error.src} className="text-red-500 text-6xl mb-4 h-40 w-40" />
             {/* Page not found */}
             {error == "PAGE_NOT_FOUND" && <p>Trang bạn tìm hiện không tồn tại</p>}
+            {error == "PAGE_UNAUTHORIZED" && <p>Bạn không được truy cập vào trang này</p>}
             {/*Account */}
             {error == "WRONG_ACCOUNT_OR_PASSWORD" && <p>Tài khoản hoặc mật khẩu không đúng</p>}
             {error == "WRONG_PASSWORD" && <p>Mật khẩu hiện tại không đúng</p>}
             {error == "CONFIRM_PASSWORD_NOT_MATCH" && <p className="text-center">Mật khẩu mới và mật khẩu nhập lại không khớp</p>}
+            {error == "INVALID_PHONE_NUMBER" && <p>Số điện thoại không hợp lệ</p>}
             {/* Comment Errors */}
             {error == "EMPTY COMMENT" && <p>Nội dung không được phép rỗng</p>}
             {error == "EMPTY RATING" && <p>Đánh giá không được phép rỗng</p>}
@@ -68,6 +71,12 @@ const ErrorModal = ({ error, setError, product }: any ) => {
               )}
             {error == "MAX_QUANTITY_ALLOWED" && (
               <p>Hiện tại giỏ hàng đã có tối đa sản phẩm này</p>
+            )}
+            {error == "TOTAL_PRICE_INVALID" && (
+              <p>Giá trị thanh toán không hợp lệ</p>
+            )}
+            {error == "TOTAL_PRICE_INVALID" && (
+              <p className="text-center">Bạn cần nhập thêm số điện thoại vào tài khoản trước khi đặt hàng</p>
             )}
             {/* Not log in errors */}
             {error == "NOT_LOGGED_IN" && <p>Bạn cần đăng nhập xem trang này</p>}
@@ -161,7 +170,7 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "LACK_PRODUCTIMAGE" && <p>Vui lòng chọn ảnh sản phẩm!</p>}
 
             {/* PET */}
-            {error == "PET_OWNED" && <p>Pet này đã có người khác rồi :(</p>}
+            {error == "PET_OWNED" && <p>Pet này đã có người khác rồi :( </p>}
             {error == "PET_NOT_FOUND" && <p>Pet này không có trong cửa hàng!</p>}
             {error == "LACK_PETNAME" && <p>Vui lòng nhập tên thú cưng!</p>}
             {error == "LACK_PETGENDER" && (

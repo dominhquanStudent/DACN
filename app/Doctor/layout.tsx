@@ -13,7 +13,7 @@ export default function RootLayout({
     return <LoadingModal loading="LOADING_PAGE"/>
   }
 
-  if (!auth || (auth && auth.role !== 'admin')) {
+  if (!auth || (auth && auth.role !== 'doctor')) {
     return <ErrorModal error="PAGE_UNAUTHORIZED" />;
   } else {
     return <>{children}</>;

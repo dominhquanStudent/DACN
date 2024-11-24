@@ -11,13 +11,13 @@ export default function ProfileNav() {
       url: ''
     },
     _id: '',
-    userName: null,
+    userName: '',
     email: '',
     password: '',
-    phone: null,
-    address: null,
-    gender: null,
-    birthday: null,
+    phone: '',
+    address: '',
+    gender: '',
+    birthday: '',
     token: [],
     role: 'user',
   });
@@ -50,7 +50,7 @@ export default function ProfileNav() {
       {/* Left */}
       <div className="flex items-center w-full mb-4">
         <img
-          src={data.avatar.url ? data.avatar.url : "https://res.cloudinary.com/dzm879qpm/image/upload/v1724509562/defautProduct_mlmwsw.png"}
+          src={data.avatar ? data.avatar.url : "https://res.cloudinary.com/dzm879qpm/image/upload/v1724509562/defautProduct_mlmwsw.png"}
           alt='Avatar'
           className="w-12 h-12 rounded-full mr-4"
         />

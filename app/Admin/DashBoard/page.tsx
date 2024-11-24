@@ -8,7 +8,12 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 
 function DashBoard() {
     const formatRevenue = (value: number) => {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'VND' }).format(value);
+        if (value >= 1000000) {
+          return `${(value / 1000000).toFixed(1)}M`;
+        } else if (value >= 1000) {
+          return `${(value / 1000).toFixed(1)}K`;
+        }
+        return value.toString();
       };
     const router = useRouter();
     const [dashboard, setdashboard] = useState<any>({
@@ -26,7 +31,9 @@ function DashBoard() {
         handledOrders: [],
     });
     const [revenueData, setRevenueData] = useState<any>({
-        revenue: []
+        revenue: [],
+        revenueLast7Days: []
+
     })
     const [petData, setPetData] = useState<any>({
         petsChuaCoChu: [],
@@ -71,7 +78,6 @@ function DashBoard() {
             try {
                 const response = await axios.get('/dashboard/graph/order');
                 setOrderData(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching graph data:', error);
             }
@@ -80,7 +86,6 @@ function DashBoard() {
             try {
                 const response = await axios.get('/dashboard/graph/appointment');
                 setAppoinmentData(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching graph data:', error);
             }
@@ -89,7 +94,6 @@ function DashBoard() {
             try {
                 const response = await axios.get('/dashboard/graph/adopt');
                 setPetData(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching graph data:', error);
             }
@@ -98,7 +102,6 @@ function DashBoard() {
             try {
                 const response = await axios.get('/dashboard/graph/rescue');
                 setRescueData(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching graph data:', error);
             }
@@ -147,6 +150,10 @@ function DashBoard() {
             }
         } else if (currentgraph === 'revenue') {
             switch (selectedOption) {
+                case 'revenue':
+                    return revenueData.revenue;
+                case 'revenueLast7Days':
+                    return revenueData.revenueLast7Days;
                 default:
                     return revenueData.revenue;
             }
@@ -190,6 +197,7 @@ function DashBoard() {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         return `${day}-${month}`;
     }
+    
     return (
         <div className='flex flex-col w-full justify-center items-center'>
             {/* //Header */}
@@ -199,7 +207,7 @@ function DashBoard() {
                 <div className='w-3/4 border-l-2 border-gray-200'>
                     <div className='flex flex-col ml-8'>
                         <div className={'flex font-nunito text-xl font-bold w-full justify-center'}>
-                            DashBoard
+                            Dashboard
                         </div>
                         <div className='font-nunito text-lg font-bold'>
                             Việc cần xử lý
@@ -267,7 +275,8 @@ function DashBoard() {
                             <div className='mb-4'>
                                 <label htmlFor="orderType" className='font-nunito text-lg font-bold'>Chọn loại doanh thu </label>
                                 <select id="revenueType" value={selectedOption} onChange={handleChange} className='ml-2'>
-                                <option value="revenue">Doanh thu tháng</option>
+                                <option value="revenue">Doanh thu tích lũy tháng</option>
+                                <option value="revenueLast7Days">Doanh thu qua 7 ngày</option>
                                 </select>
                             </div>
                             <div className='w-full h-96'>

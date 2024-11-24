@@ -2,18 +2,17 @@
 import Header from "@/app/Component/Header/Header";
 import Footer from '@/app/Component/Footer/Footer';
 import ProfileNav from "@/app/Component/ProfileNav/ProfileNav";
-import Link from 'next/link';
 import axios from '@/api/axios';
 import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import withAuth from "@/hooks/withAuth";
 import getInfo from "@/hooks/getInfo";
 import { useRouter } from "next/navigation";
 import ErrorModal from "@/app/Component/Error";
 import LoadingModal from "@/app/Component/Loading";
+
 function Page() {
-      //Handle loading and complete
+    //Handle loading and complete
     const [isLoading, setIsLoading] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
     const [loadWhat, setLoadWhat] = useState("");
@@ -35,6 +34,7 @@ function Page() {
         token: [],
         role: 'user',
     });
+
     const fetchData = async () => {
         try {
             setIsLoading(true);
@@ -47,10 +47,22 @@ function Page() {
             router.push('/login');
         }
     };
+
     useEffect(() => {
         fetchData();
     }, []);
+
+    const validatePhoneNumber = (phone: string) => {
+        const re = /^[0-9]{10}$/;
+        return re.test(phone);
+    };
+
     const handleSave = () => {
+        if (!validatePhoneNumber(data.phone)) {
+            setError("INVALID_PHONE_NUMBER");
+            return;
+        }
+
         const updateProfile = async () => {
             if (!data.email) {
                 setError("EMPTY_EMAIL");
@@ -64,22 +76,26 @@ function Page() {
             }
         };
         updateProfile();
-    }
+    };
+
     const handleImage = (e: any) => {
         const file = e.target.files[0];
         setFileToBase(file);
         console.log(file);
-    }
+    };
+
     const setFileToBase = (file: any) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = () => {
             setData({ ...data, avatar: { public_id: "null", url: reader.result as string } });
-        }
-    }
+        };
+    };
+
     const triggerFileInput = () => {
         document.getElementById('fileInput')?.click();
     };
+
     return (
         <div className="flex flex-col w-full ">
             <Header />
@@ -121,7 +137,7 @@ function Page() {
                                         placeholder="Chưa có" disabled />
                                 </div>
                                 <div className="flex items-center my-4">
-                                    <div className="font-nunito w-1/4">Address</div>
+                                    <div className="font-nunito w-1/4">Địa chỉ</div>
                                     <input type="text" defaultValue={data.address ? data.address : ""} className="p-2 pl-4 font-nunito 
                                     rounded border border-gray-300 w-full text-lg"
                                         onChange={e => setData({ ...data, address: e.target.value })}
@@ -173,7 +189,7 @@ function Page() {
                             {/* Right */}
                             <div className="flex flex-col w-1/3 items-center justify-center">
                                 <div className="flex flex-col items-center mt-8 w-full">
-                                    <img loading="lazy" src={data.avatar.url ? data.avatar.url : "https://res.cloudinary.com/dzm879qpm/image/upload/v1724509562/defautProduct_mlmwsw.png"}
+                                    <img loading="lazy" src={data.avatar != "" ? data.avatar.url : "https://res.cloudinary.com/dzm879qpm/image/upload/v1724509562/defautProduct_mlmwsw.png"}
                                         alt='Avatar' className="w-24 h-24 rounded-full mr-4 mb-4" />
                                     <input type="file" id="fileInput" accept="image/*" onChange={handleImage} className="mb-4 hidden" />
                                     <button type="submit" className="bg-[#EDB24E] text-white font-nunito p-1 text-lg rounded w-1/2" onClick={triggerFileInput}>Thay đổi Avatar</button>
@@ -188,4 +204,4 @@ function Page() {
     )
 }
 
-export default Page
+export default Page;

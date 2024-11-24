@@ -59,6 +59,7 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
         {isLoading && (
           <div className="flex flex-col items-center justify-center h-64 w-80">
             <img src={LoadingGif.src} alt="Loading..." className="h-40 w-40 mb-4" />
+            {loadWhat=="LOADING_PAGE"&& <p>Đang tải trang!</p>}
             {loadWhat=="LOGIN"&& <p>Đang đăng nhập vào </p>}
             {loadWhat=="ADD_TO_CART"&& <p>Đang thêm vào giỏ hàng!</p>}
             {loadWhat=="ADD_COMMENT"&& <p>Đang thêm đánh giá của bạn!</p>}
@@ -106,7 +107,7 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
 
 
             {/* CART LOADING */}
-            {loadWhat=="ORDERING"&& <p>Đã đặt hàng thành công, vui lòng thanh toán theo phương thức đã chọn!</p>}
+            {loadWhat=="ORDERING"&& <p className="text-center">Đã đặt hàng thành công, vui lòng thanh toán theo phương thức đã chọn!</p>}
             <button
               className="mt-4 px-4 py-2 bg-green-500 text-white rounded"
               onClick={handleClose}

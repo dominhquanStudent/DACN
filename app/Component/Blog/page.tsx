@@ -161,51 +161,49 @@ function NewsPage() {
           <div>
             <img src={xmast4.src} className=" h-[350px]" alt="Poster 2" />
           </div>
-          
+
         </Carousel>
       </div>
 
       <div className="flex w-full justify-center space-x-2 mt-4">
         <button
           onClick={() => setFilter("all")}
-          className={`py-1 px-4 rounded-xl mb-2 font-bold ${
-            filter === "all"
+          className={`py-1 px-4 rounded-xl mb-2 font-bold ${filter === "all"
               ? "bg-blue-500 text-white"
               : "bg-transparent border border-[#CCCCCC] text-black"
-          }`}
+            }`}
         >
           Tất cả
         </button>
         <button
-          onClick={() => setFilter("today")}
-          className={`py-1 px-4 rounded-xl mb-2 font-bold ${
-            filter === "today"
+          onClick={() => setFilter("month")}
+          className={`py-1 px-4 rounded-xl mb-2 font-bold ${filter === "month"
               ? "bg-blue-500 text-white"
               : "bg-transparent border border-[#CCCCCC] text-black"
-          }`}
+            }`}
         >
-          Hôm nay
+          Trong tháng
         </button>
         <button
           onClick={() => setFilter("week")}
-          className={`py-1 px-4 rounded-xl mb-2 font-bold ${
-            filter === "week"
+          className={`py-1 px-4 rounded-xl mb-2 font-bold ${filter === "week"
               ? "bg-blue-500 text-white"
               : "bg-transparent border border-[#CCCCCC] text-black"
-          }`}
+            }`}
         >
           Trong tuần
         </button>
         <button
-          onClick={() => setFilter("month")}
-          className={`py-1 px-4 rounded-xl mb-2 font-bold ${
-            filter === "month"
+          onClick={() => setFilter("today")}
+          className={`py-1 px-4 rounded-xl mb-2 font-bold ${filter === "today"
               ? "bg-blue-500 text-white"
               : "bg-transparent border border-[#CCCCCC] text-black"
-          }`}
+            }`}
         >
-          Trong tháng
+          Hôm nay
         </button>
+
+
       </div>
 
       <div className="p-4 border rounded-md shadow-sm bg-white flex flex-row items-start space-x-4">
