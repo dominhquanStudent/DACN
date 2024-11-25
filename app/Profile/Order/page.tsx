@@ -40,7 +40,7 @@ function Page() {
     const [error, setError] = useState<string | null>(null);
     const [sort, setSort] = useState('Tất cả');
     const [fromDate, setFromDate] = useState('');
-    const [toDate, setToDate] = useState(new Date().toISOString().split('T')[0]);
+    const [toDate, setToDate] = useState(new Date(new Date()).toISOString().split('T')[0]);
     const handleSort = (e: any) => {
         setSort(e);
     };
@@ -75,8 +75,15 @@ function Page() {
             const response = await axios.put(`/order/${id}/cancel`);
             setIsComplete(true);
             setIsLoading(false);
+    
+            // Update the order status locally
+            setData(prevData => 
+                prevData.map(o => 
+                    o._id === id ? { ...o, order_status: 'Đã hủy' } : o
+                )
+            );
         } catch (error) {
-            console.error("Error rebuy orders:", error);
+            console.error("Error canceling order:", error);
         }
     };
     const handleRefund = async (order: Order) => {
@@ -125,7 +132,7 @@ function Page() {
     const filteredOrders = data.filter(order => {
         const orderDate = new Date(order.order_date);
         const from = fromDate ? new Date(fromDate) : null;
-        const to = toDate ? new Date(toDate) : null;
+        const to = toDate ? new Date(new Date(toDate).setHours(23, 59, 59, 999)) : null;
         return (
             (sort === 'Tất cả' || order.order_status === sort) &&
             (!from || orderDate >= from) &&
