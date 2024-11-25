@@ -74,6 +74,8 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             {loadWhat=="GET_ACCOUNT_DATA"&& <p>Đang tải thông tin của bạn</p>}
             {loadWhat=="CANCEL_ORDER"&& <p>Đang hủy đơn của bạn</p>}
             {loadWhat=="LOADING_ORDER"&& <p>Đang tải thông tin order của bạn</p>}
+            {loadWhat=="CHANGE_PASSWORD"&& <p>Đang cập nhật lại mật khẩu của bạn</p>}
+            {loadWhat=="GET_NOTIFICATION"&& <p>Đang tải thông báo của bạn</p>}
           </div>
         )}
         {isComplete && (

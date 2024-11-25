@@ -14,7 +14,6 @@ const menuItems = [
     { name: 'Tin nhắn', path: 'https://1240.3cx.cloud/#/chat', icon: '/img/icon/message.svg', iconhl: '/img/icon/message_hl.svg', external: true },
     { name: 'Thông báo người dùng', path: '/Admin/Notification', icon: '/img/icon/Allert.svg', iconhl: '/img/icon/Allert_hl.svg'},
     { name: 'Hồ sơ', path: '/Admin/Profile', icon: '/img/icon/admin.svg', iconhl: '/img/icon/admin_hl.svg' },
-    { name: 'Cài đặt', path: '/Admin/Setting', icon: '/img/icon/setting.svg', iconhl: '/img/icon/setting_hl.svg' },
 ];
 
 function Sidebar() {
