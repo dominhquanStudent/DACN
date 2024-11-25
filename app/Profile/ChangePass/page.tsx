@@ -43,13 +43,16 @@ function Page() {
             return;
           }
           try {
+            setIsLoading(true);
+            setLoadWhat("CHANGE_PASSWORD");
             const response = await axios.post(`/account/changepass`, { oldpassword: passwords[0], newpassword: passwords[1] });
             setIsLoading(false);
             setIsComplete(true);
-            setLoadWhat("CHANGE_PASSWORD");
+            
           } catch (error: any) {
             console.error('Error update password:', error);
             if (error.response.data.message === "WRONG_PASSWORD") {
+              setIsLoading(false);
               setError("WRONG_PASSWORD");
             }
           }
