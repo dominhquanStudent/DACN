@@ -40,7 +40,7 @@ function Page() {
     const [error, setError] = useState<string | null>(null);
     const [sort, setSort] = useState('Tất cả');
     const [fromDate, setFromDate] = useState('');
-    const [toDate, setToDate] = useState(new Date().toISOString().split('T')[0]);
+    const [toDate, setToDate] = useState(new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
     const handleSort = (e: any) => {
         setSort(e);
     };
@@ -75,8 +75,15 @@ function Page() {
             const response = await axios.put(`/order/${id}/cancel`);
             setIsComplete(true);
             setIsLoading(false);
+    
+            // Update the order status locally
+            setData(prevData => 
+                prevData.map(o => 
+                    o._id === id ? { ...o, order_status: 'Đã hủy' } : o
+                )
+            );
         } catch (error) {
-            console.error("Error rebuy orders:", error);
+            console.error("Error canceling order:", error);
         }
     };
     const handleRefund = async (order: Order) => {
