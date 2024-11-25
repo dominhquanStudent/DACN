@@ -40,7 +40,7 @@ function Page() {
     const [error, setError] = useState<string | null>(null);
     const [sort, setSort] = useState('Tất cả');
     const [fromDate, setFromDate] = useState('');
-    const [toDate, setToDate] = useState(new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
+    const [toDate, setToDate] = useState(new Date(new Date()).toISOString().split('T')[0]);
     const handleSort = (e: any) => {
         setSort(e);
     };
@@ -132,7 +132,7 @@ function Page() {
     const filteredOrders = data.filter(order => {
         const orderDate = new Date(order.order_date);
         const from = fromDate ? new Date(fromDate) : null;
-        const to = toDate ? new Date(toDate) : null;
+        const to = toDate ? new Date(new Date(toDate).setHours(23, 59, 59, 999)) : null;
         return (
             (sort === 'Tất cả' || order.order_status === sort) &&
             (!from || orderDate >= from) &&
