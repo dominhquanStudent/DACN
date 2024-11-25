@@ -2,10 +2,8 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import logo from "../../../public/img/Booking/petcare.png";
 import logoname from "../../../public/img/Logo2.svg";
 import axios from '@/api/axios';
-import { useRouter } from 'next/navigation';
 import ErrorModal from "@/app/Component/Error";
 import LoadingModal from "@/app/Component/Loading";
 import "react-calendar/dist/Calendar.css"; // Import the calendar CSS
@@ -13,7 +11,6 @@ import { getCookie } from "cookies-next";
 import getInfo from "@/hooks/getInfo";
 
 export default function Booking() {
-  const router = useRouter();
   const [user_name, setUser_name] = useState("");
   const [contactPhone, setContact_phone] = useState(""); // State for phone number
   const [image, setImage] = useState({ public_id: '', url: '' });
@@ -53,8 +50,6 @@ export default function Booking() {
         message,
       };
       const phoneRegex = /^[0-9]{10}$/;
-
-
       if (!user_name && !jwt) {
         setError("NO_ADOPT_USER_NAME");
         return;
@@ -75,7 +70,6 @@ export default function Booking() {
         setError("NO_ADOPT_MESSAGE");
         return;
       }
-
       if (!phoneRegex.test(accountData?.phone || contactPhone)) {
         setError("INVALID_PHONENUMBER");
         return;
@@ -115,7 +109,7 @@ export default function Booking() {
         loadWhat={loadWhat}
       />
 
-      <div className="flex flex-col items-center gap-4 py-4 justify-center font-nunito bg-gradient-to-br from-[#3c8ce7] to-[#00eaff] min-h-screen">
+      <div className="flex flex-col items-center gap-4 py-8 justify-center font-nunito bg-gradient-to-br from-[#3c8ce7] to-[#00eaff] ">
         <div className="bg-white rounded-lg shadow-md px-8 py-4 w-full lg:w-1/2 mx-auto">
           <div className="flex flex-col items-center space-y-4">
             <img src={logoname.src} alt="Logo" className="w-40 lg:w-60" />

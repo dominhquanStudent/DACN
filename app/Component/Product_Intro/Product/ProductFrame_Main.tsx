@@ -27,6 +27,7 @@ const ProductCard = (props: any) => {
       {/* Product Image */}
       <div className="w-full h-36 flex justify-center items-start">
           <img
+            loading='lazy'
             src={props.product.image.url}
             alt={props.product.name}
             className={`w-full h-full object-cover ${props.product.stock === 0 ? 'grayscale' : ''}`}
