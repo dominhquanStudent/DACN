@@ -1,8 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from "@/api/axios";
+import { useRouter } from 'next/navigation';
 
 export default function Product_Frame(props) {
+  const router = useRouter();
   const [quantity, setQuantity] = useState(props.product.quantity);
   const [isRemoved, setIsRemoved] = useState(false);
   const [selected, setSelected] = useState(props.product.selected);
@@ -10,6 +12,9 @@ export default function Product_Frame(props) {
   const [data, setData] = useState(0);
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-US', { style: 'decimal' }).format(price);
+  };
+  const handleProductClick = () => {
+    router.push(`/Product_Info/${props.product.product_id}`);
   };
   // Handle update cart function
   const fetchProductData = async () => {
@@ -114,12 +119,22 @@ export default function Product_Frame(props) {
         </svg>
       </button>
       <div className="w-full md:max-w-[126px]">
-        <img src={props.product.product_image} alt="perfume bottle image" className="mx-auto" />
+      <img 
+        src={props.product.product_image} 
+        alt="perfume bottle image" 
+        className="mx-auto cursor-pointer" 
+        onClick={handleProductClick}
+      />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-4 w-full">
         <div className="md:col-span-2">
           <div className="flex flex-col max-[500px]:items-center gap-3">
-            <h6 className="font-semibold text-base leading-7 text-black">{props.product.product_name}</h6>
+          <h6 
+            className="font-semibold text-base leading-7 text-black cursor-pointer"
+            onClick={handleProductClick}
+          >
+            {props.product.product_name}
+          </h6>
             <h6 className={`font-normal text-base leading-7 transition-all duration-300 ${props.product.price === props.product.discount_price ? 'hidden' : 'text-red-500 line-through'}`}>
               {formatPrice(props.product.price)} đ
             </h6>
