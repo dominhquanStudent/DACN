@@ -29,7 +29,7 @@ const config: Config = {
         'background-col': '#DDF2FF',
         'background-blue': '#296EB6',
         'background-filter': '#FCFAEE',
-        'clicked_filter': '#DA8359',
+        'clicked_filter': '#B1C29E',
         'hover_filter': '#ECDFCC',
         'title_filter': '#A5B68D',
         'form_bg': '#2C74B3',
