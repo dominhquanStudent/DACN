@@ -200,7 +200,7 @@ function Booking() {
               value={accountData?.userName || userName}
               onChange={(e) => setUserName(e.target.value)}
               placeholder="Nguyễn Văn A"
-              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] "
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] disabled:bg-gray-300"
               disabled={accountData?.userName ? true : false}
             />
           </div>
@@ -214,7 +214,7 @@ function Booking() {
               value={accountData?.phone || phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="0123456789"
-              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] "
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] disabled:bg-gray-300"
               disabled={accountData?.userName ? true : false}
             />
           </div>
@@ -227,7 +227,7 @@ function Booking() {
               value={accountData?.email || userEmail}
               onChange={(e) => setUserEmail(e.target.value)}
               placeholder="petcare@gmail.com"
-              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] "
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] disabled:bg-gray-300"
               disabled={accountData?.email ? true : false}
             />
           </div>
@@ -240,7 +240,7 @@ function Booking() {
               value={accountData?.address || address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder="247 Lý Thường Kiệt, Quận 10, TP.HCM"
-              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] "
+              className="block w-full mt-2 p-2 border rounded ml-2 flex-[4] disabled:bg-gray-300"
               disabled={accountData?.userName ? true : false}
             />
           </div>

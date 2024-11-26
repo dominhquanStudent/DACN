@@ -12,17 +12,26 @@ import Brand6 from '@/public/img/Product_Main/Brand_RoyalCanin.png';
 import Brand7 from '@/public/img/Product_Main/Brand_Whiskas.png';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
+interface ProductIntro {
+  "Nhà thú cưng": any[],
+  "Đồ chơi cho thú cưng": any[],
+  "Thức ăn thú cưng": any[],
+  "Đồ dùng tắm gội": any[],
+  "Đồ dùng thú y": any[],
+  "Đồ dùng vệ sinh": any[],
+  "overall": any[]
+}
 export default function Product_Main() {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<ProductIntro>();
 
   // Get products from server
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const response = await axios.get(`${baseURL}/product/list`);
-        setProducts(response.data.products);
+        const response = await axios.get(`${baseURL}/product/intro`);
+        console.log("Response data:", response.data);
+        setProducts(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -30,20 +39,12 @@ export default function Product_Main() {
 
     fetchProducts();
   }, []);
+  
+  const topRatedProducts = products ? products["overall"] : []
+  const topHouseProducts = products ? products["Nhà thú cưng"] : []
+  const topToyProducts = products ? products["Đồ chơi cho thú cưng"] : []
+  const topFoodProducts = products ? products["Thức ăn thú cưng"] : []
 
-  // Sort products by star rating in descending order and select the top 5 products
-  const topRatedProducts = products
-    .sort((a, b) => b.rating - a.rating)
-    .slice(0, 5);
-  const topHouseProducts = products.filter((item) => item.category === 'Nhà thú cưng').
-  sort((a, b) => b.rating - a.rating)
-  .slice(0, 5);;
-  const topToyProducts = products.filter((item) => item.category === 'Đồ chơi cho thú cưng').
-  sort((a, b) => b.rating - a.rating)
-  .slice(0, 5);;
-  const topFoodProducts = products.filter((item) => item.category === 'Thức ăn thú cưng').
-  sort((a, b) => b.rating - a.rating)
-  .slice(0, 5);;
   return (
     <>
       <Header />
