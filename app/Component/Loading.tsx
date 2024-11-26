@@ -59,6 +59,7 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
         {isLoading && (
           <div className="flex flex-col items-center justify-center h-64 w-80">
             <img src={LoadingGif.src} alt="Loading..." className="h-40 w-40 mb-4" />
+            {loadWhat=="OTP_SENDING"&& <p>Đang gửi mã OTP</p>}
             {loadWhat=="LOADING_PAGE"&& <p>Đang tải trang!</p>}
             {loadWhat=="LOGIN"&& <p>Đang đăng nhập vào </p>}
             {loadWhat=="ADD_TO_CART"&& <p>Đang thêm vào giỏ hàng!</p>}

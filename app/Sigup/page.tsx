@@ -4,26 +4,33 @@ import Logo from "../../public/img/logo";
 import Link from "next/link";
 import React, { useState } from "react";
 import axios from "@/api/axios";
+import LoadingModal from "../Component/Loading";
 function Page() {
   const [isPopup, setIsPopup] = useState(false);
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const validateEmail = (email: String) => {
     const re =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (validateEmail(email)) {
       setEmailError("");
-      setIsPopup(true);
       try{
-        const response = axios.post("/otp/create", { email: email, job: "register" });
-        console.log(response);
+        setIsLoading(true);
+        const response = await axios.post("/otp/create", { email: email, job: "register" });
+        setIsLoading(false);
+        setIsPopup(true);
       } catch (error) {
         console.error('Error sending email:', error);
         if (error instanceof Error) {
-          setEmailError(error.message);
+          if(error.message === "Request failed with status code 404") {
+            setEmailError("Email đã tồn tại, vui lòng sử dụng email khác");
+          } else {
+            setEmailError("Có vấn đề xảy ra, vui lòng thử lại sau");
+          } 
         } else {
           setEmailError("Có vấn đề xảy ra, vui lòng thử lại sau");  
         }
@@ -34,6 +41,7 @@ function Page() {
   };
   return (
     <>
+    <LoadingModal isLoading={isLoading} loadWhat={"OTP_SENDING"}/>
   <div
     className="flex flex-col w-full"
     style={{ opacity: isPopup ? "0.5" : "1" }}

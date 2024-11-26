@@ -159,12 +159,14 @@ function Page({
                     </div>
                 )}
                 {step === 3 && (
-                    <div className='bg-white w-2/6 rounded-xl ml-16 px-12 pt-8 flex flex-col' style={{ height: '60vh' }}>
+                    <div className='bg-white w-2/6 rounded-xl ml-16 px-12 pt-8 flex flex-col items-center' style={{ height: '60vh' }}>
                         <div className='text-2xl font-bold mb-6'>Đăng ký </div>
-                        <div className='text-3xl text-[#F29A2E] mb-12 mt-12 text-center font-bold'>
+                        <div className='text-3xl text-[#F29A2E] mb-4 mt-4 text-center font-bold'>
                             Chúc mừng, bạn đã <br /> đăng ký thành công
                         </div>
-                        <button type="submit" className="bg-[#296EB6] text-white font-nunito p-2 text-xl rounded w-full mt-12" ref={buttonRef} onClick={() => router.push("/Login")}>Đăng nhập ngay</button>
+                        <img src="https://res.cloudinary.com/dzm879qpm/image/upload/v1730968243/Dachshund_Dog_Love_Heart_houyzu.jpg" loading="lazy"
+                            className="w-[200px] h-[200px] rounded-full" alt="Dachshund_Dog_Love_Heart" />
+                        <button type="submit" className="bg-[#296EB6] text-white font-nunito p-2 text-xl rounded w-full mt-4" ref={buttonRef} onClick={() => router.push("/Login")}>Đăng nhập ngay</button>
                     </div>
                 )}
             </div>
