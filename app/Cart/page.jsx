@@ -552,12 +552,6 @@ export default function Cart() {
                     -{formatPrice(discount)}đ
                   </p>
                 </div>
-                <div className="flex justify-between">
-                  <p className="font-normal text-lg leading-8 text-black">
-                    Phí vận chuyển
-                  </p>
-                  <p className="font-normal text-lg leading-8 text-black">0đ</p>
-                </div>
                 {/* Total price */}
                 <div className="flex justify-between mt-4">
                   <p className="font-normal text-lg leading-8 text-black">

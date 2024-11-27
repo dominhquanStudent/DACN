@@ -61,7 +61,7 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             <img src={LoadingGif.src} alt="Loading..." className="h-40 w-40 mb-4" />
             {loadWhat=="OTP_SENDING"&& <p>Đang gửi mã OTP</p>}
             {loadWhat=="LOADING_PAGE"&& <p>Đang tải trang!</p>}
-            {loadWhat=="LOGIN"&& <p>Đang đăng nhập vào </p>}
+            {loadWhat=="LOGIN"&& <p>Đang đăng nhập vào hệ thống </p>}
             {loadWhat=="ADD_TO_CART"&& <p>Đang thêm vào giỏ hàng!</p>}
             {loadWhat=="ADD_COMMENT"&& <p>Đang thêm đánh giá của bạn!</p>}
             {loadWhat=="SEND_ADOPT_REQUEST"&& <p>Đang gửi yêu cầu nhận thú cưng!</p>}
@@ -74,7 +74,7 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
             {loadWhat=="SEND_RESCUE_REQUEST"&& <p>Đang gửi yêu cầu cứu hộ!</p>}
             {loadWhat=="GET_ACCOUNT_DATA"&& <p>Đang tải thông tin của bạn</p>}
             {loadWhat=="CANCEL_ORDER"&& <p>Đang hủy đơn của bạn</p>}
-            {loadWhat=="LOADING_ORDER"&& <p>Đang tải thông tin order của bạn</p>}
+            {loadWhat=="LOADING_ORDER"&& <p>Đang tải thông tin đơn hàng của bạn</p>}
             {loadWhat=="CHANGE_PASSWORD"&& <p>Đang cập nhật lại mật khẩu của bạn</p>}
             {loadWhat=="GET_NOTIFICATION"&& <p>Đang tải thông báo của bạn</p>}
           </div>
@@ -83,7 +83,7 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
           <div className="flex flex-col items-center justify-center h-64 w-80">
             <img src={Dog.src} className=" mb-4 h-40 w-40" />
             {loadWhat=="ADD_TO_CART"&& <p>Đã thêm vào giỏ hàng thành công!</p>}
-            {loadWhat=="ADD_COMMENT"&& <p>Đã review thành công!</p>}
+            {loadWhat=="ADD_COMMENT"&& <p>Đã đánh giá thành công!</p>}
             {/* Adopt Pet */}
             {loadWhat=="SEND_ADOPT_REQUEST"&& <p>Đã gửi yêu cầu nhận thú cưng!</p>}
             {loadWhat=="SEND_BOOKING_REQUEST"&& <p>Đã đặt lịch thành công!</p>}

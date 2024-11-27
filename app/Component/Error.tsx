@@ -40,8 +40,12 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {/*Account */}
             {error == "WRONG_ACCOUNT_OR_PASSWORD" && <p>Tài khoản hoặc mật khẩu không đúng</p>}
             {error == "WRONG_PASSWORD" && <p>Mật khẩu hiện tại không đúng</p>}
+            {error == "EMPTY_PASSWORD_FIELD" && <p>Không thể bỏ trống trường mật khẩu</p>}
+            {error == "PASSWORD_TOO_SHORT" && <p>Mật khẩu phải ít nhất 6 kí tự</p>}
             {error == "CONFIRM_PASSWORD_NOT_MATCH" && <p className="text-center">Mật khẩu mới và mật khẩu nhập lại không khớp</p>}
             {error == "INVALID_PHONE_NUMBER" && <p>Số điện thoại không hợp lệ</p>}
+            {error == "INVALID_OTP" && <p>Mã OTP không hợp lệ</p>}
+            {error == "INCORRECT_OTP" && <p>Mã OTP của bạn không chính xác</p>}
             {/* Comment Errors */}
             {error == "EMPTY COMMENT" && <p>Nội dung không được phép rỗng</p>}
             {error == "EMPTY RATING" && <p>Đánh giá không được phép rỗng</p>}
@@ -170,8 +174,8 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "LACK_PRODUCTIMAGE" && <p>Vui lòng chọn ảnh sản phẩm!</p>}
 
             {/* PET */}
-            {error == "PET_OWNED" && <p>Pet này đã có người khác rồi :( </p>}
-            {error == "PET_NOT_FOUND" && <p>Pet này không có trong cửa hàng!</p>}
+            {error == "PET_OWNED" && <p>Bé này đã có người khác rồi </p>}
+            {error == "PET_NOT_FOUND" && <p>Bé này không có trong cửa hàng!</p>}
             {error == "LACK_PETNAME" && <p>Vui lòng nhập tên thú cưng!</p>}
             {error == "LACK_PETGENDER" && (
               <p>Vui lòng chọn giới tính thú cưng!</p>

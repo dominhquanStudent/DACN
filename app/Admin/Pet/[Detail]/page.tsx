@@ -245,6 +245,7 @@ function PetDetail({ params }: { params: { Detail: string } }) {
                     <option value="">Chọn loài</option>
                     <option value="Chó">Chó</option>
                     <option value="Mèo">Mèo</option>
+                    <option value="Thỏ">Thỏ</option>
                   </select>
                 </div>
               </div>
