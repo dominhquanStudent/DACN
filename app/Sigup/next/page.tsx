@@ -16,7 +16,7 @@ function Page({
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value);
     };
-    const [step, setStep] = useState(2);
+    const [step, setStep] = useState(1);
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
         //Handle loading and complete
