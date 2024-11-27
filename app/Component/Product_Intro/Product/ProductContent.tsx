@@ -82,6 +82,7 @@ const ProductContent = () => {
   }, [queryFilterMode, products]);
 
   useEffect(() => {
+    setSearchPerformed(true);
     let filtered = products;
     if (selectedCategory) {
       filtered = filtered.filter(
@@ -171,44 +172,6 @@ const ProductContent = () => {
       params.delete("maxPrice");
     }
     router.push(`?${params.toString()}`, undefined);
-  };
-
-  const handleApplyClick = () => {
-    setSearchPerformed(true);
-    let filtered = products; // Start filtering from the original list of products
-
-    if (minPrice !== "" && maxPrice !== "" && parseFloat(minPrice) > parseFloat(maxPrice)) {
-      setError("INVALID_PRICE_RANGE");
-      return;
-    }
-
-    // Apply category filter
-    if (selectedCategory) {
-      filtered = filtered.filter(
-        (product: any) => product.category === selectedCategory
-      );
-    }
-
-    // Apply brand filter
-    if (selectedBrands.length > 0) {
-      filtered = filtered.filter((product: any) =>
-        selectedBrands.includes(product.brand)
-      );
-    }
-
-    // Apply price filter
-    if (minPrice !== "") {
-      filtered = filtered.filter(
-        (product: any) => product.discount_price >= parseFloat(minPrice)
-      );
-    }
-    if (maxPrice !== "") {
-      filtered = filtered.filter(
-        (product: any) => product.discount_price <= parseFloat(maxPrice)
-      );
-    }
-
-    setFilteredProducts(filtered);
   };
 
   const priceOptions = [
@@ -318,16 +281,7 @@ const ProductContent = () => {
                 </select>
               </div>
             </div>
-            <button
-              className="w-full rounded-md bg-[#DA8359] py-2 px-6 font-kd2 text-xs font-bold 
-              uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 
-              focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none active:bg-cyan-700 active:scale-95 
-              disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none mt-4"
-              data-ripple-light="true"
-              onClick={handleApplyClick}
-            >
-              Áp dụng
-            </button>
+
           </div>
         </div>
         {/* Product side */}

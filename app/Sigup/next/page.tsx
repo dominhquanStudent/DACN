@@ -4,7 +4,8 @@ import Logo from '../../../public/img/logo';
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from '@/api/axios';
-
+import ErrorModal from "@/app/Component/Error";
+import LoadingModal from "@/app/Component/Loading";
 function Page({
     searchParams,
 }: { searchParams: { email: string }; }) {
@@ -15,10 +16,14 @@ function Page({
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value);
     };
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(2);
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
     const buttonRef = useRef<HTMLButtonElement | null>(null);
-
+        //Handle loading and complete
+        const [isLoading, setIsLoading] = useState(false);
+        const [isComplete, setIsComplete] = useState(false);
+        const [loadWhat, setLoadWhat] = useState("");
+        const [error, setError] = useState<string | null>(null);
     const handleChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
         const newOtp = [...otp];
         newOtp[index] = event.target.value;
@@ -47,26 +52,36 @@ function Page({
     };
 
     const handleVerify = async () => {
-        try {
-            const response = await axios.post('/otp/verify', {
-                email: searchParams.email,
-                otp: combinedOtp,
-                job: 'register',
-            });
-            console.log(response);
-            if (response.status === 200) {
-                setStep(step + 1);
-            }
-        } catch (error) {
-            console.error('Error verifying OTP:', error);
+        if (combinedOtp.length !== 4) {
+          setError('INVALID_OTP');
+          return;
         }
-    };
+        try {
+          const response = await axios.post('/otp/verify', {
+            email: searchParams.email,
+            otp: combinedOtp,
+            job: 'register',
+          });
+      
+          if (response.status === 200) {
+            setStep(step + 1);
+          } else {
+            throw new Error('INCORRECT_OTP');
+          }
+        } catch (error) {
+          setError('INCORRECT_OTP');
+        }
+      };
 
     const handleResend = async () => {
         // Implement resend logic here
     };
 
     const handleCreateAccount = async () => {
+        if (password.length < 6) {
+            setError('PASSWORD_TOO_SHORT');
+            return;
+        }
         try {
             const response = await axios.post('/account/create', {
                 email: searchParams.email,
@@ -89,6 +104,13 @@ function Page({
 
     return (
         <div className="flex flex-col w-full ">
+            <ErrorModal error={error} setError={setError} />
+            <LoadingModal
+                isLoading={isLoading}
+                isComplete={isComplete}
+                setIsComplete={setIsComplete}
+                loadWhat={loadWhat}
+            />
             <div className="flex items-center">
                 <img src={"./../img/logo.png"} alt="Logo" className='w-20 ml-8' />
                 <button onClick={() => router.push('/Main')}>
