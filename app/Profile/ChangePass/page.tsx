@@ -38,6 +38,14 @@ function Page() {
         e.preventDefault(); // Prevent default form submission behavior
       
         const updatePassword = async () => {
+          if(passwords[1] === "" || passwords[2] === "") {
+            setError("EMPTY_PASSWORD_FIELD");
+            return;
+          }
+          if(passwords[1].length<=5 || passwords[2].length<=5 ) {
+            setError("PASSWORD_TOO_SHORT");
+            return;
+          }
           if (passwords[1] !== passwords[2]) {
             setError("CONFIRM_PASSWORD_NOT_MATCH");
             return;

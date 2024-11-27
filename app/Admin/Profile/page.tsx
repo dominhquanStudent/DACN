@@ -39,6 +39,10 @@ function Profile() {
     useEffect(() => {
         fetchData();
     }, []);
+    const validatePhoneNumber = (phone: string) => {
+        const re = /^[0-9]{10}$/;
+        return re.test(phone);
+    };
 
     // const handleSave = () => {
     //     const updateProfile = async () => {
@@ -54,6 +58,10 @@ function Profile() {
     // };
     const handleSave = async (e: any) => {
         e.preventDefault();
+        if (!validatePhoneNumber(data.phone)) {
+            setError("INVALID_PHONE_NUMBER");
+            return;
+        }
         if (data.userName==="") {
           setError("EMPTY_USERNAME");
           return;
@@ -137,9 +145,9 @@ function Profile() {
                                 <div className="flex items-center my-4">
                                     <div className="font-nunito w-1/4">Email</div>
                                     <input type="text" defaultValue={data.email ? data.email : ""} className="p-2 pl-4 font-nunito 
-                                rounded border border-gray-300 w-full text-lg"
+                                rounded border border-gray-300 w-full text-lg disabled:bg-gray-300"
                                         // onChange={e => setData({ ...data, email: e.target.value })} 
-                                        placeholder="Chưa có" />
+                                        placeholder="Chưa có" disabled  />
                                 </div>
                                 <div className="flex items-center my-4">
                                     <div className="font-nunito w-1/4">Address</div>
