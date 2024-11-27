@@ -319,7 +319,7 @@ const ProductContent = () => {
               </div>
             </div>
             <button
-              className="w-full rounded-md bg-[#DA8359] py-2 px-6 font-kd2 text-xs font-bold 
+              className="w-full rounded-md bg-search-button-orange py-2 px-6 font-kd2 text-xs font-bold 
               uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-orange-500/40 
               focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none active:bg-cyan-700 active:scale-95 
               disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none mt-4"
