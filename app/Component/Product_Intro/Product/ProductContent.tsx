@@ -281,7 +281,6 @@ const ProductContent = () => {
                 </select>
               </div>
             </div>
-
           </div>
         </div>
         {/* Product side */}
