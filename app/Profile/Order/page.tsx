@@ -108,9 +108,17 @@ function Page() {
                 }
             } else if (payment.data.return_code != 1) {
                 const checkStatus = await axios.post(`payment/check_order_status/${order.payment_id}`);
-                if (checkStatus.data.return_code != 1) {
+                console.log(checkStatus.data);
+                if (checkStatus.data.returncode != 1) {
                     window.open(order.payment_url, '_blank');
                 } else {
+                    // Update local state when payment is successful
+                    setData(prevData => 
+                        prevData.map(o => 
+                            o._id === order._id ? { ...o, order_status: 'Chờ xử lý' } : o
+                        )
+                    );
+                    
                     sendNotifications({
                         user_id: order.user_id,
                         category: 'Đơn hàng',
