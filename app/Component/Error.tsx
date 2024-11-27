@@ -170,8 +170,8 @@ const ErrorModal = ({ error, setError, product }: any ) => {
             {error == "LACK_PRODUCTIMAGE" && <p>Vui lòng chọn ảnh sản phẩm!</p>}
 
             {/* PET */}
-            {error == "PET_OWNED" && <p>Pet này đã có người khác rồi :( </p>}
-            {error == "PET_NOT_FOUND" && <p>Pet này không có trong cửa hàng!</p>}
+            {error == "PET_OWNED" && <p>Bé này đã có người khác rồi </p>}
+            {error == "PET_NOT_FOUND" && <p>Bé này không có trong cửa hàng!</p>}
             {error == "LACK_PETNAME" && <p>Vui lòng nhập tên thú cưng!</p>}
             {error == "LACK_PETGENDER" && (
               <p>Vui lòng chọn giới tính thú cưng!</p>
