@@ -60,11 +60,10 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
     const fetchServiceDetails = async () => {
       try {
         console.log(data);
-        const serviceIds = data.service || [];
+        const serviceIds = data.serviceList || [];
         const serviceDetailsPromises = serviceIds.map((id: string) =>
           axios.get(`/service/${id}`)
         );
-        console.log(serviceDetailsPromises);
         const serviceDetailsResponses = await Promise.all(serviceDetailsPromises);
         const serviceDetailsData = serviceDetailsResponses.map(response => response.data.service);
         setServiceDetails(serviceDetailsData);
@@ -72,10 +71,10 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
         console.error("Error fetching service details:", error);
       }
     };
-    if (data.service && data.service.length > 0) {
+    if (data.serviceList && data.serviceList.length > 0) {
       fetchServiceDetails();
     }
-  }, [data.service]);
+  }, [data.serviceList]);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -95,10 +94,10 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
 
   const handleAddService = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (newServiceId.trim() !== '' && !data.service.includes(newServiceId)) {
+    if (newServiceId.trim() !== '' && !data.serviceList.includes(newServiceId)) {
       setData((prevData: any) => ({
         ...prevData,
-        service: [...prevData.service, newServiceId]
+        serviceList: [...prevData.serviceList, newServiceId]
       }));
       setNewServiceId('');
     }
@@ -107,7 +106,7 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
   const handleDeleteService = (serviceId: string) => {
     setData((prevData: any) => ({
       ...prevData,
-      service: prevData.service.filter((id: string) => id !== serviceId)
+      serviceList: prevData.serviceList.filter((id: string) => id !== serviceId)
     }));
     setServiceDetails((prevDetails) => prevDetails.filter((service) => service._id !== serviceId));
   };
@@ -272,11 +271,19 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
                 Dịch vụ khám bệnh
               </div>
               <div className="w-full px-3">
+                <div className="w-1/2">
+                  <label className="text-sm font-bold mb-2" htmlFor="service">
+                    Dịch vụ chính
+                  </label>
+                  <div className="block w-full border border-gray-300 rounded-lg py-2 px-4 bg-gray-50">
+                    {data.service}
+                  </div>
+                </div>
                 <label
                   className="text-xs font-bold mb-2"
                   htmlFor="doctorMessage"
                 >
-                  Dịch vụ
+                  Danh sách dịch vụ
                 </label>
                 <Select
                   options={serviceOptions}
@@ -293,21 +300,23 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
                   Thêm dịch vụ
                 </button>
                 {/* Chi tiết dịch vụ */}
-                <div className="flex flex-col space-y-4">
+                <div className="flex flex-col space-y-4 w-[1000px]">
                   {serviceDetails.map((service) => (
                     <div
                       key={service._id}
-                      className="flex flex-row justify-between items-center w-full p-4 border border-gray-200 rounded-lg shadow-sm bg-white hover:shadow-md transition-shadow"
+                      className="flex flex-row justify-between items-center w-full p-1 px-4 border border-gray-200 rounded-lg shadow-sm bg-white hover:shadow-md transition-shadow"
                     >
-                      <div className="font-semibold text-lg text-blue-600">{service.name}</div>
-                      <div className="text-gray-600">
+                      <div className="font-semibold text-lg text-blue-600 w-[300px] truncate">
+                        {service.name}
+                      </div>
+                      <div className="text-gray-600 w-[250px] truncate">
                         <span className="font-medium">Danh mục:</span> {service.category}
                       </div>
-                      <div className="text-gray-600">
+                      <div className="text-gray-600 w-[250px] truncate">
                         <span className="font-medium">Giá:</span> {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(service.price)}
                       </div>
                       <button
-                        className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg"
+                        className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg w-[100px]"
                         onClick={() => handleDeleteService(service._id)}
                         disabled={!isEditable}
                       >

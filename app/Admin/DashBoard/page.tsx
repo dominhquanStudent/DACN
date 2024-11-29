@@ -396,7 +396,7 @@ function DashBoard() {
                                 <div className='mb-4'>
                                     <label htmlFor="appointmentType" className='font-nunito text-lg font-bold'>Chọn loại thống kê lịch hẹn </label>
                                     <select id="appointmentType" value={selectedOption} onChange={handleChange} className='ml-2'>
-                                        <option value="appointmentsByDay">Số lịch hẹn được đặt theo ngày</option>
+                                        <option value="appointmentsByDay">Lịch hẹn chưa xử lý trong tháng</option>
                                         <option value="appointmentsPreview">Những ngày có lịch hẹn</option>
                                     </select>
                                 </div>
