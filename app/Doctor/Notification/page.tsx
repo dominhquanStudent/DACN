@@ -152,9 +152,7 @@ function NotificationPage() {
                   required
                 >
                   <option value="">Chọn loại thông báo</option>
-                  <option value="Đơn hàng">Đơn hàng</option>
                   <option value="Lịch hẹn">Lịch hẹn</option>
-                  <option value="Nhận nuôi">Nhận nuôi</option>
                   <option value="Khám bệnh">Khám bệnh</option>
                 </select>
               </div>
