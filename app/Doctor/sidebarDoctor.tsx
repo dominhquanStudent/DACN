@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const menuItems = [
-    { name: 'Dash Board', path: '/Doctor/DashBoard', icon: '/img/icon/dashboard_hl.svg', iconhl: '/img/icon/dashboard.svg' },
+    { name: 'Dashboard', path: '/Doctor/DashBoard', icon: '/img/icon/dashboard_hl.svg', iconhl: '/img/icon/dashboard.svg' },
     { name: 'Quản lý lịch hẹn', path: '/Doctor/Appointment', icon: '/img/icon/appointment.svg', iconhl: '/img/icon/appointment_hl.svg' },
     { name: 'Bản tin', path: '/Doctor/Blog', icon: '/img/icon/order.svg', iconhl: '/img/icon/order_hl.svg' },
     { name: 'Thông báo bệnh nhân', path: '/Doctor/Notification', icon: '/img/icon/Allert.svg', iconhl: '/img/icon/Allert_hl.svg'},
