@@ -49,7 +49,7 @@ function DashBoard() {
                 <div className='w-3/4 border-l-2 border-gray-200'>
                     <div className='flex flex-col ml-8'>
                         <div className={'flex font-nunito text-xl font-bold w-full justify-center'}>
-                            Dash Board
+                            Dashboard
                         </div>
                         <div className='font-nunito text-lg font-bold'>
                             Việc cần xử lý

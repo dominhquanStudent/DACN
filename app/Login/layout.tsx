@@ -1,28 +1,40 @@
 'use client';
-import { redirect } from 'next/dist/server/api-utils';
+import { useEffect } from 'react';
 import useAuth from '../../hooks/useAuth';
-import ErrorModal from '../Component/Error';
 import LoadingModal from '../Component/Loading';
 import { useRouter } from 'next/navigation';
+import { getCookie } from 'cookies-next';
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { auth, loading } = useAuth();
+  const { auth, setAuth, loading } = useAuth();
   const router = useRouter();
-  if (loading) {
-    return <LoadingModal loading="LOADING_PAGE" />
-  }
-  if (auth) {
-    if (auth.role == 'admin') {
-      router.push('/Admin');
-    } else if (auth.role == 'user') {
-      router.push('/Main');
-    } else if (auth.role == 'doctor') {
-      router.push('/Doctor');
+  const jwt = getCookie('jwt');
+
+  useEffect(() => {
+    if (auth && jwt) {
+      switch (auth.role) {
+        case 'admin':
+          router.push('/Admin');
+          break;
+        case 'user':
+          router.push('/Main');
+          break;
+        case 'doctor':
+          router.push('/Doctor');
+          break;
+      }
+    } else if (!jwt) {
+      setAuth(null);
     }
-  } else {
-    return <>{children}</>;
+  }, [auth, jwt, router, setAuth]);
+
+  if (loading) {
+    return <LoadingModal />;
   }
+
+  return <>{children}</>;
 }

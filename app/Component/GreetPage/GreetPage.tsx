@@ -1,7 +1,3 @@
-// import Doggo1 from "../../../public/img/Greet page/Doggo1.png";
-// import Service from "../../../public/img/Greet page/Service.png";
-// import Healthcare from "../../../public/img/Greet page/Healtcare.png";
-// import Consult from "../../../public/img/Greet page/Consult.png";
 import React, { useState, useEffect } from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
