@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import axios from "axios";
-import { createSelector } from 'reselect';
 import Select from 'react-select';
 
 
@@ -120,8 +119,8 @@ const PredictPage = () => {
     { value: "Dịch tiết có máu", label: "Dịch tiết có máu" },
     { value: "Vết thương", label: "Vết thương" },
   ];
-  
-  
+
+
   const handleSymptomChange = (selectedOptions: any) => {
     const selectedValues = selectedOptions.map((option: any) => option.value);
     setSymptoms(selectedValues);
@@ -207,105 +206,112 @@ const PredictPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-5/6 bg-white p-8 shadow-lg rounded-lg">
-        <h1 className="text-3xl font-bold text-center mb-4">
-          Dự đoán bệnh cho chó và mèo
-        </h1>
-        <div className="space-y-4">
-          {/* Image Upload */}
-<div>
-  <label className="block text-sm font-bold mb-2" htmlFor="image">
-    Tải lên hình ảnh
-  </label>
-  <input
-    type="file"
-    id="image"
-    accept="image/*"
-    onChange={handleImageChange}
-    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
-  />
-  
-  {/* Image Preview */}
-  {selectedImage && (
-    <div className="mt-4">
-      <p className="text-sm font-semibold text-gray-700">Xem trước hình ảnh:</p>
-      <img
-        src={selectedImage}
-        alt="Xem trước hình ảnh đã tải lên"
-        className="w-full max-w-xs rounded-lg shadow-lg"
-      />
-    </div>
-  )}
-</div>
-<button
-  onClick={PredictImage}
-  className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 mt-4"
->
-  Dự đoán từ hình ảnh
-</button>
+    <div className="flex flex-col items-center justify-center my-8 md:my-12 lg:my-16">
+      <div className="w-5/6 bg-white p-8 md:p-10 lg:p-12 shadow-lg rounded-lg">
+        <div className="flex flex-col items-center justify-center">
+          <div className="w-5/6 bg-white p-8 shadow-lg rounded-lg">
+            <h1 className="text-3xl font-bold text-center mb-4">
+              Dự đoán bệnh cho chó cưng
+            </h1>
+            <div className="space-y-4">
+              {/* Image Upload */}
+              <div>
+                <label className="block text-sm font-bold mb-2" htmlFor="image">
+                  Tải lên hình ảnh
+                </label>
+                <input
+                  type="file"
+                  id="image"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
+                />
 
-          {/* Symptoms Selection */}
-          <div>
-            <label className="block text-sm font-bold mb-2" htmlFor="symptoms">
-              Chọn triệu chứng (tối thiểu 3)
-            </label>
-            <Select
-              id="symptoms"
-              options={symptomOptions}
-              isMulti
-              onChange={handleSymptomChange}
-              className="basic-multi-select"
-              classNamePrefix="select"
-              placeholder="Chọn triệu chứng..."
-            />
-            <button
-              type="button"
-              onClick={handleConfirmSymptoms}
-              className="mt-2 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-700"
-            >
-              Xác nhận triệu chứng
-            </button>
-          </div>
+                {/* Image Preview */}
+                {selectedImage && (
+                  <div className="mt-4">
+                    <p className="text-sm font-semibold text-gray-700">Xem trước hình ảnh:</p>
+                    <img
+                      src={selectedImage}
+                      alt="Xem trước hình ảnh đã tải lên"
+                      className="w-full max-w-xs rounded-lg shadow-lg"
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col items-center">
+                <button
+                  onClick={PredictImage}
+                  className=" bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 mt-4"
+                >
+                  Dự đoán từ hình ảnh
+                </button>
+              </div>
+              {/* Prediction Results */}
+              {predictionByImage && (
+                <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-lg">
+                  <h2 className="text-xl font-bold">Kết quả từ hình ảnh:</h2>
+                  <p>{predictionByImage}</p>
+                </div>
+              )}
 
-          {/* Selected Symptoms */}
-          {selectedSymptoms.length > 0 && (
-            <div className="mt-4 p-4 bg-blue-100 rounded-lg">
-              <h3 className="font-bold mb-2">Các triệu chứng đã chọn:</h3>
-              <div className="flex flex-wrap gap-2">
-                {selectedSymptoms.map((symptom, index) => (
-                  <span
-                    key={index}
-                    className="bg-blue-500 text-white px-2 py-1 rounded-full text-sm"
-                  >
-                    {symptom}
-                  </span>
-                ))}
+              {/* Symptoms Selection */}
+              <div>
+                <label className="block text-sm font-bold mb-2" htmlFor="symptoms">
+                  Chọn triệu chứng (tối thiểu 3)
+                </label>
+                <Select
+                  id="symptoms"
+                  options={symptomOptions}
+                  isMulti
+                  onChange={handleSymptomChange}
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  placeholder="Chọn triệu chứng..."
+                />
+                <button
+                  type="button"
+                  onClick={handleConfirmSymptoms}
+                  className="mt-2 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-700"
+                >
+                  Xác nhận triệu chứng
+                </button>
+              </div>
+
+              {/* Selected Symptoms */}
+              {selectedSymptoms.length > 0 && (
+                <div className="mt-4 p-4 bg-blue-100 rounded-lg">
+                  <h3 className="font-bold mb-2">Các triệu chứng đã chọn:</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedSymptoms.map((symptom, index) => (
+                      <span
+                        key={index}
+                        className="bg-blue-500 text-white px-2 py-1 rounded-full text-sm"
+                      >
+                        {symptom}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div className="flex flex-col items-center">
+                <button
+                  onClick={PredictSymptoms}
+                  className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+                >
+                  Dự đoán từ triệu chứng
+                </button>
               </div>
             </div>
-          )}
-          <button
-            onClick={PredictSymptoms}
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
-          >
-            Dự đoán từ triệu chứng
-          </button>
+
+            {predictionBySymptoms && (
+              <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-lg">
+                <h2 className="text-xl font-bold">Kết quả từ triệu chứng:</h2>
+                <p>{predictionBySymptoms}</p>
+              </div>
+            )}
+          </div>
         </div>
-
-        {/* Prediction Results */}
-        {predictionByImage && (
-          <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-lg">
-            <h2 className="text-xl font-bold">Kết quả từ hình ảnh:</h2>
-            <p>{predictionByImage}</p>
-          </div>
-        )}
-
-        {predictionBySymptoms && (
-          <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-lg">
-            <h2 className="text-xl font-bold">Kết quả từ triệu chứng:</h2>
-            <p>{predictionBySymptoms}</p>
-          </div>
-        )}
       </div>
     </div>
   );

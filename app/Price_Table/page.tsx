@@ -5,7 +5,7 @@ import Footer from "@/app/Component/Footer/Footer";
 import Calendar from "react-calendar";
 import logo from "@/public/img/Booking/petcare.png";
 import Link from "next/link";
-
+import PredictPage from "../Component/Predict/page";
 import "react-calendar/dist/Calendar.css"; // Import the calendar CSS
 
 export default function Booking() {
@@ -108,9 +108,21 @@ export default function Booking() {
   // JSX code with random content in each cell
   return (
     //global container
-        <>
+    <>
       <Header />
-    
+      <div className="border-b lg:border-r border-gray-200 mx-4"></div> {/* Divider line */}
+      <div className="text-center mb-6 mt-4">
+      <div className="text-lg text-gray-600 mb-2">
+          Ngoài ra, chúng tôi đang triển khai dịch vụ dự đoán bệnh thông minh, có thể giúp bạn dự đoán bệnh của thú cưng một cách nhanh chóng
+        </div>
+        <p className="text-lg text-gray-600 italic mb-2">
+          "Chăm sóc thú cưng thông minh - Dự đoán bệnh nhanh chóng, chính xác"
+        </p>
+        <a href="#predict" className="cursor-pointer hover:text-blue-600 transition-colors">
+          <div className="font-semibold text-orange-500">Dự đoán ngay</div>
+        </a>
+      </div>
+      <div className="border-b lg:border-r border-gray-200 mx-4"></div> {/* Divider line */}
       <div className="flex flex-col lg:flex-row gap-4 p-4">
         <div className="border-b lg:border-r border-gray-300 mx-4"></div> {/* Divider line */}
         <div className="flex-[8] p-4">
@@ -177,9 +189,8 @@ export default function Booking() {
                       {spaServices.map((service, rowIndex) => (
                         <tr
                           key={rowIndex}
-                          className={`bg-white ${
-                            rowIndex % 2 === 0 ? "border-b" : ""
-                          } dark:bg-gray-800 dark:border-gray-700`}
+                          className={`bg-white ${rowIndex % 2 === 0 ? "border-b" : ""
+                            } dark:bg-gray-800 dark:border-gray-700`}
                         >
                           <th
                             scope="row"
@@ -219,7 +230,9 @@ export default function Booking() {
           </div>
         </div>
       </div>
-    
+      <div className="border-b lg:border-r border-gray-300 mx-4"></div> {/* Divider line */}
+      <div id="predict"></div>
+      <PredictPage />
       <Footer />
     </>
   );
