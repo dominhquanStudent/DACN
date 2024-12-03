@@ -116,7 +116,7 @@ export default function Booking() {
           Ngoài ra, chúng tôi đang triển khai dịch vụ dự đoán bệnh thông minh, có thể giúp bạn dự đoán bệnh của thú cưng một cách nhanh chóng
         </div>
         <p className="text-lg text-gray-600 italic mb-2">
-          "Chăm sóc thú cưng thông minh - Dự đoán bệnh nhanh chóng, chính xác"
+        &ldquo;Chăm sóc thú cưng thông minh - Dự đoán bệnh nhanh chóng, chính xác&rdquo;
         </p>
         <a href="#predict" className="cursor-pointer hover:text-blue-600 transition-colors">
           <div className="font-semibold text-orange-500">Dự đoán ngay</div>
