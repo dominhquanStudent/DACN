@@ -46,7 +46,9 @@ const LoadingModal = ({ isLoading, isComplete, setIsComplete,loadWhat }:any) => 
     if(loadWhat=="SEND_UPDATE_PROFILE_DOCTOR"){
       window.location.href = "/Doctor/Profile";
     }
-    
+    if(loadWhat=="ORDERING"){
+      window.location.href = "/Profile/Order";
+    }
   };
 
   if (!isLoading && !isComplete) {
