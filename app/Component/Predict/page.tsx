@@ -217,7 +217,7 @@ const PredictPage = () => {
         <div className="flex flex-col items-center justify-center">
           <div className="w-5/6 bg-white p-4 shadow-lg rounded-lg">
             <h1 className="text-3xl font-bold text-center mb-4">
-              Dự đoán bệnh cho chó cưng
+              Dự đoán bệnh cho cún cưng
             </h1>
             <div className="space-y-4">
               {/* Image Upload */}
