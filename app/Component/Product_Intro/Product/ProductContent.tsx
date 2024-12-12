@@ -32,6 +32,8 @@ const ProductContent = () => {
   const [maxPrice, setMaxPrice] = useState<string>(queryMaxPrice);
   const [searchPerformed, setSearchPerformed] = useState<boolean>(false);
   const [Params, setParams] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 10;
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -107,11 +109,32 @@ const ProductContent = () => {
     }
     setFilteredProducts(filtered);
   }, [selectedCategory, selectedBrands, minPrice, maxPrice, products]);
-  const categoryMapping: { [key: string]: string } = { "Thức ăn thú cưng": "Boss ăn Boss uống", "Quần áo & Phụ kiện": "Boss mang Boss mặc", "Đồ chơi cho thú cưng": "Boss học Boss chơi", "Đồ dùng tắm gội": "Boss tắm Boss gội", "Đồ dùng vệ sinh": "Boss sạch Boss thơm", "Nhà thú cưng": "Boss ngủ Boss nghỉ", "Đồ dùng thú y": "Boss khỏe Boss ngoan", }; const categoryOrder = [ "Thức ăn thú cưng", "Quần áo & Phụ kiện", "Đồ chơi cho thú cưng", "Đồ dùng tắm gội", "Đồ dùng vệ sinh", "Nhà thú cưng", "Đồ dùng thú y", ];
+
+  const categoryMapping: { [key: string]: string } = {
+    "Thức ăn thú cưng": "Boss ăn Boss uống",
+    "Quần áo & Phụ kiện": "Boss mang Boss mặc",
+    "Đồ chơi cho thú cưng": "Boss học Boss chơi",
+    "Đồ dùng tắm gội": "Boss tắm Boss gội",
+    "Đồ dùng vệ sinh": "Boss sạch Boss thơm",
+    "Nhà thú cưng": "Boss ngủ Boss nghỉ",
+    "Đồ dùng thú y": "Boss khỏe Boss ngoan",
+  };
+
+  const categoryOrder = [
+    "Thức ăn thú cưng",
+    "Quần áo & Phụ kiện",
+    "Đồ chơi cho thú cưng",
+    "Đồ dùng tắm gội",
+    "Đồ dùng vệ sinh",
+    "Nhà thú cưng",
+    "Đồ dùng thú y",
+  ];
+
   const handleCategoryChange = (category: string) => {
     const newCategory = category === selectedCategory ? null : category;
     setSelectedCategory(newCategory);
     setSelectedBrands([]); // Reset selected brands when category changes
+    setCurrentPage(1); // Reset to the first page when category changes
 
     // Reset checkboxes
     const checkboxes = document.querySelectorAll('.custom-checkbox');
@@ -135,6 +158,7 @@ const ProductContent = () => {
       ? selectedBrands.filter((b) => b !== brand)
       : [...selectedBrands, brand];
     setSelectedBrands(newSelectedBrands);
+    setCurrentPage(1); // Reset to the first page when brand filter changes
 
     // Update URL
     const params = new URLSearchParams(searchParams.toString());
@@ -149,6 +173,7 @@ const ProductContent = () => {
   const handleMinPriceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value ? e.target.value : "";
     setMinPrice(value);
+    setCurrentPage(1); // Reset to the first page when min price changes
 
     // Update URL
     const params = new URLSearchParams(searchParams.toString());
@@ -163,6 +188,7 @@ const ProductContent = () => {
   const handleMaxPriceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value ? e.target.value : "";
     setMaxPrice(value);
+    setCurrentPage(1); // Reset to the first page when max price changes
 
     // Update URL
     const params = new URLSearchParams(searchParams.toString());
@@ -189,13 +215,45 @@ const ProductContent = () => {
     new Set(products.map((product) => product.category))
   ).sort((a, b) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b));
 
+  // Calculate the products to display on the current page
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = (searchPerformed && filteredProducts.length > 0 ? filteredProducts : products).slice(indexOfFirstProduct, indexOfLastProduct);
+
+  // Calculate total pages
+  const totalPages = Math.ceil((searchPerformed && filteredProducts.length > 0 ? filteredProducts : products).length / productsPerPage);
+
+  // Handle page change
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Generate pagination buttons
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    if (totalPages <= 4) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        pageNumbers.push(1, 2, 3, '...', totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pageNumbers.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pageNumbers.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+      }
+    }
+    return pageNumbers;
+  };
+
   if (products.length !== 0) return (
     <>
       <Header />
       <ErrorModal error={error} setError={setError} />
       <div className="flex mr-2">
         {/* FilterSide */}
-        <div className="w-1/6 font-k2d flex flex-col items-center border-r-[1px] border-clicked_filter p-4 space-y-6 ">
+        <div className="w-1/6 font-k2d flex flex-col items-center border-r-[1px] border-clicked_filter p-4 space-y-6 h-[calc(100vh-4rem)] overflow-y-auto">
           {/* Bộ lọc */}
           <div className="relative w-full flex-col">
             <div className="flex justify-between items-center p-2 text-center font-bold bg-[#659287] text-white">
@@ -284,10 +342,10 @@ const ProductContent = () => {
           </div>
         </div>
         {/* Product side */}
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-16 ml-1 mr-2 snap-y snap-mandatory overflow-y-scroll h-[calc(100vh-4rem)] hide-scrollbar mt-2">
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-16 ml-1 mr-2 mt-2">
           {(searchPerformed && filteredProducts.length === 0) ||
           (Params != 0 && filteredProducts.length === 0) ? (
-            <div className="col-span-4 text-center p-6 snap-center">
+            <div className="col-span-4 text-center p-6">
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
                 className="h-20 w-20 mb-4 text-gray-400"
@@ -301,10 +359,7 @@ const ProductContent = () => {
               </p>
             </div>
           ) : (
-            (filteredProducts && filteredProducts.length > 0
-              ? filteredProducts
-              : products
-            ).map((product, index) => (
+            currentProducts.map((product, index) => (
               <div
                 key={index}
                 className="transition-transform transform hover:scale-105 w-53 h-64 p-2 "
@@ -314,6 +369,47 @@ const ProductContent = () => {
             ))
           )}
         </div>
+      </div>
+      {/* Pagination Controls */}
+      <div className="pagination flex justify-center mt-8 mb-4">
+        <button
+          onClick={() => handlePageChange(1)}
+          className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+          disabled={currentPage === 1}
+        >
+          &laquo;
+        </button>
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+          disabled={currentPage === 1}
+        >
+          &lt;
+        </button>
+        {renderPageNumbers().map((pageNumber, index) => (
+          <button
+            key={index}
+            onClick={() => typeof pageNumber === 'number' && handlePageChange(pageNumber)}
+            className={`px-3 py-1 mx-1 ${currentPage === pageNumber ? "bg-blue-500 text-white" : "bg-gray-200 hover:bg-gray-300"}`}
+            disabled={typeof pageNumber !== 'number'}
+          >
+            {pageNumber}
+          </button>
+        ))}
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+          disabled={currentPage === totalPages}
+        >
+          &gt;
+        </button>
+        <button
+          onClick={() => handlePageChange(totalPages)}
+          className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
+          disabled={currentPage === totalPages}
+        >
+          &raquo;
+        </button>
       </div>
       <Footer />
     </>
