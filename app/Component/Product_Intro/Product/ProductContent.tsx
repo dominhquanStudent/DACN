@@ -17,6 +17,7 @@ const ProductContent = () => {
   const [loadWhat, setLoadWhat] = useState("");
   const searchParams = useSearchParams();
   const router = useRouter();
+  const productsPerPage = 10;
 
   const queryFilterMode = Number(searchParams.get("filterMode") ?? "0");
   const queryCategory = searchParams.get("category") ?? "";
@@ -32,8 +33,7 @@ const ProductContent = () => {
   const [maxPrice, setMaxPrice] = useState<string>(queryMaxPrice);
   const [searchPerformed, setSearchPerformed] = useState<boolean>(false);
   const [Params, setParams] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(Number(searchParams.get("page")) || 1);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -225,7 +225,21 @@ const ProductContent = () => {
 
   // Handle page change
   const handlePageChange = (pageNumber: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", pageNumber.toString());
+    
+    // Update URL without scroll
+    router.push(`?${params.toString()}`, {
+      scroll: false
+    });
+    
     setCurrentPage(pageNumber);
+  
+    // Smooth scroll to top of product grid
+    const productGrid = document.getElementById('product-grid');
+    if (productGrid) {
+      productGrid.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   // Generate pagination buttons
@@ -246,7 +260,10 @@ const ProductContent = () => {
     }
     return pageNumbers;
   };
-
+  useEffect(() => {
+    const page = Number(searchParams.get("page")) || 1;
+    setCurrentPage(page);
+  }, [searchParams]);
   if (products.length !== 0) return (
     <>
       <Header />
@@ -342,7 +359,7 @@ const ProductContent = () => {
           </div>
         </div>
         {/* Product side */}
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-16 ml-1 mr-2 mt-2">
+        <div id="product-grid" className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-16 ml-1 mr-2 mt-2 scroll-mt-4">
           {(searchPerformed && filteredProducts.length === 0) ||
           (Params != 0 && filteredProducts.length === 0) ? (
             <div className="col-span-4 text-center p-6">
