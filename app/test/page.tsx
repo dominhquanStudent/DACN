@@ -8,7 +8,7 @@ import ProductCard from "@/app/Component/Product_Intro/Product/ProductFrame_Main
 import ErrorModal from "@/app/Component/Error";
 import "@/app/Component/CheckboxStyles.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faList, faMagnifyingGlass, faBars } from "@fortawesome/free-solid-svg-icons";
+import { faList, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import LoadingModal from "@/app/Component/Loading";
 
 const ProductContent = () => {
@@ -322,16 +322,9 @@ const ProductContent = () => {
     <>
       <Header />
       <ErrorModal error={error} setError={setError} />
-      <div className="flex flex-col md:flex-row mr-2">
-        {/* Burger Menu for Mobile */}
-        <div className="flex justify-between items-center p-4 md:hidden">
-          <button onClick={toggleFilter} className="text-gray-700 focus:outline-none">
-            <FontAwesomeIcon icon={faBars} className="h-6 w-6" />
-          </button>
-          <span className="text-lg font-bold">Bộ lọc sản phẩm</span>
-        </div>
+      <div className="flex mr-2">
         {/* FilterSide */}
-        <div className={`w-full md:w-1/6 font-k2d flex flex-col items-center border-r-[1px] border-clicked_filter p-4 space-y-6 overflow-y-auto ${isFilterOpen ? 'block' : 'hidden'} md:block`}>
+        <div className="w-1/6 font-k2d flex flex-col items-center border-r-[1px] border-clicked_filter p-4 space-y-6 h-[calc(100vh-4rem)] overflow-y-auto">
           {/* Bộ lọc */}
           <div className="relative w-full flex-col">
             <div className="flex justify-between items-center p-2 text-center font-bold bg-[#659287] text-white">
@@ -466,7 +459,7 @@ const ProductContent = () => {
         </div>
       </div>
       {/* Pagination Controls */}
-      <div className="pagination flex justify-center mt-12 mb-4">
+      <div className="pagination flex justify-center mt-8 mb-4">
         <button
           onClick={() => handlePageChange(1)}
           className="px-3 py-1 mx-1 bg-gray-200 hover:bg-gray-300"
