@@ -1,38 +1,52 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Calendar, momentLocalizer, Views } from "react-big-calendar";
+import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import Sidebar from "../../Doctor/sidebarDoctor";
-
 import Header from "@/app/Admin/Header";
 import { useRouter } from "next/navigation";
 import axios from "@/api/axios";
 import Footer from "@/app/Component/Footer/Footer";
+import { getCookie } from "cookies-next";
+import getInfo from "@/hooks/getInfo";
+import useSWR from "swr";
 
 const localizer = momentLocalizer(moment);
 
+const fetcher = (url: string) => axios.get(url).then(res => res.data);
+
 function Appointment() {
-  const [appointments, setAppointments] = useState<any[]>([]);
   const [view, setView] = useState<any>('month'); // State to manage the current view
   const [date, setDate] = useState<Date>(new Date()); // State to manage the current date
+  const [accountData, setAccountData] = useState<any>(null);
   const Router = useRouter();
 
   useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const response = await axios.get("/appointment/list");
-        setAppointments(response.data.appointments);
-      } catch (error) {
-        console.error("Error fetching appointments:", error);
+    const fetchAccountData = async () => {
+      const jwt = getCookie("jwt");
+      if (jwt) {
+        const accountData = await getInfo();
+        setAccountData(accountData);
       }
     };
-    fetchAppointments();
+
+    fetchAccountData();
   }, []);
 
-  const events = appointments.map((appointment) => {
+  const { data: appointmentsData, error: appointmentsError } = useSWR('/appointment/list', fetcher);
+
+  if (appointmentsError) {
+    console.error("Error fetching appointments:", appointmentsError);
+  }
+
+  const filteredAppointments = appointmentsData?.appointments.filter(
+    (appointment: any) => appointment.doctorName === accountData?.userName
+  ) || [];
+
+  const events = filteredAppointments.map((appointment: any) => {
     const start = new Date(appointment.date);
-    const end = new Date(start.getTime() + 30 * 60000); // Add 15 minutes to the start time
+    const end = new Date(start.getTime() + 30 * 60000); // Add 30 minutes to the start time
     return {
       title: appointment.userName,
       start: start,
