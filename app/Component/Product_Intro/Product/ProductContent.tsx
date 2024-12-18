@@ -1,9 +1,10 @@
+"use client";
 import Header from "@/app/Component/Header/Header";
 import Footer from "@/app/Component/Footer/Footer";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "@/api/axios";
-import ProductCard from "./ProductFrame_Main";
+import ProductCard from "@/app/Component/Product_Intro/Product/ProductFrame_Main";
 import ErrorModal from "@/app/Component/Error";
 import "@/app/Component/CheckboxStyles.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,96 +20,132 @@ const ProductContent = () => {
   const router = useRouter();
   const productsPerPage = 10;
 
-  const queryFilterMode = Number(searchParams.get("filterMode") ?? "0");
-  const queryCategory = searchParams.get("category") ?? "";
-  const queryBrands = searchParams.get("brands") ?? "";
-  const queryMinPrice = searchParams.get("minPrice") ?? "";
-  const queryMaxPrice = searchParams.get("maxPrice") ?? "";
-
   const [products, setProducts] = useState<any[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(queryCategory || null);
-  const [selectedBrands, setSelectedBrands] = useState<string[]>(queryBrands ? queryBrands.split(",") : []);
-  const [minPrice, setMinPrice] = useState<string>(queryMinPrice);
-  const [maxPrice, setMaxPrice] = useState<string>(queryMaxPrice);
-  const [searchPerformed, setSearchPerformed] = useState<boolean>(false);
-  const [Params, setParams] = useState(0);
+  const [brandlist, setBrandlist] = useState<any[]>([]);
+  const [brand, setBrand] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(Number(searchParams.get("page")) || 1);
-
+  const [totalPages, setTotalPages] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [minPrice, setMinPrice] = useState<string>("");
+  const [maxPrice, setMaxPrice] = useState<string>("");
+  const productGridRef = useRef<HTMLDivElement>(null);
+  const [sortOrder, setSortOrder] = useState<string>("none");
+  const [sortBy, setSortBy] = useState<string>("none");
+  const sortOptions = [
+    { label: "Không", value: "none", field: "none" },
+    { label: "Giá thấp đến cao", value: "asc", field: "price" },
+    { label: "Giá cao đến thấp", value: "desc", field: "price" },
+    { label: "Tên A-Z", value: "asc", field: "name" },
+    { label: "Tên Z-A", value: "desc", field: "name" }
+  ];
+  const scrollToProducts = () => {
+    if (productGridRef.current) {
+      const yOffset = -80;
+      const y = productGridRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y + 100, behavior: 'smooth' });
+    }
+  };
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const response = await axios.get(`${baseURL}/product/list`);
-        setProducts(response.data.products);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
+    const params = new URLSearchParams(window.location.search);
+    const sortByParam = params.get("sortBy");
+    const sortOrderParam = params.get("sortOrder");
 
-    fetchProducts();
+    // If either param is none or missing, clear both
+    if (!sortByParam || !sortOrderParam || sortByParam === "none" || sortOrderParam === "none") {
+      params.delete("sortBy");
+      params.delete("sortOrder");
+      setSortBy("none");
+      setSortOrder("none");
+    } else {
+      setSortBy(sortByParam);
+      setSortOrder(sortOrderParam);
+    }
   }, []);
+  const updateSearchParams = (updates: { [key: string]: string | null }) => {
+    const params = new URLSearchParams(window.location.search);
+
+    // Handle each update
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null) {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+    });
+
+    // Don't reset page when it's being updated
+    if (!updates.hasOwnProperty("page")) {
+      params.delete("page");
+    }
+
+    router.push(`?${params.toString()}`);
+  };
+  const fetchProducts = async (page: number) => {
+    try {
+      setIsLoading(true);
+      const params = new URLSearchParams(window.location.search);
+
+      const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const apiParams: {
+        page: number;
+        limit: number;
+        category: string;
+        brand?: string;  // Add brand parameter
+        minPrice: string;
+        maxPrice: string;
+        sortBy?: string;
+        sortOrder?: string
+      } = {
+        page,
+        limit: productsPerPage,
+        category: params.get("category") || "",
+        brand: params.get("brand") || "",
+        minPrice: params.get("minPrice") || "",
+        maxPrice: params.get("maxPrice") || ""
+      };
+
+      // Only add sort params if they exist and aren't "none"
+      const sortBy = params.get("sortBy");
+      const sortOrder = params.get("sortOrder");
+      if (sortBy && sortOrder && sortBy !== "none" && sortOrder !== "none") {
+        apiParams["sortBy"] = sortBy;
+        apiParams["sortOrder"] = sortOrder;
+      }
+
+      // Clean empty params
+      Object.keys(apiParams).forEach(key => {
+        if (!apiParams[key as keyof typeof apiParams]) delete apiParams[key as keyof typeof apiParams];
+      });
+      console.log(apiParams);
+      const response = await axios.get(`${baseURL}/product/list`, { params: apiParams });
+      console.log(response.data);
+      setProducts(response.data.products);
+      setBrandlist(response.data.brandlist);
+      console.log(response.data.brandlist);
+      setTotalPages(response.data.pagination.totalPages);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setError("Failed to fetch products");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (queryFilterMode === 1) {
-      const filtered = products.filter(
-        (product) => product.category === "Thức ăn thú cưng"
-      );
-      setParams(1);
-      setFilteredProducts(filtered);
-    } else if (queryFilterMode === 2) {
-      const filtered = products.filter(
-        (product) => product.category === "Phụ kiện & Đồ chơi"
-      );
-      setParams(2);
-      setFilteredProducts(filtered);
-    } else if (queryFilterMode === 3) {
-      const filtered = products.filter(
-        (product) => product.category === "Đồ dùng vệ sinh"
-      );
-      setParams(3);
-      setFilteredProducts(filtered);
-    } else if (queryFilterMode === 4) {
-      const filtered = products.filter(
-        (product) => product.category === "Nhà thú cưng"
-      );
-      setParams(4);
-      setFilteredProducts(filtered);
-    } else if (queryFilterMode === 5) {
-      const filtered = products.filter(
-        (product) => product.category === "Đồ dùng thú y"
-      );
-      setParams(5);
-      setFilteredProducts(filtered);
-    }
-  }, [queryFilterMode, products]);
+    fetchProducts(currentPage).then(() => {
+      // Scroll after products are loaded
+      const productGrid = document.getElementById('product-grid');
+      if (productGrid && products.length > 0) {
+        setTimeout(() => {
+          productGrid.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }, 100); // Small delay to ensure content is rendered
+      }
+    });
 
-  useEffect(() => {
-    setSearchPerformed(true);
-    let filtered = products;
-    if (selectedCategory) {
-      filtered = filtered.filter(
-        (product: any) => product.category === selectedCategory
-      );
-    }
-    // Apply price filter
-    if (minPrice !== "") {
-      filtered = filtered.filter(
-        (product: any) => product.discount_price >= parseFloat(minPrice)
-      );
-    }
-    if (maxPrice !== "") {
-      filtered = filtered.filter(
-        (product: any) => product.discount_price <= parseFloat(maxPrice)
-      );
-    }
-    if (selectedBrands.length > 0) {
-      filtered = filtered.filter((product: any) =>
-        selectedBrands.includes(product.brand)
-      );
-    }
-    setFilteredProducts(filtered);
-  }, [selectedCategory, selectedBrands, minPrice, maxPrice, products]);
+  }, [currentPage, selectedCategory, maxPrice, minPrice, sortBy, sortOrder, brand]);
 
   const categoryMapping: { [key: string]: string } = {
     "Thức ăn thú cưng": "Boss ăn Boss uống",
@@ -129,119 +166,109 @@ const ProductContent = () => {
     "Nhà thú cưng",
     "Đồ dùng thú y",
   ];
-
-  const handleCategoryChange = (category: string) => {
-    const newCategory = category === selectedCategory ? null : category;
-    setSelectedCategory(newCategory);
-    setSelectedBrands([]); // Reset selected brands when category changes
-    setCurrentPage(1); // Reset to the first page when category changes
-
-    // Reset checkboxes
-    const checkboxes = document.querySelectorAll('.custom-checkbox');
-    checkboxes.forEach((checkbox: any) => {
-      checkbox.checked = false;
-    });
-
-    // Update URL
-    const params = new URLSearchParams(searchParams.toString());
-    if (newCategory) {
-      params.set("category", newCategory);
-    } else {
-      params.delete("category");
-    }
-    params.delete("brands");
-    router.push(`?${params.toString()}`, undefined);
-  };
-
-  const handleCheckboxChange = (brand: string) => {
-    const newSelectedBrands = selectedBrands.includes(brand)
-      ? selectedBrands.filter((b) => b !== brand)
-      : [...selectedBrands, brand];
-    setSelectedBrands(newSelectedBrands);
-    setCurrentPage(1); // Reset to the first page when brand filter changes
-
-    // Update URL
-    const params = new URLSearchParams(searchParams.toString());
-    if (newSelectedBrands.length > 0) {
-      params.set("brands", newSelectedBrands.join(","));
-    } else {
-      params.delete("brands");
-    }
-    router.push(`?${params.toString()}`, undefined);
-  };
-
-  const handleMinPriceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value ? e.target.value : "";
-    setMinPrice(value);
-    setCurrentPage(1); // Reset to the first page when min price changes
-
-    // Update URL
-    const params = new URLSearchParams(searchParams.toString());
-    if (value) {
-      params.set("minPrice", value);
-    } else {
-      params.delete("minPrice");
-    }
-    router.push(`?${params.toString()}`, undefined);
-  };
-
-  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value ? e.target.value : "";
-    setMaxPrice(value);
-    setCurrentPage(1); // Reset to the first page when max price changes
-
-    // Update URL
-    const params = new URLSearchParams(searchParams.toString());
-    if (value) {
-      params.set("maxPrice", value);
-    } else {
-      params.delete("maxPrice");
-    }
-    router.push(`?${params.toString()}`, undefined);
-  };
-
   const priceOptions = [
     0, 10000, 100000, 200000, 500000, 800000, 1000000, 2000000,
   ];
+  // Update handlers to use new function
+  const handleCategoryChange = (category: string) => {
+    const currentCategory = searchParams.get("category");
+    const updates: { [key: string]: string | null } = {};
 
-  const brands = Array.from(
-    new Set(
-      products
-        .filter((product) => product.category === selectedCategory)
-        .map((product) => product.brand)
-    )
-  );
-  const category = Array.from(
-    new Set(products.map((product) => product.category))
-  ).sort((a, b) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b));
+    // Toggle category and always remove brand
+    if (category === currentCategory) {
+      updates.category = null;
+    } else {
+      updates.category = category;
+    }
+    updates.brand = null;
+    setBrand(null);
 
-  // Calculate the products to display on the current page
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = (searchPerformed && filteredProducts.length > 0 ? filteredProducts : products).slice(indexOfFirstProduct, indexOfLastProduct);
+    updateSearchParams(updates);
+  };
 
-  // Calculate total pages
-  const totalPages = Math.ceil((searchPerformed && filteredProducts.length > 0 ? filteredProducts : products).length / productsPerPage);
+  const handleBrandChange = (brand: string) => {
+    const currentBrand = searchParams.get("brand");
+    const updates: { [key: string]: string | null } = {};
 
-  // Handle page change
-  const handlePageChange = (pageNumber: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", pageNumber.toString());
-    
-    // Update URL without scroll
-    router.push(`?${params.toString()}`, {
-      scroll: false
+    // Toggle brand selection  
+    if (brand === currentBrand) {
+      updates.brand = null;
+    } else {
+      updates.brand = brand;
+    }
+
+    updateSearchParams(updates);
+  };
+
+  const handleMinPriceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    updateSearchParams({
+      minPrice: e.target.value || null
     });
-    
-    setCurrentPage(pageNumber);
-  
-    // Smooth scroll to top of product grid
-    const productGrid = document.getElementById('product-grid');
-    if (productGrid) {
-      productGrid.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    updateSearchParams({
+      maxPrice: e.target.value || null
+    });
+  };
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const [field, order] = e.target.value.split("-");
+    if (field === "none" || order === "none") {
+      updateSearchParams({
+        sortBy: null,
+        sortOrder: null
+      });
+      setSortBy("none");
+      setSortOrder("none");
+    } else {
+      updateSearchParams({
+        sortBy: field,
+        sortOrder: order
+      });
     }
   };
 
+  const handlePageChange = (pageNumber: number) => {
+    if (pageNumber < 1 || pageNumber > totalPages) return;
+
+    const params = new URLSearchParams(window.location.search);
+    params.set("page", pageNumber.toString());
+
+    // Update URL with page number
+    router.push(`?${params.toString()}`);
+
+    // Scroll to product grid
+    if (productGridRef.current) {
+      productGridRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+  const clearFilters = () => {
+    // Reset all states
+    setBrand(null);
+    setSelectedCategory(null);
+    setMinPrice("");
+    setMaxPrice("");
+    setSortBy("none");
+    setSortOrder("none");
+
+    // Clear all search params except page
+    const params = new URLSearchParams(window.location.search);
+    const currentPage = params.get("page");
+    params.delete("category");
+    params.delete("brand");
+    params.delete("minPrice");
+    params.delete("maxPrice");
+    params.delete("sortBy");
+    params.delete("sortOrder");
+
+    // Keep current page if exists
+    if (currentPage) {
+      params.set("page", currentPage);
+    }
+
+    router.push(`?${params.toString()}`);
+  };
   // Generate pagination buttons
   const renderPageNumbers = () => {
     const pageNumbers = [];
@@ -260,11 +287,38 @@ const ProductContent = () => {
     }
     return pageNumbers;
   };
+
   useEffect(() => {
     const page = Number(searchParams.get("page")) || 1;
+    const categoryParam = searchParams.get("category");
+    const brandParam = searchParams.get("brand");
+    const minPriceParam = searchParams.get("minPrice");
+    const maxPriceParam = searchParams.get("maxPrice");
+    const sortByParam = searchParams.get("sortBy") || "price";
+    const sortOrderParam = searchParams.get("sortOrder") || "asc";
     setCurrentPage(page);
+    setSelectedCategory(categoryParam);
+    setBrand(brandParam || null);
+    setMinPrice(minPriceParam || "");
+    setMaxPrice(maxPriceParam || "");
+    setSortBy(sortByParam);
+    setSortOrder(sortOrderParam);
   }, [searchParams]);
-  if (products.length !== 0) return (
+  useEffect(() => {
+    // Scroll on initial page load
+    const productGrid = document.getElementById('product-grid');
+    if (productGrid) {
+      productGrid.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }, []);
+  if (isLoading) {
+    return <LoadingModal isLoading={true} isComplete={false} setIsComplete={setIsComplete} loadWhat="LOADING_PRODUCT" />;
+  }
+
+  return (
     <>
       <Header />
       <ErrorModal error={error} setError={setError} />
@@ -277,15 +331,13 @@ const ProductContent = () => {
               <FontAwesomeIcon icon={faList} />
               <span className="flex-grow text-center">Theo danh mục</span>
             </div>
-
             {/* Theo loại */}
             <div className=" space-y-2 border-b-[1px] pb-4 bg-background-filter">
-              {category.map((cat, index) => (
+              {categoryOrder.map((cat, index) => (
                 <div
                   key={index}
-                  className={`flex items-center space-x-2  p-2  ${
-                    selectedCategory === cat ? "bg-clicked_filter" : ""
-                  } hover:bg-hover_filter`}
+                  className={`flex items-center space-x-2 p-2 ${searchParams.get("category") === cat ? "bg-clicked_filter" : ""
+                    } hover:bg-hover_filter`}
                   onClick={() => handleCategoryChange(cat)}
                 >
                   <label htmlFor={cat} className="text-sm">
@@ -294,35 +346,28 @@ const ProductContent = () => {
                 </div>
               ))}
             </div>
-            {selectedCategory && (
-              <>
-                {/* Theo brand */}
-                <div className="space-y-4 border-b-[1px] pb-4 mt-4 bg-background-filter">
-                  <div className="flex justify-between items-center p-2 text-center font-bold bg-[#659287] text-white">
-                    <FontAwesomeIcon icon={faList} />
-                    <span className="flex-grow text-center">
-                      Theo thương hiệu
-                    </span>
-                  </div>
-                  {brands.map((brand, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        name={`brand${index + 1}`}
-                        id={`brand${index + 1}`}
-                        className="custom-checkbox bg-blue-white"
-                        onChange={() => handleCheckboxChange(brand)}
-                        checked={selectedBrands.includes(brand)}
-                      />
-                      <label htmlFor={`brand${index + 1}`} className="text-sm">
-                        {brand}
-                      </label>
-                    </div>
-                  ))}
+            {/* Theo thương hiệu */}
+            {(brandlist && brandlist.length > 0) && (
+              <div className="space-y-2 border-b-[1px] pb-4 bg-background-filter">
+                <div className="flex justify-between items-center p-2 text-center font-bold bg-[#659287] text-white">
+                  <FontAwesomeIcon icon={faList} />
+                  <span className="flex-grow text-center">Theo thương hiệu</span>
                 </div>
-              </>
+                {brandlist.map((brand, index) => (
+                  <div
+                    key={index}
+                    className={`flex items-center space-x-2 p-2 ${searchParams.get("brand") === brand ? "bg-clicked_filter" : ""
+                      } hover:bg-hover_filter`}
+                    onClick={() => handleBrandChange(brand)}
+                  >
+                    <label htmlFor={brand} className="text-sm">
+                      {brand}
+                    </label>
+                  </div>
+                ))}
+              </div>
             )}
-            {/* Min and max price searching */}
+            {/* Theo giá */}
             <div className="space-y-4 border-b-[1px] pb-4 mt-4 bg-background-filter">
               <div className="flex justify-between items-center p-2 text-center font-bold bg-[#659287] text-white">
                 <FontAwesomeIcon icon={faList} />
@@ -330,8 +375,8 @@ const ProductContent = () => {
               </div>
               <div className="flex items-center justify-center space-x-2">
                 <select
-                  className="border-[1px] w-20 p-1 rounded "
-                  value={minPrice} // Bind value to state
+                  className="border-[1px] w-20 p-1 rounded"
+                  value={minPrice}
                   onChange={handleMinPriceChange}
                 >
                   <option value="">Từ</option>
@@ -343,8 +388,8 @@ const ProductContent = () => {
                 </select>
                 <span>-</span>
                 <select
-                  className="border-[1px] w-20 p-1 rounded "
-                  value={maxPrice} // Bind value to state
+                  className="border-[1px] w-20 p-1 rounded"
+                  value={maxPrice}
                   onChange={handleMaxPriceChange}
                 >
                   <option value="">Đến</option>
@@ -356,18 +401,44 @@ const ProductContent = () => {
                 </select>
               </div>
             </div>
+            <div className="flex justify-between items-center p-2 text-center font-bold bg-[#659287] text-white">
+              <FontAwesomeIcon icon={faList} />
+              <span className="flex-grow text-center">Sắp xếp theo</span>
+            </div>
+            <select
+              className="border-[1px] p-2 rounded"
+              value={sortBy && sortOrder ? `${sortBy}-${sortOrder}` : "none-none"}
+              onChange={handleSortChange}
+            >
+              {sortOptions.map((option, index) => (
+                <option key={index} value={`${option.field}-${option.value}`}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <div className="mt-4">
+              <button
+                onClick={clearFilters}
+                className="w-full p-2 text-white bg-red-500 hover:bg-red-600 rounded font-semibold"
+              >
+                Xóa bộ lọc
+              </button>
+            </div>
           </div>
         </div>
+
         {/* Product side */}
-        <div id="product-grid" className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-16 ml-1 mr-2 mt-2 scroll-mt-4">
-          {(searchPerformed && filteredProducts.length === 0) ||
-          (Params != 0 && filteredProducts.length === 0) ? (
+        <div
+          ref={productGridRef}
+          id="product-grid"
+          className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-8"
+        >
+          {!isLoading && products.length === 0 ? (
             <div className="col-span-4 text-center p-6">
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
                 className="h-20 w-20 mb-4 text-gray-400"
               />
-
               <h2 className="text-xl font-semibold mb-2">
                 Không tìm thấy sản phẩm
               </h2>
@@ -376,10 +447,10 @@ const ProductContent = () => {
               </p>
             </div>
           ) : (
-            currentProducts.map((product, index) => (
+            products.map((product, index) => (
               <div
                 key={index}
-                className="transition-transform transform hover:scale-105 w-53 h-64 p-2 "
+                className="transition-transform transform hover:scale-105 w-53 h-64 p-2"
               >
                 <ProductCard product={product} />
               </div>
@@ -431,7 +502,6 @@ const ProductContent = () => {
       <Footer />
     </>
   );
-  if (products.length === 0) return <LoadingModal isLoading={true} isComplete={false} setIsComplete={setIsComplete} loadWhat="LOADING_PRODUCT" />;
 };
 
 export default ProductContent;
