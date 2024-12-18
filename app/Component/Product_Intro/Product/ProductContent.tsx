@@ -325,13 +325,13 @@ const ProductContent = () => {
       <div className="flex flex-col md:flex-row mr-2">
         {/* Burger Menu for Mobile */}
         <div className="flex justify-between items-center p-4 md:hidden">
-          <button onClick={toggleFilter} className="text-gray-700 focus:outline-none">
+          <button className="text-gray-700 focus:outline-none">
             <FontAwesomeIcon icon={faBars} className="h-6 w-6" />
           </button>
           <span className="text-lg font-bold">Bộ lọc sản phẩm</span>
         </div>
         {/* FilterSide */}
-        <div className={`w-full md:w-1/6 font-k2d flex flex-col items-center border-r-[1px] border-clicked_filter p-4 space-y-6 overflow-y-auto ${isFilterOpen ? 'block' : 'hidden'} md:block`}>
+        <div className={`w-full md:w-1/6 font-k2d flex flex-col items-center border-r-[1px] border-clicked_filter p-4 space-y-6 overflow-y-auto md:block`}>
           {/* Bộ lọc */}
           <div className="relative w-full flex-col">
             <div className="flex justify-between items-center p-2 text-center font-bold bg-[#659287] text-white">
