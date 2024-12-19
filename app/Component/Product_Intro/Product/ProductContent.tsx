@@ -18,7 +18,7 @@ const ProductContent = () => {
   const [loadWhat, setLoadWhat] = useState("");
   const searchParams = useSearchParams();
   const router = useRouter();
-  const productsPerPage = 10;
+  const productsPerPage = 20;
 
   const [products, setProducts] = useState<any[]>([]);
   const [brandlist, setBrandlist] = useState<any[]>([]);
@@ -331,7 +331,7 @@ const ProductContent = () => {
           <span className="text-lg font-bold">Bộ lọc sản phẩm</span>
         </div>
         {/* FilterSide */}
-        <div className={`w-full md:w-1/6 font-k2d flex flex-col items-center border-r-[1px] border-clicked_filter p-4 space-y-6 overflow-y-auto md:block`}>
+        <div className={`w-full md:w-1/6 font-k2d flex flex-col items-center border-r-[1px] border-clicked_filter p-4 space-y-6  md:block`}>
           {/* Bộ lọc */}
           <div className="relative w-full flex-col">
             <div className="flex justify-between items-center p-2 text-center font-bold bg-[#659287] text-white">
@@ -438,7 +438,7 @@ const ProductContent = () => {
         <div
           ref={productGridRef}
           id="product-grid"
-          className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-8"
+          className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-20"
         >
           {!isLoading && products.length === 0 ? (
             <div className="col-span-4 text-center p-6">
