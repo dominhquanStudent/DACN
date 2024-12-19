@@ -41,7 +41,7 @@ const ProductCard = (props: any) => {
       </div>
 
       {/* Product Info */}
-      <div className="p-2 flex flex-col justify-between flex-grow">
+      <div className="p-2 flex flex-col justify-between flex-grow ">
         {/* Product Name */}
         <h2
           className="font-nunito text-sm mb-1 line-clamp-2 product-name min-h-[2.5rem]"
