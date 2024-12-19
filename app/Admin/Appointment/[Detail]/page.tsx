@@ -261,14 +261,14 @@ function AppointmentDetail({ params }: { params: { Detail: string } }) {
                 </div>
               </div>
               <div className="w-full px-3">
-                <div className="w-1/2">
+                {/* <div className="w-1/2">
                   <label className="text-sm font-bold mb-2" htmlFor="time">
                     Dịch vụ chính
                   </label>
                   <div className="block w-full border border-gray-300 rounded-lg py-2 px-4 bg-gray-50">
                     {data.service}
                   </div>
-                </div>
+                </div> */}
                 <label
                   className="text-xs font-bold mb-2"
                   htmlFor="doctorMessage"
