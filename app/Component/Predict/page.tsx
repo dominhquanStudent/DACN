@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import axios from "axios";
-import { createSelector } from 'reselect';
 import Select from 'react-select';
 
 
@@ -11,7 +10,7 @@ const translatePrediction = (prediction: string) => {
     hotspot: "Viêm da cơ địa",
     mange: "Ghẻ lỡ",
     ringworm: "Nấm ngoài da",
-    "Tick Fever": "Sốt ve",
+    "Tick fever": "Sốt ve",
     Distemper: "Bệnh sài sốt",
     Parvovirus: "Bệnh Parvovirus",
     Hepatitis: "Viêm gan",
@@ -37,97 +36,103 @@ const PredictPage = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const symptomOptions = [
-    { value: "Sốt", label: "Sốt" },
-    { value: "Chảy dịch mũi", label: "Chảy dịch mũi" },
-    { value: "Mất cảm giác thèm ăn", label: "Mất cảm giác thèm ăn" },
-    { value: "Sụt cân", label: "Sụt cân" },
-    { value: "Khập khiễng", label: "Khập khiễng" },
-    { value: "Khó thở", label: "Khó thở" },
-    { value: "Sưng hạch bạch huyết", label: "Sưng hạch bạch huyết" },
-    { value: "Mệt mỏi", label: "Mệt mỏi" },
-    { value: "Chán nản", label: "Chán nản" },
-    { value: "Ho", label: "Ho" },
-    { value: "Tiêu chảy", label: "Tiêu chảy" },
-    { value: "Co giật", label: "Co giật" },
-    { value: "Nôn mửa", label: "Nôn mửa" },
-    { value: "Ăn ít hơn bình thường", label: "Ăn ít hơn bình thường" },
-    { value: "Chảy nước dãi nhiều", label: "Chảy nước dãi nhiều" },
-    { value: "Đỏ xung quanh vùng mắt", label: "Đỏ xung quanh vùng mắt" },
-    { value: "Mất nước nghiêm trọng", label: "Mất nước nghiêm trọng" },
-    { value: "Đau", label: "Đau" },
-    { value: "Khó chịu", label: "Khó chịu" },
-    { value: "Nhiễm trùng huyết", label: "Nhiễm trùng huyết" },
-    { value: "Đau bụng", label: "Đau bụng" },
-    { value: "Uống và tiểu tiện nhiều hơn", label: "Uống và tiểu tiện nhiều hơn" },
-    { value: "Bụng phình to", label: "Bụng phình to" },
-    { value: "Lợi vàng", label: "Lợi vàng" },
-    { value: "Táo bón", label: "Táo bón" },
-    { value: "Liệt", label: "Liệt" },
-    { value: "Trán nhăn", label: "Trán nhăn" },
-    { value: "Tai dựng liên tục và cứng đơ", label: "Tai dựng liên tục và cứng đơ" },
-    { value: "Biểu cảm cười gượng", label: "Biểu cảm cười gượng" },
-    { value: "Đuôi cứng và cứng đơ", label: "Đuôi cứng và cứng đơ" },
-    { value: "Cứng cơ", label: "Cứng cơ" },
-    { value: "Mù đột ngột", label: "Mù đột ngột" },
-    { value: "Có máu trong nước tiểu", label: "Có máu trong nước tiểu" },
-    { value: "Đói", label: "Đói" },
-    { value: "Đục thủy tinh thể", label: "Đục thủy tinh thể" },
-    { value: "Mất thị lực", label: "Mất thị lực" },
-    { value: "Glucose trong nước tiểu", label: "Glucose trong nước tiểu" },
-    { value: "Ợ hơi", label: "Ợ hơi" },
-    { value: "Có máu trong phân", label: "Có máu trong phân" },
-    { value: "Xì hơi", label: "Xì hơi" },
-    { value: "Ăn cỏ", label: "Ăn cỏ" },
-    { value: "Gãi", label: "Gãi" },
-    { value: "Liếm", label: "Liếm" },
-    { value: "Ngứa da", label: "Ngứa da" },
-    { value: "Đỏ da", label: "Đỏ da" },
-    { value: "Cọ xát mặt", label: "Cọ xát mặt" },
-    { value: "Rụng lông", label: "Rụng lông" },
-    { value: "Sưng lợi", label: "Sưng lợi" },
-    { value: "Đỏ lợi", label: "Đỏ lợi" },
-    { value: "Lợi tụt", label: "Lợi tụt" },
-    { value: "Chảy máu lợi", label: "Chảy máu lợi" },
-    { value: "Mảng bám", label: "Mảng bám" },
-    { value: "Hơi thở hôi", label: "Hơi thở hôi" },
-    { value: "Cao răng", label: "Cao răng" },
-    { value: "Cục u", label: "Cục u" },
-    { value: "Sưng tấy", label: "Sưng tấy" },
-    { value: "Nốt đỏ", label: "Nốt đỏ" },
-    { value: "Vảy da", label: "Vảy da" },
-    { value: "Kích ứng", label: "Kích ứng" },
-    { value: "Da khô", label: "Da khô" },
-    { value: "Vùng đỏ trên da", label: "Vùng đỏ trên da" },
-    { value: "Biến chứng tim", label: "Biến chứng tim" },
-    { value: "Yếu đuối", label: "Yếu đuối" },
-    { value: "Hung dữ", label: "Hung dữ" },
-    { value: "Lợi nhợt nhạt", label: "Lợi nhợt nhạt" },
-    { value: "Hôn mê", label: "Hôn mê" },
-    { value: "Ngã gục", label: "Ngã gục" },
-    { value: "Khó đi tiểu", label: "Khó đi tiểu" },
-    { value: "Gàu", label: "Gàu" },
-    { value: "Chán ăn", label: "Chán ăn" },
-    { value: "Mù lòa", label: "Mù lòa" },
-    { value: "Căng hàm quá mức", label: "Căng hàm quá mức" },
-    { value: "Nhiễm trùng đường tiểu", label: "Nhiễm trùng đường tiểu" },
-    { value: "Thiếu năng lượng", label: "Thiếu năng lượng" },
-    { value: "Có mùi khó chịu", label: "Có mùi khó chịu" },
-    { value: "Rối loạn thần kinh", label: "Rối loạn thần kinh" },
-    { value: "Chảy dịch mắt", label: "Chảy dịch mắt" },
-    { value: "Mất ý thức", label: "Mất ý thức" },
-    { value: "Gan to", label: "Gan to" },
-    { value: "Tẩy ruột", label: "Tẩy ruột" },
-    { value: "Dịch tiết có máu", label: "Dịch tiết có máu" },
-    { value: "Vết thương", label: "Vết thương" },
+    { value: "Fever", label: "Sốt" },
+    { value: "Nasal Discharge", label: "Chảy dịch mũi" },
+    { value: "Loss of appetite", label: "Mất cảm giác thèm ăn" },
+    { value: "Weight Loss", label: "Sụt cân" },
+    { value: "Lameness", label: "Khập khiễng" },
+    { value: "Breathing Difficulty", label: "Khó thở" },
+    { value: "Swollen Lymph nodes", label: "Sưng hạch bạch huyết" },
+    { value: "lethargy", label: "Mệt mỏi" },
+    { value: "Depression", label: "Chán nản" },
+    { value: "Coughing", label: "Ho" },
+    { value: "Diarrhea", label: "Tiêu chảy" },
+    { value: "Seizures", label: "Co giật" },
+    { value: "Vomiting", label: "Nôn mửa" },
+    { value: "Eating less than usual", label: "Ăn ít hơn bình thường" },
+    { value: "Excessive Salivation", label: "Chảy nước dãi nhiều" },
+    { value: "Redness around Eye area", label: "Đỏ xung quanh vùng mắt" },
+    { value: "Severe Dehydration", label: "Mất nước nghiêm trọng" },
+    { value: "Pain", label: "Đau" },
+    { value: "Discomfort", label: "Khó chịu" },
+    { value: "Sepsis", label: "Nhiễm trùng huyết" },
+    { value: "Tender abdomen", label: "Đau bụng" },
+    { value: "Increased drinking and urination", label: "Uống và tiểu tiện nhiều hơn" },
+    { value: "Bloated Stomach", label: "Bụng phình to" },
+    { value: "Yellow gums", label: "Lợi vàng" },
+    { value: "Constipation", label: "Táo bón" },
+    { value: "Paralysis", label: "Liệt" },
+    { value: "Wrinkled forehead", label: "Trán nhăn" },
+    { value: "Continuously erect and stiff ears", label: "Tai dựng liên tục và cứng đơ" },
+    { value: "Grinning appearance", label: "Biểu cảm cười gượng" },
+    { value: "Stiff and hard tail", label: "Đuôi cứng và cứng đơ" },
+    { value: "Stiffness of muscles", label: "Cứng cơ" },
+    { value: "Acute blindness", label: "Mù đột ngột" },
+    { value: "Blood in urine", label: "Có máu trong nước tiểu" },
+    { value: "Hunger", label: "Đói" },
+    { value: "Cataracts", label: "Đục thủy tinh thể" },
+    { value: "Losing sight", label: "Mất thị lực" },
+    { value: "Glucose in urine", label: "Glucose trong nước tiểu" },
+    { value: "Burping", label: "Ợ hơi" },
+    { value: "blood in stools", label: "Có máu trong phân" },
+    { value: "Passing gases", label: "Xì hơi" },
+    { value: "Eating grass", label: "Ăn cỏ" },
+    { value: "Scratching", label: "Gãi" },
+    { value: "Licking", label: "Liếm" },
+    { value: "Itchy skin", label: "Ngứa da" },
+    { value: "Redness of skin", label: "Đỏ da" },
+    { value: "Face rubbing", label: "Cọ xát mặt" },
+    { value: "Loss of Fur", label: "Rụng lông" },
+    { value: "Swelling of gum", label: "Sưng lợi" },
+    { value: "Redness of gum", label: "Đỏ lợi" },
+    { value: "Receding gum", label: "Lợi tụt" },
+    { value: "Bleeding of gum", label: "Chảy máu lợi" },
+    { value: "Plaque", label: "Mảng bám" },
+    { value: "Bad breath", label: "Hơi thở hôi" },
+    { value: "Tartar", label: "Cao răng" },
+    { value: "Lumps", label: "Cục u" },
+    { value: "Swelling", label: "Sưng tấy" },
+    { value: "Red bumps", label: "Nốt đỏ" },
+    { value: "Scabs", label: "Vảy da" },
+    { value: "Irritation", label: "Kích ứng" },
+    { value: "Dry Skin", label: "Da khô" },
+    { value: "Fur loss", label: "Rụng lông" },
+    { value: "Red patches", label: "Vùng đỏ trên da" },
+    { value: "Heart Complication", label: "Biến chứng tim" },
+    { value: "Weakness", label: "Yếu đuối" },
+    { value: "Aggression", label: "Hung dữ" },
+    { value: "Pale gums", label: "Lợi nhợt nhạt" },
+    { value: "Coma", label: "Hôn mê" },
+    { value: "Collapse", label: "Ngã gục" },
+    { value: "Abdominal pain", label: "Đau bụng" },
+    { value: "Difficulty Urinating", label: "Khó đi tiểu" },
+    { value: "Dandruff", label: "Gàu" },
+    { value: "Anorexia", label: "Chán ăn" },
+    { value: "Blindness", label: "Mù lòa" },
+    { value: "excess jaw tone", label: "Căng hàm quá mức" },
+    { value: "Urine infection", label: "Nhiễm trùng đường tiểu" },
+    { value: "Lack of energy", label: "Thiếu năng lượng" },
+    { value: "Smelly", label: "Có mùi khó chịu" },
+    { value: "Neurological Disorders", label: "Rối loạn thần kinh" },
+    { value: "Eye Discharge", label: "Chảy dịch mắt" },
+    { value: "Loss of Consciousness", label: "Mất ý thức" },
+    { value: "Enlarged Liver", label: "Gan to" },
+    { value: "Purging", label: "Tẩy ruột" },
+    { value: "Bloody discharge", label: "Dịch tiết có máu" },
+    { value: "Wounds", label: "Vết thương" }
   ];
-  
-  
+
+
   const handleSymptomChange = (selectedOptions: any) => {
     const selectedValues = selectedOptions.map((option: any) => option.value);
     setSymptoms(selectedValues);
   };
+  const getLabelByValue = (value: String) => {
+    const symptom = symptomOptions.find(symptom => symptom.value === value);
+    return symptom ? symptom.label : null; // Returns the label or null if not found
+  }
   const possibleDiseases = [
-    "Tick Fever",
+    "Tick fever",
     "Distemper",
     "Parvovirus",
     "Hepatitis",
@@ -207,105 +212,112 @@ const PredictPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-5/6 bg-white p-8 shadow-lg rounded-lg">
-        <h1 className="text-3xl font-bold text-center mb-4">
-          Dự đoán bệnh cho chó và mèo
-        </h1>
-        <div className="space-y-4">
-          {/* Image Upload */}
-<div>
-  <label className="block text-sm font-bold mb-2" htmlFor="image">
-    Tải lên hình ảnh
-  </label>
-  <input
-    type="file"
-    id="image"
-    accept="image/*"
-    onChange={handleImageChange}
-    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
-  />
-  
-  {/* Image Preview */}
-  {selectedImage && (
-    <div className="mt-4">
-      <p className="text-sm font-semibold text-gray-700">Xem trước hình ảnh:</p>
-      <img
-        src={selectedImage}
-        alt="Xem trước hình ảnh đã tải lên"
-        className="w-full max-w-xs rounded-lg shadow-lg"
-      />
-    </div>
-  )}
-</div>
-<button
-  onClick={PredictImage}
-  className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 mt-4"
->
-  Dự đoán từ hình ảnh
-</button>
+    <div className="flex flex-col items-center justify-center my-4 md:my-6 lg:my-8">
+      <div className="w-5/6 bg-white p-4 md:p-6 lg:p-8 shadow-lg rounded-lg">
+        <div className="flex flex-col items-center justify-center">
+          <div className="w-5/6 bg-white p-4 shadow-lg rounded-lg">
+            <h1 className="text-3xl font-bold text-center mb-4">
+              Dự đoán bệnh cho cún cưng
+            </h1>
+            <div className="space-y-4">
+              {/* Image Upload */}
+              <div>
+                <label className="block text-sm font-bold mb-2" htmlFor="image">
+                  Tải lên hình ảnh
+                </label>
+                <input
+                  type="file"
+                  id="image"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
+                />
 
-          {/* Symptoms Selection */}
-          <div>
-            <label className="block text-sm font-bold mb-2" htmlFor="symptoms">
-              Chọn triệu chứng (tối thiểu 3)
-            </label>
-            <Select
-              id="symptoms"
-              options={symptomOptions}
-              isMulti
-              onChange={handleSymptomChange}
-              className="basic-multi-select"
-              classNamePrefix="select"
-              placeholder="Chọn triệu chứng..."
-            />
-            <button
-              type="button"
-              onClick={handleConfirmSymptoms}
-              className="mt-2 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-700"
-            >
-              Xác nhận triệu chứng
-            </button>
-          </div>
+                {/* Image Preview */}
+                {selectedImage && (
+                  <div className="mt-4">
+                    <p className="text-sm font-semibold text-gray-700">Xem trước hình ảnh:</p>
+                    <img
+                      src={selectedImage}
+                      alt="Xem trước hình ảnh đã tải lên"
+                      className="w-full max-w-xs rounded-lg shadow-lg"
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col items-center">
+                <button
+                  onClick={PredictImage}
+                  className=" bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 mt-4"
+                >
+                  Dự đoán từ hình ảnh
+                </button>
+              </div>
+              {/* Prediction Results */}
+              {predictionByImage && (
+                <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-lg">
+                  <h2 className="text-xl font-bold">Kết quả từ hình ảnh:</h2>
+                  <p>{predictionByImage}</p>
+                </div>
+              )}
 
-          {/* Selected Symptoms */}
-          {selectedSymptoms.length > 0 && (
-            <div className="mt-4 p-4 bg-blue-100 rounded-lg">
-              <h3 className="font-bold mb-2">Các triệu chứng đã chọn:</h3>
-              <div className="flex flex-wrap gap-2">
-                {selectedSymptoms.map((symptom, index) => (
-                  <span
-                    key={index}
-                    className="bg-blue-500 text-white px-2 py-1 rounded-full text-sm"
-                  >
-                    {symptom}
-                  </span>
-                ))}
+              {/* Symptoms Selection */}
+              <div>
+                <label className="block text-sm font-bold mb-2" htmlFor="symptoms">
+                  Chọn triệu chứng (tối thiểu 3)
+                </label>
+                <Select
+                  id="symptoms"
+                  options={symptomOptions}
+                  isMulti
+                  onChange={handleSymptomChange}
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  placeholder="Chọn triệu chứng..."
+                />
+                <button
+                  type="button"
+                  onClick={handleConfirmSymptoms}
+                  className="mt-2 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-700"
+                >
+                  Xác nhận triệu chứng
+                </button>
+              </div>
+
+              {/* Selected Symptoms */}
+              {selectedSymptoms.length > 0 && (
+                <div className="mt-4 p-4 bg-blue-100 rounded-lg">
+                  <h3 className="font-bold mb-2">Các triệu chứng đã chọn:</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedSymptoms.map((symptom, index) => (
+                      <span
+                        key={index}
+                        className="bg-blue-500 text-white px-2 py-1 rounded-full text-sm"
+                      >
+                        {getLabelByValue(symptom)}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div className="flex flex-col items-center">
+                <button
+                  onClick={PredictSymptoms}
+                  className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+                >
+                  Dự đoán từ triệu chứng
+                </button>
               </div>
             </div>
-          )}
-          <button
-            onClick={PredictSymptoms}
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
-          >
-            Dự đoán từ triệu chứng
-          </button>
+
+            {predictionBySymptoms && (
+              <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-lg">
+                <h2 className="text-xl font-bold">Kết quả từ triệu chứng:</h2>
+                <p>{predictionBySymptoms}</p>
+              </div>
+            )}
+          </div>
         </div>
-
-        {/* Prediction Results */}
-        {predictionByImage && (
-          <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-lg">
-            <h2 className="text-xl font-bold">Kết quả từ hình ảnh:</h2>
-            <p>{predictionByImage}</p>
-          </div>
-        )}
-
-        {predictionBySymptoms && (
-          <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-lg">
-            <h2 className="text-xl font-bold">Kết quả từ triệu chứng:</h2>
-            <p>{predictionBySymptoms}</p>
-          </div>
-        )}
       </div>
     </div>
   );

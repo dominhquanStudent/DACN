@@ -3,6 +3,7 @@ import Foto from "@/public/img/Product_Main/foto.png";
 import { useRouter } from "next/navigation";
 import RenderStars from "@/app/Product_Info/[product_id]/renderStars";
 import OutOfStock from "@/public/img/Out-Of-Stock.png";
+
 const ProductCard = (props: any) => {
   const Router = useRouter();
   const handleChangeClick = (productId: any) => {
@@ -20,27 +21,27 @@ const ProductCard = (props: any) => {
 
   return (
     <div
-      className="flex flex-col rounded-lg overflow-hidden w-full h-70 transform transition-transform duration-300 hover:scale-105 hover:shadow-lg active:scale-95 border-[#EDB24E] 
-      p-4 border-2  mt-4 mb-2 ml-1 mr-1 cursor-pointer"
+      className="flex flex-col rounded-lg overflow-hidden w-full  transform transition-transform duration-300 hover:scale-105 hover:shadow-lg active:scale-95 border-[#EDB24E] 
+      p-4 border-2 ml-1 mr-1 cursor-pointer"
       onClick={() => handleChangeClick(props.product._id)}
     >
       {/* Product Image */}
-      <div className="w-full h-36 flex justify-center items-start">
-          <img
-            loading='lazy'
-            src={props.product.image.url}
-            alt={props.product.name}
-            className={`w-full h-full object-cover ${props.product.stock === 0 ? 'grayscale' : ''}`}
-          />
-          {props.product.stock === 0 && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white font-bold">
-              <img src={OutOfStock.src} alt="Out of stock" />
-            </div>
-          )}
-        </div>
+      <div className="w-full h-36 flex justify-center items-start relative">
+        <img
+          loading="lazy"
+          src={props.product.image.url}
+          alt={props.product.name}
+          className={`w-full h-full object-cover ${props.product.stock === 0 ? 'grayscale' : ''}`}
+        />
+        {props.product.stock === 0 && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white font-bold">
+            <img src={OutOfStock.src} alt="Out of stock" />
+          </div>
+        )}
+      </div>
 
       {/* Product Info */}
-      <div className="p-2 flex flex-col justify-between flex-grow">
+      <div className="p-2 flex flex-col justify-between flex-grow ">
         {/* Product Name */}
         <h2
           className="font-nunito text-sm mb-1 line-clamp-2 product-name min-h-[2.5rem]"
@@ -55,14 +56,12 @@ const ProductCard = (props: any) => {
             {props.product.brand}
           </span>
           <span className="text-xs text-gray-500">
-           {props.product.category}
+            {props.product.category}
           </span>
         </div>
 
         {/* Price */}
-        <div
-          className={`flex justify-between`}
-        >
+        <div className="flex justify-between">
           <span className="text-sm font-semibold">
             <span className="text-xs underline">đ</span> {discount_price}
           </span>

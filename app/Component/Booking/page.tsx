@@ -2,23 +2,16 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
-import Calendar from "react-calendar";
-import logo from "../../../public/img/Booking/petcare.png";
 import logoname from "../../../public/img/Logo2.svg";
-import Doggo1 from "../../../public/img/Greet page/Doggo1.png";
 import ErrorModal from "@/app/Component/Error";
 import LoadingModal from "@/app/Component/Loading";
-// import React, { useState } from 'react';
-import Link from "next/link";
-import Sidebar from "@/app/Admin/sidebar";
-// import Header from '@/app/Admin/Header';
 import axios from "@/api/axios";
 import getInfo from "@/hooks/getInfo";
-import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { getCookie } from "cookies-next";
 import "react-calendar/dist/Calendar.css"; // Import the calendar CSS
 import { sendNotifications } from "@/ultis/notificationUtils";
+import Select from 'react-select';
 function Booking() {
   const router = useRouter();
 
@@ -35,12 +28,15 @@ function Booking() {
   const [time, setTime] = useState("");
   const [note, setNote] = useState("");
   const [isSaved, setIsSaved] = useState(false);
-  // const [error, setError] = useState("");
-  //Handle loading and complete
   const [isLoading, setIsLoading] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [loadWhat, setLoadWhat] = useState("");
   const [error, setError] = useState<string | null>(null);
+
+  const [serviceList, setServiceList] = useState<any[]>([]);
+  const [newServiceId, setNewServiceId] = useState<any[]>([]);
+  const [serviceOptions, setServiceOptions] = useState<{ value: string; label: string; category: string; price: number }[]>([]);
+  const [serviceDetails, setServiceDetails] = useState<any[]>([]);
   //get account data
   const jwt = getCookie("jwt");
   const [accountData, setAccountData] = useState<any>(null);
@@ -57,15 +53,27 @@ function Booking() {
         console.error('Error fetching user info:', error);
       }
     };
-
+    const fetchServiceOptions = async () => {
+      try {
+        const response = await axios.get('/service/list');
+        const services = response.data.services.map((service: any) => ({
+          value: service._id,
+          label: service.name
+        }));
+        setServiceOptions(services);
+        setServiceDetails(response.data.services);
+      } catch (error) {
+        console.error("Error fetching service options:", error);
+      }
+    };
     fetchData();
+    fetchServiceOptions();
   }, []);
 
-
-  
   const handleSaveClick = async (e: any) => {
     e.preventDefault();
     try {
+      console.log(1)
       const data = {
         userName: accountData?.userName || userName,
         phone: accountData?.phone || phone,
@@ -78,6 +86,7 @@ function Booking() {
         time,
         note,
         weight,
+        serviceList
       };
       const phoneRegex = /^[0-9]{10}$/;
       const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -105,10 +114,10 @@ function Booking() {
         setError("NO_BOOKING_WEIGHT");
         return;
       }
-      if (!service) {
-        setError("NO_BOOKING_SERVICE");
-        return;
-      }
+      // if (!service) {
+      //   setError("NO_BOOKING_SERVICE");
+      //   return;
+      // }
       if (!date) {
         setError("NO_BOOKING_DATE");
         return;
@@ -137,7 +146,12 @@ function Booking() {
 
       setLoadWhat("SEND_BOOKING_REQUEST");
       setIsLoading(true);
+      console.log(2)
       const response = await axios.post("/appointment/add", data);
+      console.log(3)
+      setIsLoading(false);
+      setIsComplete(true);
+      setLoadWhat("SEND_BOOKING_REQUEST");
       if (accountData) {
         const notification = {
           user_id: accountData?._id || "",
@@ -148,9 +162,6 @@ function Booking() {
         }
         sendNotifications(notification);
       }
-      setIsLoading(false);
-      setIsComplete(true);
-      setLoadWhat("SEND_BOOKING_REQUEST");
     } catch (error) {
       // toast.error('Error saving product!');
       console.error("Error saving product:", error);
@@ -170,8 +181,30 @@ function Booking() {
       // setImage({public_id: 'null', url: reader.result as string});
     };
   };
-  // JSX code with random content in each cell
-  console.log(accountData);
+  const handleServiceChange = (selectedOption: any) => {
+    setNewServiceId(selectedOption);
+  };
+  const handleAddService = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const newValues = newServiceId.map(item => item.value);
+    setServiceList(newValues);
+
+  };
+  const calculateTotalPrice = () => {
+    // return serviceDetails.reduce((total, service) => total + service.price, 0);
+    return serviceDetails
+      .filter(service => serviceList.includes(service._id))
+      .reduce((total, service) => total + service.price, 0);
+  };
+  const timeSlots = Array.from({ length: 49 }, (_, i) => {
+    const hour = Math.floor(i / 4) + 8; // Start from 8:00
+    const minute = (i % 4) * 15;
+    return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+  }).filter(time => {
+    const hour = parseInt(time.split(':')[0]);
+    return hour <= 20;
+  });
+
   return (
     // Global container
     <>
@@ -186,7 +219,7 @@ function Booking() {
 
       <div className="flex gap-4 p-4 font-nunito bg-gradient-to-br from-[#3c8ce7] to-[#00eaff]">
         <form className="bg-white rounded-lg shadow-md px-8 py-4 w-1/2 mx-auto">
-        <div className="flex flex-col items-center space-y-4">
+          <div className="flex flex-col items-center space-y-4">
             <img src={logoname.src} alt="Logo" className="w-40 lg:w-60" />
             <h2 className="text-xl lg:text-3xl text-center text-gray-800 font-bold">
               Đặt lịch hẹn chăm sóc thú cưng
@@ -300,7 +333,7 @@ function Booking() {
             </select>
           </div>
 
-          <div className="flex items-center mt-4 space-x-8">
+          {/* <div className="flex items-center mt-4 space-x-8">
             <label className="flex-1">Chọn dịch vụ <span className="text-red-500">*</span></label>
             <select
               value={service}
@@ -313,7 +346,46 @@ function Booking() {
               <option value="Tỉa lông">Tỉa lông</option>
               <option value="Tiêm vắc-xin">Tiêm vắc-xin</option>
             </select>
+          </div> */}
+          <div className="flex items-center mt-4 space-x-8">
+            <label className="">Danh sách dịch vụ</label>
+            <div className="block flex-col  mt-2 p-2 rounded ml-2 flex-[4]">
+              <Select
+                options={serviceOptions}
+                placeholder="Chọn dịch vụ"
+                onChange={handleServiceChange}
+                className="mt-2"
+                isMulti
+              />
+              <button
+                className="my-2 px-4 py-2 bg-blue-500 text-white rounded-lg"
+                onClick={handleAddService}
+              >
+                Chọn dịch vụ
+              </button>
+              {/* Chi tiết dịch vụ */}
+              <div className="flex flex-col space-y-4">
+                {serviceDetails
+                  .filter(service => serviceList.includes(service._id)).map((service, index) => (
+                    <div
+                      key={`service-${service._id}-${index}`}
+                      className="flex flex-row justify-between items-center w-full p-1 px-4 border border-gray-200 rounded-lg shadow-sm bg-white hover:shadow-md transition-shadow"
+                    >
+                      <div className="font-semibold text-lg text-blue-600 truncate">
+                        {service.name}
+                      </div>
+                      <div className="text-gray-600 truncate">
+                        <span className="font-medium">Giá:</span> {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(service.price)}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+              <div className="mt-4 font-bold text-lg text-right">
+                Tổng giá: {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(calculateTotalPrice())}
+              </div>
+            </div>
           </div>
+
           <div className="flex items-center mt-4 space-x-8">
             <label className="flex-1">Ngày hẹn <span className="text-red-500">*</span></label>
             <input
@@ -325,13 +397,23 @@ function Booking() {
             />
           </div>
           <div className="flex items-center mt-4 space-x-8">
-            <label className="flex-1">Thời gian <span className="text-red-500">*</span></label>
-            <input
-              type="time"
+            <label className="flex-1">
+              Thời gian <span className="text-red-500">*</span>
+            </label>
+            <select
               value={time}
-              onChange={(e) => setTime(e.target.value)}
+              onChange={(e) => {
+                const newTime = e.target.value; // Lấy giá trị thời gian từ option
+                setTime(newTime); // Cập nhật biến time
+              }}
               className="block w-full mt-2 p-2 border rounded ml-2 flex-[4]"
-            />
+            >
+              {timeSlots.map((time) => (
+                <option key={time} value={time}>
+                  {time}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="flex items-center mt-4 space-x-8">
             <label className="flex-1">Để lại lời nhắn</label>
