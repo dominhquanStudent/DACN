@@ -112,7 +112,7 @@ export default function ProductDetailPage({
         setPrice(productData.product.price);
 
         // Fetch similar products
-        const similarResponse = await axios.get(`${baseURL}/product/list`);
+        const similarResponse = await axios.get(`${baseURL}/product/listFilter`);
         const similarProducts = similarResponse.data.products.filter(
           (product: any) =>
             product.category === productData.product.category &&
